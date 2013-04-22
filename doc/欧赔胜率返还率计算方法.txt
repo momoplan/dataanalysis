@@ -1,0 +1,12 @@
+/// <summary>
+		/// 计算返回率和胜率
+		/// </summary>
+		public void CalculateProbability()
+		{
+			主队胜率 probability_H=(float)Math.Round(1/(1+homewin/standoff + homewin/guestwin)*100,2);
+			平率     probability_S=(float)Math.Round(1/(1+standoff/homewin + standoff/guestwin)*100,2);
+			客队胜率 probability_G=(float)Math.Round(1/(1+guestwin/homewin + guestwin/standoff)*100,2);
+			返还率   probability_T=(float)Math.Round(probability_H*homewin,2);
+		}
+
+homewin 主胜赔率  standoff 平局赔率 guestwin 客胜赔率

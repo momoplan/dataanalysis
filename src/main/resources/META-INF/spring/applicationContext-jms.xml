@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:camel="http://camel.apache.org/schema/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/beans
+		  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<amq:connectionFactory id="jmsConnectionFactory"
+		brokerURL="${jms.brokerURL}" />
+		
+	<amq:connectionFactory id="jmsLotteryConnectionFactory"
+		brokerURL="${jms.lottery.brokerURL}" />
+		
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="maxConnections" value="8" />
+		<property name="maximumActive" value="500" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+	
+	<bean id="pooledLotteryConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="maxConnections" value="8" />
+		<property name="maximumActive" value="500" />
+		<property name="connectionFactory" ref="jmsLotteryConnectionFactory" />
+	</bean>
+	
+	<bean id="jmsCfg" class="com.ruyicai.dataanalysis.jms.WithoutTMJmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory"></property>
+	</bean>
+	
+	<bean id="jmsLotteryCfg" class="com.ruyicai.dataanalysis.jms.WithoutTMJmsConfiguration">
+		<property name="connectionFactory" ref="pooledLotteryConnectionFactory"></property>
+	</bean>
+	
+	<bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
+		<constructor-arg type="org.apache.camel.component.jms.JmsConfiguration" ref="jmsCfg"></constructor-arg>
+		<property name="connectionFactory" ref="pooledConnectionFactory"></property>
+		<property name="transacted" value="true"></property>
+	</bean>
+	
+	<bean id="jmsLottery" class="org.apache.camel.component.jms.JmsComponent">
+		<constructor-arg type="org.apache.camel.component.jms.JmsConfiguration" ref="jmsLotteryCfg"></constructor-arg>
+		<property name="connectionFactory" ref="pooledLotteryConnectionFactory"></property>
+		<property name="transacted" value="true"></property>
+	</bean>
+	
+	<camel:camelContext id="camelContext" >
+		<!-- <camel:package>com.ruyicai.dataanalysis.camel</camel:package> -->
+		<!-- <camel:jmxAgent id="camelAgent" mbeanObjectDomainName="com.ruyicai.dataanalysis"/> -->
+	</camel:camelContext>
+	
+	<camel:camelContext id="lotteryCamelContext" >
+		<!-- <camel:package>com.ruyicai.dataanalysis.camel</camel:package> -->
+		<!-- <camel:jmxAgent id="camelAgent" mbeanObjectDomainName="com.ruyicai.dataanalysis"/> -->
+	</camel:camelContext>
+	
+</beans>

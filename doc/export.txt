@@ -1,0 +1,1 @@
+exec master..xp_cmdshell 'bcp " select * from Bet007.dbo.Company" queryout c:\temp.xls -c -U "sa" -P "buqian"' 

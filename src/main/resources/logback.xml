@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>   
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">   
+        <Encoding>UTF-8</Encoding>   
+        <layout class="ch.qos.logback.classic.PatternLayout">   
+            <pattern>%-20(%d{yyyy-MM-dd HH:mm:ss.SSS}) %-5level %logger{80}.%method - %msg%n</pattern>   
+        </layout>   
+    </appender>   
+       
+    <appender name="dataanalysisLog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.dir}/dataanalysis.log</File>
+		<encoder>
+			<pattern>%-20(%d{yyyy-MM-dd HH:mm:ss.SSS}) %-5level %logger{80}.%method - %msg%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/dataanalysis.log%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	
+	<logger name="org.apache" level="ERROR" />
+	<logger name="org.hibernate.SQL" level="ERROR" />
+	<logger name="org.hibernate" level="ERROR" />
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="net.sf" level="ERROR" />
+	
+    <root level="INFO">
+		<appender-ref ref="${logback.appender}" />
+	</root>
+</configuration>
