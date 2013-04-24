@@ -87,7 +87,7 @@ public class FetchNewsService {
 		StringBuilder builder = new StringBuilder();
 		for (Element p : ps) {
 			if (!StringUtil.isEmpty(p.text())&&!p.html().equals("&nbsp;")) {
-				builder.append(p.text());
+				builder.append(p.text()).append("\n");
 			}
 		}
 		return builder.toString();
