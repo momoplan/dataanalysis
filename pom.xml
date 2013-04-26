@@ -38,7 +38,7 @@
 		<repository>
 			<id>ruyicai</id>
 			<name>Ruyicai Repository</name>
-			<url>http://202.43.152.162:8181/nexus/content/repositories/public/</url>
+			<url>http://202.43.152.168/nexus/content/repositories/public/</url>
 		</repository>
 		<repository>
 			<id>momoplan-maven-release</id>
@@ -50,7 +50,7 @@
 		<pluginRepository>
 			<id>ruyicai</id>
 			<name>Ruyicai Repository</name>
-			<url>http://202.43.152.162:8181/nexus/content/repositories/public/</url>
+			<url>http://202.43.152.168/nexus/content/repositories/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
     <dependencies>
