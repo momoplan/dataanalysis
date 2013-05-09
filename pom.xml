@@ -31,7 +31,8 @@
 		<peiLvJclUrl>http://nba.bet007.com/odds/OddsData/oddsBsk.txt</peiLvJclUrl>
 		<teamJclUrl>http://bf.bet007.com/LqTeam_Xml.aspx</teamJclUrl>
 		<!-- 新闻 -->
-		<jingCaiNewsUrl>http://info.sporttery.cn/roll/fb_list.php</jingCaiNewsUrl>
+		<!-- <jingCaiNewsUrl>http://info.sporttery.cn/roll/fb_list.php</jingCaiNewsUrl> -->
+		<jingCaiNewsUrl>http://info.sporttery.cn/roll/</jingCaiNewsUrl>
 		<jingCaiZuQiuUrl>http://www.sporttery.cn/football/index.html</jingCaiZuQiuUrl>
     </properties>
     <repositories>

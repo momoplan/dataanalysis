@@ -41,16 +41,24 @@ public class FetchNewsService {
 		logger.info("抓取新闻开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			//竞彩独家(http://info.sporttery.cn/roll/fb_list.php?&s=fb&c=%BE%BA%B2%CA%B6%C0%BC%D2)
-			String urlDuJia = jingCaiNewsUrl + "?&s=fb&c="+URLEncoder.encode("竞彩独家", "gbk");
+			//竞彩足球-竞彩独家(http://info.sporttery.cn/roll/fb_list.php?&s=fb&c=%BE%BA%B2%CA%B6%C0%BC%D2)
+			String urlDuJia = jingCaiNewsUrl + "fb_list.php?&s=fb&c="+URLEncoder.encode("竞彩独家", "gbk");
 			doProcess(urlDuJia);
 			
-			//竞彩专家(http://info.sporttery.cn/roll/fb_list.php?&s=fb&c=%BE%BA%B2%CA%D7%A8%BC%D2)
-			String urlZhuanJia = jingCaiNewsUrl + "?&s=fb&c="+URLEncoder.encode("竞彩专家", "gbk");
+			//竞彩足球-竞彩专家(http://info.sporttery.cn/roll/fb_list.php?&s=fb&c=%BE%BA%B2%CA%D7%A8%BC%D2)
+			String urlZhuanJia = jingCaiNewsUrl + "fb_list.php?&s=fb&c="+URLEncoder.encode("竞彩专家", "gbk");
 			doProcess(urlZhuanJia);
 			
 			//竞彩足球(http://www.sporttery.cn/football/index.html)
 			doProcessJcZq(jingCaiZuQiuUrl);
+			
+			//竞彩篮球-分析推荐(http://info.sporttery.cn/roll/bk_list.php?s=bk&c=%B7%D6%CE%F6%CD%C6%BC%F6)
+			String jcLqFxtjUrl = jingCaiNewsUrl + "bk_list.php?s=bk&c="+URLEncoder.encode("分析推荐", "gbk");
+			doProcess(jcLqFxtjUrl);
+			
+			//竞彩篮球-竞彩前瞻(http://info.sporttery.cn/roll/bk_list.php?s=bk&c=%BE%BA%B2%CA%C7%B0%D5%B0)
+			String jcLqJcqzUrl = jingCaiNewsUrl + "bk_list.php?s=bk&c="+URLEncoder.encode("竞彩前瞻", "gbk");
+			doProcess(jcLqJcqzUrl);
 		} catch (Exception e) {
 			logger.error("抓取新闻异常", e);
 		}
@@ -230,7 +238,7 @@ public class FetchNewsService {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception {
+	public static void main1(String[] args) throws Exception {
 		//获取新闻内容
 		//Document contentDocument = Jsoup.connect("http://www.sporttery.cn/football/jcdj/2013/0416/53972.html").timeout(5000).get();
 		/*String url = "http://www.sporttery.cn/football/jcdj/2013/0416/53972.html";
