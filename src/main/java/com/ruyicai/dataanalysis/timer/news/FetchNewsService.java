@@ -137,7 +137,10 @@ public class FetchNewsService {
 						break;
 					}
 				}
-				event = StringUtil.join("_", type, day, weekIdBig.toString(), teamId);
+				if (StringUtils.isNotBlank(type)&&StringUtils.isNotBlank(day)&&StringUtils.isNotBlank(weekIdBig.toString())
+						&&StringUtils.isNotBlank(teamId)) {
+					event = StringUtil.join("_", type, day, weekIdBig.toString(), teamId);
+				}
 			}
 		}
 		return event;
