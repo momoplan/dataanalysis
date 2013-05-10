@@ -45,6 +45,9 @@ public class News {
 	@Column(name = "event")
 	private String event;
 	
+	@Column(name = "url")
+	private String url;
+	
 	public static List<News> findByOutId(String outId) {
 		return entityManager().createQuery("select o from News o where o.outid=? order by o.publishtime asc", News.class)
 				.setParameter(1, outId).getResultList();

@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -94,7 +95,7 @@ public class FetchNewsService {
 		Elements ps = contents.select("p");
 		StringBuilder builder = new StringBuilder();
 		for (Element p : ps) {
-			if (!StringUtil.isEmpty(p.text())&&!p.html().equals("&nbsp;")) {
+			if (StringUtils.isNotBlank(p.text())&&!StringUtils.equals(p.html(), "&nbsp;")) {
 				builder.append(p.text()).append("\n");
 			}
 		}
@@ -103,8 +104,9 @@ public class FetchNewsService {
 	
 	private boolean containsWeek(String title) {
 		boolean contains = false;
-		if (title!=null&&(title.indexOf("周一")>-1||title.indexOf("周二")>-1||title.indexOf("周三")>-1
-				||title.indexOf("周四")>-1||title.indexOf("周五")>-1||title.indexOf("周六")>-1||title.indexOf("周日")>-1)) {
+		if (StringUtils.indexOf(title, "周一")>-1||StringUtils.indexOf(title, "周二")>-1||StringUtils.indexOf(title, "周三")>-1
+				||StringUtils.indexOf(title, "周四")>-1||StringUtils.indexOf(title, "周五")>-1||StringUtils.indexOf(title, "周六")>-1
+				||StringUtils.indexOf(title, "周日")>-1) {
 			contains = true;
 		}
 		return contains;
@@ -117,7 +119,7 @@ public class FetchNewsService {
 			BigDecimal weekIdBig = JingCaiUtil.WEEKID.get(weekStr);
 			int weekIdInt = JingCaiUtil.WEEK.get(weekIdBig.intValue()) ;
 			String teamId = title.substring(title.indexOf("周")+2, title.indexOf("周")+5);
-			if (StringUtil.isInt(teamId)) {
+			if (StringUtils.isNumeric(teamId)) {
 				String type = "";
 				if (Integer.parseInt(teamId)<=300) { //足球
 					type = "1";
@@ -162,10 +164,11 @@ public class FetchNewsService {
 		Element a = li.select("a").first();
 		String href = a.attr("href"); //新闻地址(http://www.sporttery.cn/football/jczj/2013/0417/54063.html)
 		String outId = ""; //外部id
-		if (!StringUtil.isEmpty(href)&&href.indexOf("/")>-1&&href.indexOf(".")>-1) {
-			outId = href.substring(href.lastIndexOf("/")+1, href.lastIndexOf("."));
+		if (StringUtils.isNotBlank(href)&&StringUtils.indexOf(href, "/")>-1&&StringUtils.indexOf(href, ".")>-1) {
+			//outId = href.substring(href.lastIndexOf("/")+1, href.lastIndexOf("."));
+			outId = StringUtils.substring(href, StringUtils.lastIndexOf(href, "/")+1, StringUtils.lastIndexOf(href, "."));
 		}
-		if (StringUtil.isEmpty(outId)) {
+		if (StringUtils.isBlank(outId)) {
 			return ;
 		}
 		List<News> newsList = News.findByOutId(outId);
@@ -184,7 +187,7 @@ public class FetchNewsService {
 		
 		Element textTitle = contentDocument.select("div.TextTitle").first();
 		String title = textTitle.text(); //新闻标题
-		if (StringUtil.isEmpty(title)||StringUtil.isEmpty(content)) {
+		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
@@ -195,15 +198,17 @@ public class FetchNewsService {
 		news.setPublishtime(publishTime);
 		news.setOutid(outId);
 		news.setEvent(event);
+		news.setUrl(url);
 		news.persist();
 	}
 	
 	public void fetchNewsByUrl(String url) throws IOException {
 		String outId = ""; //外部id
-		if (!StringUtil.isEmpty(url)&&url.indexOf("/")>-1&&url.indexOf(".")>-1) {
-			outId = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."));
+		if (StringUtils.isNotBlank(url)&&StringUtils.indexOf(url, "/")>-1&&StringUtils.indexOf(url, ".")>-1) {
+			//outId = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."));
+			outId = StringUtils.substring(url, StringUtils.lastIndexOf(url, "/")+1, StringUtils.lastIndexOf(url, "."));
 		}
-		if (StringUtil.isEmpty(outId)) {
+		if (StringUtils.isBlank(outId)) {
 			return ;
 		}
 		//Document contentDocument = Jsoup.connect(url).timeout(5000).get();
@@ -213,7 +218,7 @@ public class FetchNewsService {
 		
 		Element textTitle = contentDocument.select("div.TextTitle").first();
 		String title = textTitle.text(); //新闻标题
-		if (StringUtil.isEmpty(title)||StringUtil.isEmpty(content)) {
+		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
@@ -226,6 +231,7 @@ public class FetchNewsService {
 			news.setPublishtime(publishTime);
 			news.setOutid(outId);
 			news.setEvent(event);
+			news.setUrl(url);
 			news.persist();
 		} else if (newsList!=null&&newsList.size()==1) {
 			News news = newsList.get(0);
@@ -234,11 +240,12 @@ public class FetchNewsService {
 			news.setPublishtime(publishTime);
 			news.setOutid(outId);
 			news.setEvent(event);
+			news.setUrl(url);
 			news.merge();
 		}
 	}
 	
-	public static void main1(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		//获取新闻内容
 		//Document contentDocument = Jsoup.connect("http://www.sporttery.cn/football/jcdj/2013/0416/53972.html").timeout(5000).get();
 		/*String url = "http://www.sporttery.cn/football/jcdj/2013/0416/53972.html";
@@ -261,6 +268,9 @@ public class FetchNewsService {
 		}
 		String content = builder.toString(); //新闻内容
 		System.out.println(content);*/
+		
+		/*String str = "http://www.sporttery.cn/football/jczj/2013/0417/54063.html";
+		System.out.println(StringUtils.substring(str, StringUtils.lastIndexOf(str, "/")+1, StringUtils.lastIndexOf(str, ".")));*/
 	}
 	
 }

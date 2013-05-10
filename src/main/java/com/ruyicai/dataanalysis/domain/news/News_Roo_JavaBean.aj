@@ -57,4 +57,12 @@ privileged aspect News_Roo_JavaBean {
         this.event = event;
     }
     
+    public String News.getUrl() {
+        return this.url;
+    }
+    
+    public void News.setUrl(String url) {
+        this.url = url;
+    }
+    
 }
