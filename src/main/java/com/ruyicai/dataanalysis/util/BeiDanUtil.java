@@ -19,7 +19,7 @@ public class BeiDanUtil {
 	
 	public static String getBdEvent(String batchCode, String teamId) {
 		if (StringUtils.isNotBlank(batchCode)&&StringUtils.isNotBlank(teamId)) {
-			return StringUtil.join("_", "20", batchCode, teamId);
+			return StringUtil.join("_", "20"+batchCode, teamId);
 		}
 		return "";
 	}
