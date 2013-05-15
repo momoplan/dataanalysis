@@ -31,8 +31,12 @@ public class SelectZcService {
 	 * @throws Exception 
 	 */
 	public List<ScheduleDTO> getImmediateScores(String lotNo, String batchCode, int state) throws Exception {
-		List<Schedule> schedules = Schedule.findByZcEventAndLotNoAndBatchCode(lotNo, batchCode);
 		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+		//List<Schedule> schedules = Schedule.findByZcEventAndLotNoAndBatchCode(lotNo, batchCode);
+		List<Schedule> schedules = ZuCaiUtil.getZcScheduleByLotNoAndBatchCode(lotNo, batchCode);
+		if (schedules==null) {
+			return dtos;
+		}
 		for(Schedule s : schedules) {
 			ScheduleDTO dto = new ScheduleDTO();
 			if(state == 1) {  // 未开

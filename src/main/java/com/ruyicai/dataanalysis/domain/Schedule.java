@@ -139,6 +139,8 @@ public class Schedule {
 	
 	private String zcBqcEvent;
 	
+	private String bdEvent;
+	
 	private Double avgH;
 	
 	private Double avgS;
@@ -246,6 +248,17 @@ public class Schedule {
         return schedule;
 	}
 	
+	public static Schedule findByBdEvent(String bdEvent) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where bdEvent=?", Schedule.class)
+				.setParameter(1, bdEvent).getResultList();
+		if(null == schedules || schedules.isEmpty()) {
+			return null;
+		}
+		Schedule schedule = schedules.get(0);
+		buildSchedule(schedule);
+        return schedule;
+	}
+	
 	public static List<Schedule> findPreSchedules(int teamID, Date time) {
 		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where (homeTeamID=? or guestTeamID=?) and matchTime < ? and matchState=? order by matchTime desc", Schedule.class)
 				.setParameter(1, teamID).setParameter(2, teamID).setParameter(3, time).setParameter(4, MatchState.WANCHANG.value).setFirstResult(0).setMaxResults(10).getResultList();
@@ -290,9 +303,42 @@ public class Schedule {
 		return schedules;
 	}
 	
-	public static List<Schedule> findByZcEventAndLotNoAndBatchCode(String lotNo, String batchCode) {
-		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where zcEvent is not null and SUBSTR(zcEvent,1,6)=? AND SUBSTR(zcEvent,8,7)=? order by matchTime asc", Schedule.class)
+	public static List<Schedule> findByZcSfcEventAndLotNoAndBatchCode(String lotNo, String batchCode) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where zcSfcEvent is not null and SUBSTR(zcSfcEvent,1,6)=? AND SUBSTR(zcSfcEvent,8,7)=? order by matchTime asc", Schedule.class)
 				.setParameter(1, lotNo).setParameter(2, batchCode).getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
+	public static List<Schedule> findByZcJqcEventAndLotNoAndBatchCode(String lotNo, String batchCode) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where zcJqcEvent is not null and SUBSTR(zcJqcEvent,1,6)=? AND SUBSTR(zcJqcEvent,8,7)=? order by matchTime asc", Schedule.class)
+				.setParameter(1, lotNo).setParameter(2, batchCode).getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
+	public static List<Schedule> findByZcBqcEventAndLotNoAndBatchCode(String lotNo, String batchCode) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where zcBqcEvent is not null and SUBSTR(zcBqcEvent,1,6)=? AND SUBSTR(zcBqcEvent,8,7)=? order by matchTime asc", Schedule.class)
+				.setParameter(1, lotNo).setParameter(2, batchCode).getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
+	public static List<Schedule> findByBdEventAndBatchCode(String batchCode) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where bdEvent is not null and SUBSTR(zcBqcEvent,1,8)=? order by matchTime asc", Schedule.class)
+				.setParameter(1, batchCode).getResultList();
 		if(null != schedules) {
 			for(Schedule schedule : schedules) {
 				buildSchedule(schedule);

@@ -19,6 +19,7 @@ import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.CalcUtil;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -58,23 +59,6 @@ public class UpdateLetgoalStandardService {
 		logger.info("更新赔率结束, 共用时 " + (endmillis - startmillis));
 	}
 
-	/*private void processStandard(final String data) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				logger.info("开始更新欧赔");
-				long startmillis = System.currentTimeMillis();
-				try {
-					doStandard(data);
-				} catch(Exception e) {
-					logger.error("更新欧赔出错", e);
-				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("更新欧赔结束, 共用时 " + (endmillis - startmillis));
-			}
-		}).start();
-	}*/
-
 	private void processLetGoal(final String data) {
 		new Thread(new Runnable() {
 			@Override
@@ -92,117 +76,6 @@ public class UpdateLetgoalStandardService {
 		}).start();
 	}
 	
-	/*private void doStandard(String value) {
-		String[] datas = value.split("\\;");
-		logger.info("欧赔size:{}", new Integer[] {datas.length});
-		Set<Integer> scheduleIDs = new HashSet<Integer>();
-		for(String data : datas) {
-			String scheduleID = buildStandard(data);
-			if(!StringUtil.isEmpty(scheduleID)) {
-				scheduleIDs.add(Integer.parseInt(scheduleID));
-			}
-		}
-		for(Integer scheduleID : scheduleIDs) {
-			String id = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleID));
-			GlobalCache globalCache = GlobalCache.findGlobalCache(id);
-			List<Standard> list = Standard.findByScheduleID(scheduleID);
-			buildStandards(Schedule.findSchedule(scheduleID), list);
-			if(null == globalCache) {
-				globalCache = new GlobalCache();
-				globalCache.setId(id);
-				globalCache.setValue(Standard.toJsonArray(list));
-				globalCache.persist();
-				globalInfoService.updateInfo(scheduleID);
-			} else {
-				Collection<Standard> collection = Standard.fromJsonArrayToStandards(globalCache.getValue());
-				if(list.size() != collection.size()) {
-					globalCache.setValue(Standard.toJsonArray(list));
-					globalCache.merge();
-					globalInfoService.updateInfo(scheduleID);
-				} else {
-					List<Standard> standards = convertStandards(collection);
-					Collections.sort(standards);
-					Collections.sort(list);
-					boolean isupdate = false;
-					for(int i = 0; i < standards.size(); i ++) {
-						Standard s1 = standards.get(i);
-						Standard s2 = list.get(i);
-						if(!s1.equals(s2)) {
-							isupdate = true; 
-							break;
-						}
-					}
-					if(isupdate) {
-						globalCache.setValue(Standard.toJsonArray(list));
-						globalCache.merge();
-						globalInfoService.updateInfo(scheduleID);
-					}
-				}
-			}
-		}
-	}*/
-	
-	/*private void buildStandards(Schedule schedule, Collection<Standard> standards) {
-		if(null != standards && !standards.isEmpty()) {
-			for(Standard standard : standards) {
-				EuropeCompany company = EuropeCompany.findEuropeCompany(standard.getCompanyID());
-				if(null != company) {
-					standard.setCompanyName(company.getName_Cn());
-					standard.setCompanyName_e(company.getName_E());
-					standard.setIsPrimary(company.getIsPrimary());
-					standard.setIsExchange(company.getIsExchange());
-				}
-				standard.setHomeWin(null == standard.getHomeWin() ? standard.getFirstHomeWin() : standard.getHomeWin());
-				standard.setStandoff(null == standard.getStandoff() ? standard.getFirstStandoff() : standard.getStandoff());
-				standard.setGuestWin(null == standard.getGuestWin() ? standard.getFirstGuestWin() : standard.getGuestWin());
-				standard.setHomeWinLu(CalcUtil.probability_H(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setStandoffLu(CalcUtil.probability_S(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setGuestWinLu(CalcUtil.probability_G(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setFanHuanLu(CalcUtil.fanhuan(standard.getHomeWinLu(), standard.getHomeWin()));
-				if(null != schedule.getAvgH()) {
-					standard.setK_h(CalcUtil.k_h(standard.getHomeWinLu(), schedule.getAvgH()));
-				}
-				if(null != schedule.getAvgS()) {
-					standard.setK_s(CalcUtil.k_s(standard.getStandoffLu(), schedule.getAvgS()));
-				}
-				if(null != schedule.getAvgG()) {
-					standard.setK_g(CalcUtil.k_g(standard.getGuestWinLu(), schedule.getAvgG()));
-				}
-			}
-		}
-	}*/
-	
-	/*private List<Standard> convertStandards(Collection<Standard> collection) {
-		List<Standard> standards = new LinkedList<Standard>();
-		for(Standard standard : collection) {
-			standards.add(standard);
-		}
-		return standards;
-	}*/
-
-	/*private String buildStandard(String data) {
-		try {
-			String[] datas = data.split("\\,");
-			String scheduleID = datas[0];
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-			if(null == schedule) {
-				return null;
-			}
-			String event = schedule.getEvent();
-			String zcSfcEvent = schedule.getZcSfcEvent();
-			String zcJqcEvent = schedule.getZcJqcEvent();
-			String zcBqcEvent = schedule.getZcBqcEvent();
-			if(StringUtil.isEmpty(event)&&StringUtil.isEmpty(zcSfcEvent)&&StringUtil.isEmpty(zcJqcEvent)
-					&&StringUtil.isEmpty(zcBqcEvent)) {
-				return null;
-			}
-			return scheduleID;
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		return null;
-	}*/
-
 	private void doLetgoal(String value) {
 		String[] datas = value.split("\\;");
 		logger.info("亚赔size:{}", new Integer[] {datas.length});
@@ -288,12 +161,7 @@ public class UpdateLetgoalStandardService {
 			if(null == schedule) {
 				return null;
 			}
-			String event = schedule.getEvent();
-			String zcSfcEvent = schedule.getZcSfcEvent();
-			String zcJqcEvent = schedule.getZcJqcEvent();
-			String zcBqcEvent = schedule.getZcBqcEvent();
-			if(StringUtil.isEmpty(event)&&StringUtil.isEmpty(zcSfcEvent)&&StringUtil.isEmpty(zcJqcEvent)
-					&&StringUtil.isEmpty(zcBqcEvent)) {
+			if (CommonUtil.isZqEventEmpty(schedule)) {
 				return null;
 			}
 			LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleID), Integer.parseInt(companyID));

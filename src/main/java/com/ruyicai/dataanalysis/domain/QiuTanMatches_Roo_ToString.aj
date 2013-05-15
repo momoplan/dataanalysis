@@ -11,6 +11,7 @@ privileged aspect QiuTanMatches_Roo_ToString {
         StringBuilder sb = new StringBuilder();
         sb.append("Away: ").append(getAway()).append(", ");
         sb.append("AwayID: ").append(getAwayID()).append(", ");
+        sb.append("BdEvent: ").append(getBdEvent()).append(", ");
         sb.append("Event: ").append(getEvent()).append(", ");
         sb.append("Home: ").append(getHome()).append(", ");
         sb.append("HomeID: ").append(getHomeID()).append(", ");

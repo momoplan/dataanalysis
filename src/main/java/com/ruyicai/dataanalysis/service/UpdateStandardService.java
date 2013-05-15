@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
@@ -55,12 +56,7 @@ public class UpdateStandardService {
 				if(null == schedule) {
 					continue;
 				}
-				String event = schedule.getEvent();
-				String zcSfcEvent = schedule.getZcSfcEvent();
-				String zcJqcEvent = schedule.getZcJqcEvent();
-				String zcBqcEvent = schedule.getZcBqcEvent();
-				if(StringUtil.isEmpty(event)&&StringUtil.isEmpty(zcSfcEvent)&&StringUtil.isEmpty(zcJqcEvent)
-						&&StringUtil.isEmpty(zcBqcEvent)) {
+				if (CommonUtil.isZqEventEmpty(schedule)) {
 					continue;
 				}
 				sendJMS(match.asXML());

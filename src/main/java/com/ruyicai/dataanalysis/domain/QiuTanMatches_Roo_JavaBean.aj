@@ -121,4 +121,12 @@ privileged aspect QiuTanMatches_Roo_JavaBean {
         this.zcBqcEvent = zcBqcEvent;
     }
     
+    public String QiuTanMatches.getBdEvent() {
+        return this.bdEvent;
+    }
+    
+    public void QiuTanMatches.setBdEvent(String bdEvent) {
+        this.bdEvent = bdEvent;
+    }
+    
 }

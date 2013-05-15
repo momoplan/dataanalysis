@@ -1,5 +1,9 @@
 package com.ruyicai.dataanalysis.util;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.ruyicai.dataanalysis.consts.LotType;
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -81,7 +85,7 @@ public class ZuCaiUtil {
 	 * @param flag
 	 * @return
 	 */
-	public static boolean isPublish(String lotNo, String flag) {
+	/*public static boolean isPublish(String lotNo, String flag) {
 		String publisString = "";
 		if (!StringUtil.isEmpty(flag)) {
 			String[] flags = flag.split("\\|");
@@ -99,33 +103,7 @@ public class ZuCaiUtil {
 			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * 判断是否是竞彩足球
-	 * @param lotteryName
-	 * @return
-	 */
-	public static boolean isJcZq(String lotteryName) {
-		boolean isJcZq = false;
-		if (lotteryName!=null&&lotteryName.equals("竞彩足球")) {
-			isJcZq = true;
-		}
-		return isJcZq;
-	}
-	
-	/**
-	 * 判断是否是竞彩篮球
-	 * @param lotteryName
-	 * @return
-	 */
-	public static boolean isJcLq(String lotteryName) {
-		boolean isJcLq = false;
-		if (lotteryName!=null&&lotteryName.equals("竞彩篮球")) {
-			isJcLq = true;
-		}
-		return isJcLq;
-	}
+	}*/
 	
 	/**
 	 * 判断是否足彩
@@ -147,9 +125,12 @@ public class ZuCaiUtil {
 	 */
 	public static boolean isZcSfc(String lotteryName) {
 		boolean isZcSfc = false;
-		if (lotteryName!=null&&lotteryName.equals("14场胜负彩")) {
+		if (StringUtils.equals(lotteryName, "14场胜负彩")) {
 			isZcSfc = true;
 		}
+		/*if (lotteryName!=null&&lotteryName.equals("14场胜负彩")) {
+			isZcSfc = true;
+		}*/
 		return isZcSfc;
 	}
 	
@@ -160,9 +141,12 @@ public class ZuCaiUtil {
 	 */
 	public static boolean isZcJqc(String lotteryName) {
 		boolean isZcJqc = false;
-		if (lotteryName!=null&&lotteryName.equals("四场进球彩")) {
+		if (StringUtils.equals(lotteryName, "四场进球彩")) {
 			isZcJqc = true;
 		}
+		/*if (lotteryName!=null&&lotteryName.equals("四场进球彩")) {
+			isZcJqc = true;
+		}*/
 		return isZcJqc;
 	}
 	
@@ -173,9 +157,12 @@ public class ZuCaiUtil {
 	 */
 	public static boolean isZcBqc(String lotteryName) {
 		boolean isZcBqc = false;
-		if (lotteryName!=null&&lotteryName.equals("六场半全场")) {
+		if (StringUtils.equals(lotteryName, "六场半全场")) {
 			isZcBqc = true;
 		}
+		/*if (lotteryName!=null&&lotteryName.equals("六场半全场")) {
+			isZcBqc = true;
+		}*/
 		return isZcBqc;
 	}
 	
@@ -211,6 +198,24 @@ public class ZuCaiUtil {
 			schedule = Schedule.findByZcBqcEvent(zcEvent);
 		}
 		return schedule;
+	}
+	
+	/**
+	 * 根据彩种和期号获得足彩赛事信息
+	 * @param lotNo
+	 * @param batchCode
+	 * @return
+	 */
+	public static List<Schedule> getZcScheduleByLotNoAndBatchCode(String lotNo, String batchCode) {
+		List<Schedule> schedules = null;
+		if (StringUtils.equals(lotNo, LotType.ZC_SFC.getLotNo())) { //足彩胜负彩
+			schedules = Schedule.findByZcSfcEventAndLotNoAndBatchCode(lotNo, batchCode);
+		} else if (StringUtils.equals(lotNo, LotType.ZC_JQC.getLotNo())) { //足彩进球彩
+			schedules = Schedule.findByZcJqcEventAndLotNoAndBatchCode(lotNo, batchCode);
+		} else if (StringUtils.equals(lotNo, LotType.ZC_BQC.getLotNo())) { //足彩半全场
+			schedules = Schedule.findByZcBqcEventAndLotNoAndBatchCode(lotNo, batchCode);
+		}
+		return schedules;
 	}
 	
 }

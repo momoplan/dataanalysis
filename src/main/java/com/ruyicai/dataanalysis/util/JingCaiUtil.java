@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -86,6 +88,38 @@ public class JingCaiUtil {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(time);
 		return calendar.get(Calendar.DAY_OF_WEEK);
+	}
+	
+	/**
+	 * 判断是否是竞彩足球
+	 * @param lotteryName
+	 * @return
+	 */
+	public static boolean isJcZq(String lotteryName) {
+		boolean isJcZq = false;
+		if (StringUtils.equals(lotteryName, "竞彩足球")) {
+			isJcZq = true;
+		}
+		/*if (lotteryName!=null&&lotteryName.equals("竞彩足球")) {
+			isJcZq = true;
+		}*/
+		return isJcZq;
+	}
+	
+	/**
+	 * 判断是否是竞彩篮球
+	 * @param lotteryName
+	 * @return
+	 */
+	public static boolean isJcLq(String lotteryName) {
+		boolean isJcLq = false;
+		if (StringUtils.equals(lotteryName, "竞彩篮球")) {
+			isJcLq = true;
+		}
+		/*if (lotteryName!=null&&lotteryName.equals("竞彩篮球")) {
+			isJcLq = true;
+		}*/
+		return isJcLq;
 	}
 	
 }

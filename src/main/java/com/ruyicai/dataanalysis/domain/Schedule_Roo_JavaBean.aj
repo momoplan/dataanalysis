@@ -426,6 +426,14 @@ privileged aspect Schedule_Roo_JavaBean {
         this.zcBqcEvent = zcBqcEvent;
     }
     
+    public String Schedule.getBdEvent() {
+        return this.bdEvent;
+    }
+    
+    public void Schedule.setBdEvent(String bdEvent) {
+        this.bdEvent = bdEvent;
+    }
+    
     public Double Schedule.getAvgH() {
         return this.avgH;
     }

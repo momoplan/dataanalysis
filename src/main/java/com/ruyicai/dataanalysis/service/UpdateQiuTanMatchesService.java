@@ -2,6 +2,8 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.util.BeiDanUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.FileUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -87,7 +90,7 @@ public class UpdateQiuTanMatchesService {
 			String homeID = match.elementTextTrim("HomeID");
 			String awayID = match.elementTextTrim("AwayID");
 			//如果是竞彩篮球则不执行
-			if (ZuCaiUtil.isJcLq(lotteryName)) { //竞彩篮球
+			if (JingCaiUtil.isJcLq(lotteryName)) { //竞彩篮球
 				return;
 			}
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(iD_bet007));
@@ -107,7 +110,7 @@ public class UpdateQiuTanMatchesService {
 				qiuTanMatches.setHomeID(Integer.parseInt(homeID));
 				qiuTanMatches.setAwayID(Integer.parseInt(awayID));
 				//设置event
-				if (ZuCaiUtil.isJcZq(lotteryName)) { //竞彩足球
+				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 					qiuTanMatches.setEvent(event);
 				} else if (ZuCaiUtil.isZuCai(lotteryName)) { //足彩
@@ -121,6 +124,9 @@ public class UpdateQiuTanMatchesService {
 					}
 					//足彩处理
 					ZuCaiUtil.zcProcess(lotteryName, issueNum, iD, iD_bet007);
+				} else if (BeiDanUtil.isBeiDan(lotteryName)) { //北单
+					String bdEvent = BeiDanUtil.getBdEvent(issueNum, iD);
+					qiuTanMatches.setBdEvent(bdEvent);
 				}
  				qiuTanMatches.persist();
 			} else { //记录已存在
@@ -172,7 +178,7 @@ public class UpdateQiuTanMatchesService {
 					qiuTanMatches.setAwayID(Integer.parseInt(awayID));
 				}
 				//设置event
-				if (ZuCaiUtil.isJcZq(lotteryName)) { //竞彩足球
+				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 					String event_old = qiuTanMatches.getEvent();
 					if (!StringUtil.isEmpty(event) && (StringUtil.isEmpty(event_old)||!event.equals(event_old))) {
@@ -202,6 +208,13 @@ public class UpdateQiuTanMatchesService {
 					}
 					//足彩处理
 					ZuCaiUtil.zcProcess(lotteryName, issueNum, iD, iD_bet007);
+				} else if (BeiDanUtil.isBeiDan(lotteryName)) { //北单
+					String bdEvent = BeiDanUtil.getBdEvent(issueNum, iD);
+					String bdEvent_old = qiuTanMatches.getBdEvent();
+					if (StringUtils.isNotBlank(bdEvent) && (StringUtils.isBlank(bdEvent_old)||!StringUtils.equals(bdEvent, bdEvent_old))) {
+						isModify = true;
+						qiuTanMatches.setBdEvent(bdEvent);
+					}
 				}
 				if (isModify) {
 					qiuTanMatches.merge();

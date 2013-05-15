@@ -16,7 +16,6 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.ZuCaiUtil;
 
 /**
  * 竞彩篮球-彩票赛事与球探网的关联更新
@@ -73,7 +72,7 @@ public class QiuTanMatchesJclUpdateService {
 			String homeID = match.elementTextTrim("HomeID"); //主队id
 			String awayID = match.elementTextTrim("AwayID"); //客队id
 			//如果不是竞彩篮球则不执行
-			if (!ZuCaiUtil.isJcLq(lotteryName)) {
+			if (!JingCaiUtil.isJcLq(lotteryName)) {
 				return;
 			}
 			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJcl(Integer.parseInt(iD_bet007));

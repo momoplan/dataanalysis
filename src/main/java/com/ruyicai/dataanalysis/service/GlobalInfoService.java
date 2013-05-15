@@ -64,6 +64,20 @@ public class GlobalInfoService {
 	}
 	
 	/**
+	 * 北单数据分析
+	 * @param zcEvent
+	 * @return
+	 */
+	public InfoDTO getBdInfo(String bdEvent) {
+		Schedule schedule = Schedule.findByBdEvent(bdEvent);
+		if(schedule==null) {
+			return null;
+		}
+		InfoDTO dto = getInfoDTO(schedule);
+		return dto;
+	}
+	
+	/**
 	 * 获得数据分析DTO
 	 * @param schedule
 	 * @return

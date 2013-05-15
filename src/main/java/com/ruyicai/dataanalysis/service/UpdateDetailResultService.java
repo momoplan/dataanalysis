@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -75,13 +76,8 @@ public class UpdateDetailResultService {
 			if(schedule==null) {
 				return;
 			}
-			String event = schedule.getEvent();
-			String zcSfcEvent = schedule.getZcSfcEvent();
-			String zcJqcEvent = schedule.getZcJqcEvent();
-			String zcBqcEvent = schedule.getZcBqcEvent();
-			if(StringUtil.isEmpty(event)&&StringUtil.isEmpty(zcSfcEvent)&&StringUtil.isEmpty(zcJqcEvent)
-					&&StringUtil.isEmpty(zcBqcEvent)) {
-				return;
+			if (CommonUtil.isZqEventEmpty(schedule)) {
+				return ;
 			}
 			List<Integer> list = map.get(Integer.parseInt(scheduleID));
 			if (list==null) {
@@ -183,7 +179,6 @@ public class UpdateDetailResultService {
 	public void processPreDay() {
 		Date preDate = DateUtil.getPreDate(1);
 		String preDateStr = DateUtil.format("yyyy-MM-dd", preDate);
-		//System.out.println(preDateStr);
 		processByDate(preDateStr);
 	}
 	
