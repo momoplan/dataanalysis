@@ -262,6 +262,13 @@ public class UpdateQiuTanMatchesService {
 			schedule.setZcBqcEvent(zcBqcEventQ);
 			isUpdate = true;
 		}
+		//北单
+		String bdEventQ = qiuTanMatches.getBdEvent();
+		String bdEventS = schedule.getBdEvent();
+		if(StringUtils.isNotBlank(bdEventQ)&&(StringUtils.isBlank(bdEventS)||!StringUtils.equals(bdEventQ, bdEventS))) {
+			schedule.setZcBqcEvent(bdEventQ);
+			isUpdate = true;
+		}
 		if (isUpdate) {
 			schedule.merge();
 		}
