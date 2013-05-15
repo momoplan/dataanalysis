@@ -266,7 +266,7 @@ public class UpdateQiuTanMatchesService {
 		String bdEventQ = qiuTanMatches.getBdEvent();
 		String bdEventS = schedule.getBdEvent();
 		if(StringUtils.isNotBlank(bdEventQ)&&(StringUtils.isBlank(bdEventS)||!StringUtils.equals(bdEventQ, bdEventS))) {
-			schedule.setZcBqcEvent(bdEventQ);
+			schedule.setBdEvent(bdEventQ);
 			isUpdate = true;
 		}
 		if (isUpdate) {
