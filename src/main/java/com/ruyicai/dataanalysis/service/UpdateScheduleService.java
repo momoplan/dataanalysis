@@ -241,4 +241,14 @@ public class UpdateScheduleService {
 			}
 		}
 	}
+	
+	/**
+	 * 根据日期更新赛事
+	 * @param dateString
+	 */
+	public void updateScheduleByDate(String dateString) {
+		Date date = DateUtil.parse("yyyy-MM-dd", dateString);
+		processDateAndSclassID(date, null, false);
+	}
+	
 }

@@ -161,6 +161,24 @@ public class SystemController {
 		return rd;
 	}
 	
+	/**
+	 * 根据日期更新赛事
+	 * @param date
+	 * @return
+	 */
+	@RequestMapping(value = "/updateScheduleByDate", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData updateScheduleByDate(@RequestParam("date") String date) {
+		ResponseData rd = new ResponseData();
+		try {
+			updateScheduleService.updateScheduleByDate(date);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
 	@RequestMapping(value = "/updatestandard", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData updatestandard() {
