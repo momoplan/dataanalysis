@@ -3,6 +3,7 @@ package com.ruyicai.dataanalysis.service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -130,6 +131,10 @@ public class UpdateScheduleService {
 			String x = match.elementTextTrim("x");
 			String y = match.elementTextTrim("y");
 			String z = match.elementTextTrim("z");
+			Integer neutrality = 0; //是否是中立场(1:是;0:否)
+			if (StringUtils.equals(z, "True")) {
+				neutrality = 1;
+			}
 			Schedule schedule = Schedule.findScheduleWOBuild(Integer.parseInt(a));
 			boolean ismod = false;
 			if(null == schedule) {
@@ -160,10 +165,11 @@ public class UpdateScheduleService {
 				schedule.setTemperature(w);
 				schedule.setMatchSeason(x);
 				schedule.setGrouping(y);
-				schedule.setNeutrality(0);
+				schedule.setNeutrality(neutrality);
+				/*schedule.setNeutrality(0);
 				if("True".equals(z)) {
 					schedule.setNeutrality(1);
-				}
+				}*/
 				schedule.persist();
 				updateRanking(schedule.getScheduleID(), updateRanking);
 			} else {
@@ -219,6 +225,10 @@ public class UpdateScheduleService {
 				if(w != null && !w.equals(schedule.getTemperature())) {
 					ismod = true;
 					schedule.setTemperature(w);
+				}
+				if (neutrality!=schedule.getNeutrality()) {
+					ismod = true;
+					schedule.setNeutrality(neutrality);
 				}
 				if(ismod) {
 					schedule.merge();
