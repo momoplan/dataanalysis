@@ -74,4 +74,10 @@ public class StringUtil {
 		}
 		return sb.toString();
 	}
+	
+	/*public static void main(String[] args) {
+		String fillZero = fillZero(111, 3);
+		System.out.println(fillZero);
+	}*/
+	
 }
