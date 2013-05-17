@@ -243,6 +243,14 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.event = event;
     }
     
+    public String ScheduleDTO.getTurn() {
+        return this.turn;
+    }
+    
+    public void ScheduleDTO.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
     public Collection<DetailResult> ScheduleDTO.getDetailResults() {
         return this.detailResults;
     }

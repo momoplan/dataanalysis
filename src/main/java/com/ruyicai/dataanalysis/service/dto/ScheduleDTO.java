@@ -72,6 +72,8 @@ public class ScheduleDTO {
 	
 	private String event;
 	
+	private String turn;
+	
 	private Collection<DetailResult> detailResults;
 	
 	public String toJson() {
