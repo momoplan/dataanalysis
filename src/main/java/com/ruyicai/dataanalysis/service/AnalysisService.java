@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -165,7 +166,11 @@ public class AnalysisService {
 		if(null == schedule) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		List<Schedule> schedules = Schedule.findPreSchedules(schedule.getHomeTeamID(), schedule.getMatchTime());
+		Integer teamId = schedule.getHomeTeamID();
+		if (StringUtils.equals(schedule.getTurn(), "1")) {
+			teamId = schedule.getGuestTeamID();
+		}
+		List<Schedule> schedules = Schedule.findPreSchedules(teamId, schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}
 
@@ -174,7 +179,11 @@ public class AnalysisService {
 		if(null == schedule) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		List<Schedule> schedules = Schedule.findPreSchedules(schedule.getGuestTeamID(), schedule.getMatchTime());
+		Integer teamId = schedule.getGuestTeamID();
+		if (StringUtils.equals(schedule.getTurn(), "1")) {
+			teamId = schedule.getHomeTeamID();
+		}
+		List<Schedule> schedules = Schedule.findPreSchedules(teamId, schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}
 	
@@ -183,7 +192,11 @@ public class AnalysisService {
 		if(null == schedule) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		List<Schedule> schedules = Schedule.findAfterSchedules(schedule.getHomeTeamID(), schedule.getMatchTime());
+		Integer teamId = schedule.getHomeTeamID();
+		if (StringUtils.equals(schedule.getTurn(), "1")) {
+			teamId = schedule.getGuestTeamID();
+		}
+		List<Schedule> schedules = Schedule.findAfterSchedules(teamId, schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}
 	
@@ -192,7 +205,11 @@ public class AnalysisService {
 		if(null == schedule) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		List<Schedule> schedules = Schedule.findAfterSchedules(schedule.getGuestTeamID(), schedule.getMatchTime());
+		Integer teamId = schedule.getGuestTeamID();
+		if (StringUtils.equals(schedule.getTurn(), "1")) {
+			teamId = schedule.getHomeTeamID();
+		}
+		List<Schedule> schedules = Schedule.findAfterSchedules(teamId, schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}
 	
