@@ -84,12 +84,7 @@ public class UpdateLetgoalStandardService {
 			LetGoal letGoal = buildLetGoal(data);
 			if(null != letGoal) {
 				Schedule schedule = Schedule.findSchedule(letGoal.getScheduleID());
-				String event = schedule.getEvent();
-				String zcSfcEvent = schedule.getZcSfcEvent();
-				String zcJqcEvent = schedule.getZcJqcEvent();
-				String zcBqcEvent = schedule.getZcBqcEvent();
-				if(null != schedule && (!StringUtil.isEmpty(event)||!StringUtil.isEmpty(zcSfcEvent) 
-						||!StringUtil.isEmpty(zcJqcEvent)||!StringUtil.isEmpty(zcBqcEvent))) {
+				if(null != schedule && (!CommonUtil.isZqEventEmpty(schedule))) {
 					List<LetGoal> list = map.get(letGoal.getScheduleID());
 					if(null == list) {
 						list = new LinkedList<LetGoal>();
