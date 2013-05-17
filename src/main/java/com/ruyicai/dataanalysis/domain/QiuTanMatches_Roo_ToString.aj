@@ -21,6 +21,7 @@ privileged aspect QiuTanMatches_Roo_ToString {
         sb.append("LotteryName: ").append(getLotteryName()).append(", ");
         sb.append("MatchId: ").append(getMatchId()).append(", ");
         sb.append("Time: ").append(getTime()).append(", ");
+        sb.append("Turn: ").append(getTurn()).append(", ");
         sb.append("ZcBqcEvent: ").append(getZcBqcEvent()).append(", ");
         sb.append("ZcJqcEvent: ").append(getZcJqcEvent()).append(", ");
         sb.append("ZcSfcEvent: ").append(getZcSfcEvent());

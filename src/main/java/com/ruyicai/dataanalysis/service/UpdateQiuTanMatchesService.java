@@ -2,7 +2,6 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -89,6 +88,12 @@ public class UpdateQiuTanMatchesService {
 			String away = match.elementTextTrim("Away");
 			String homeID = match.elementTextTrim("HomeID");
 			String awayID = match.elementTextTrim("AwayID");
+			String turn = match.elementTextTrim("Turn"); //主客队是否需要反转
+			if (StringUtils.equals(turn, "True")) { //反转
+				turn = "1";
+			} else {
+				turn = "0";
+			}
 			//如果是竞彩篮球则不执行
 			if (JingCaiUtil.isJcLq(lotteryName)) { //竞彩篮球
 				return;
@@ -109,6 +114,7 @@ public class UpdateQiuTanMatchesService {
 				qiuTanMatches.setAway(away);
 				qiuTanMatches.setHomeID(Integer.parseInt(homeID));
 				qiuTanMatches.setAwayID(Integer.parseInt(awayID));
+				qiuTanMatches.setTurn(turn);
 				//设置event
 				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
@@ -176,6 +182,11 @@ public class UpdateQiuTanMatchesService {
 				if (!StringUtil.isEmpty(awayID) && (awayID_old==null||Integer.parseInt(awayID)!=awayID_old)) {
 					isModify = true;
 					qiuTanMatches.setAwayID(Integer.parseInt(awayID));
+				}
+				String turn_old = qiuTanMatches.getTurn();
+				if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(turn_old)||!StringUtils.equals(turn, turn_old))) {
+					isModify = true;
+					qiuTanMatches.setTurn(turn);
 				}
 				//设置event
 				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
@@ -267,6 +278,13 @@ public class UpdateQiuTanMatchesService {
 		String bdEventS = schedule.getBdEvent();
 		if(StringUtils.isNotBlank(bdEventQ)&&(StringUtils.isBlank(bdEventS)||!StringUtils.equals(bdEventQ, bdEventS))) {
 			schedule.setBdEvent(bdEventQ);
+			isUpdate = true;
+		}
+		//主客队反转
+		String turnQ = qiuTanMatches.getTurn();
+		String turnS = schedule.getTurn();
+		if (StringUtils.isNotBlank(turnQ)&&(StringUtils.isBlank(turnS)||!StringUtils.equals(turnQ, turnS))) {
+			schedule.setTurn(turnQ);
 			isUpdate = true;
 		}
 		if (isUpdate) {

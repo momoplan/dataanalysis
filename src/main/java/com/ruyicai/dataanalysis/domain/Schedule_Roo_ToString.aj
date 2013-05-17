@@ -58,6 +58,7 @@ privileged aspect Schedule_Roo_ToString {
         sb.append("Shangpan: ").append(getShangpan()).append(", ");
         sb.append("SubSclassID: ").append(getSubSclassID()).append(", ");
         sb.append("Temperature: ").append(getTemperature()).append(", ");
+        sb.append("Turn: ").append(getTurn()).append(", ");
         sb.append("Tv: ").append(getTv()).append(", ");
         sb.append("Umpire: ").append(getUmpire()).append(", ");
         sb.append("Visitor: ").append(getVisitor()).append(", ");

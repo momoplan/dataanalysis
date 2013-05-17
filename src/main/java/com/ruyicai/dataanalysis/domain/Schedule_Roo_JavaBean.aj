@@ -458,4 +458,12 @@ privileged aspect Schedule_Roo_JavaBean {
         this.avgG = avgG;
     }
     
+    public String Schedule.getTurn() {
+        return this.turn;
+    }
+    
+    public void Schedule.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
 }

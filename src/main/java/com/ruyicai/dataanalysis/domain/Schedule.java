@@ -147,6 +147,8 @@ public class Schedule {
 	
 	private Double avgG;
 	
+	private String turn;
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	

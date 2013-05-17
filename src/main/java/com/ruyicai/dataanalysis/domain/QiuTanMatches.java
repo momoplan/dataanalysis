@@ -54,6 +54,8 @@ public class QiuTanMatches {
 	
 	private String bdEvent;
 	
+	private String turn;
+	
 	public static QiuTanMatches findByID_bet007(int id_bet007, String lotteryName) {
 		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where iD_bet007=? and lotteryName=?", QiuTanMatches.class)
 			.setParameter(1, id_bet007).setParameter(2, lotteryName).getResultList();

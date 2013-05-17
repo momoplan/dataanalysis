@@ -129,4 +129,12 @@ privileged aspect QiuTanMatches_Roo_JavaBean {
         this.bdEvent = bdEvent;
     }
     
+    public String QiuTanMatches.getTurn() {
+        return this.turn;
+    }
+    
+    public void QiuTanMatches.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
 }
