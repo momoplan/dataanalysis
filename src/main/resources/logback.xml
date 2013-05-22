@@ -11,13 +11,13 @@
     <appender name="dataanalysisLog"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- <File>${log.dir}/dataanalysis.log</File> -->
-		<File>../dataanalysis.log</File>
+		<File>../logs/dataanalysis.log</File>
 		<encoder>
 			<pattern>%-20(%d{yyyy-MM-dd HH:mm:ss.SSS}) %-5level %logger{80}.%method - %msg%n</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- <fileNamePattern>${log.dir}/dataanalysis.log%d{yyyy-MM-dd}.log</fileNamePattern> -->
-			<fileNamePattern>../dataanalysis.log%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>../logs/dataanalysis.log%d{yyyy-MM-dd}.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 	
