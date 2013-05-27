@@ -11,7 +11,6 @@ import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
-
 import com.ruyicai.dataanalysis.util.Page;
 
 /**
@@ -48,11 +47,6 @@ public class News {
 	@Column(name = "url")
 	private String url;
 	
-	public static List<News> findByOutId(String outId) {
-		return entityManager().createQuery("select o from News o where o.outid=? order by o.publishtime asc", News.class)
-				.setParameter(1, outId).getResultList();
-	}
-	
 	public static void findList(String where, String orderby, List<Object> params, Page<News> page) {
 		try {
 			TypedQuery<News> q = entityManager().createQuery(
@@ -80,6 +74,19 @@ public class News {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<News> getList(String where, String orderby, List<Object> params) {
+		TypedQuery<News> q = entityManager().createQuery(
+				"SELECT o FROM News o " + where + orderby, News.class);
+		if (null != params && !params.isEmpty()) {
+			int index = 1;
+			for (Object param : params) {
+				q.setParameter(index, param);
+				index = index + 1;
+			}
+		}
+		return q.getResultList();
 	}
 	
 }

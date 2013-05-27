@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -168,22 +169,13 @@ public class FetchNewsService {
 		String href = a.attr("href"); //新闻地址(http://www.sporttery.cn/football/jczj/2013/0417/54063.html)
 		String outId = ""; //外部id
 		if (StringUtils.isNotBlank(href)&&StringUtils.indexOf(href, "/")>-1&&StringUtils.indexOf(href, ".")>-1) {
-			//outId = href.substring(href.lastIndexOf("/")+1, href.lastIndexOf("."));
 			outId = StringUtils.substring(href, StringUtils.lastIndexOf(href, "/")+1, StringUtils.lastIndexOf(href, "."));
-		}
-		if (StringUtils.isBlank(outId)) {
-			return ;
-		}
-		List<News> newsList = News.findByOutId(outId);
-		if (newsList!=null&&newsList.size()>0) {
-			return ;
 		}
 		//获取新闻内容
 		fetchNewsContent(href, outId);
 	}
 	
 	private void fetchNewsContent(String url, String outId) throws IOException {
-		//Document contentDocument = Jsoup.connect(url).timeout(5000).get();
 		Document contentDocument = Jsoup.parse(new URL(url).openStream(), HttpUtil.GBK, url);
 		Date publishTime = getPublishTime(contentDocument); //发布时间
 		String content = getNewsContent(contentDocument); //新闻内容
@@ -191,6 +183,11 @@ public class FetchNewsService {
 		Element textTitle = contentDocument.select("div.TextTitle").first();
 		String title = textTitle.text(); //新闻标题
 		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
+			return ;
+		}
+		//防止重复
+		List<News> newsList = getNewsListByTitle(title);
+		if (newsList!=null&&newsList.size()>0) {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
@@ -208,13 +205,11 @@ public class FetchNewsService {
 	public void fetchNewsByUrl(String url) throws IOException {
 		String outId = ""; //外部id
 		if (StringUtils.isNotBlank(url)&&StringUtils.indexOf(url, "/")>-1&&StringUtils.indexOf(url, ".")>-1) {
-			//outId = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."));
 			outId = StringUtils.substring(url, StringUtils.lastIndexOf(url, "/")+1, StringUtils.lastIndexOf(url, "."));
 		}
 		if (StringUtils.isBlank(outId)) {
 			return ;
 		}
-		//Document contentDocument = Jsoup.connect(url).timeout(5000).get();
 		Document contentDocument = Jsoup.parse(new URL(url).openStream(), HttpUtil.GBK, url);
 		Date publishTime = getPublishTime(contentDocument); //发布时间
 		String content = getNewsContent(contentDocument); //新闻内容
@@ -225,8 +220,11 @@ public class FetchNewsService {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
-		
-		List<News> newsList = News.findByOutId(outId);
+		//防止重复
+		List<News> newsList = getNewsListByTitle(title);
+		if (newsList!=null&&newsList.size()>0) {
+			return ;
+		}
 		if (newsList==null||newsList.size()<=0) {
 			News news = new News();
 			news.setTitle(title);
@@ -236,7 +234,7 @@ public class FetchNewsService {
 			news.setEvent(event);
 			news.setUrl(url);
 			news.persist();
-		} else if (newsList!=null&&newsList.size()==1) {
+		} else if (newsList!=null&&newsList.size()>=1) {
 			News news = newsList.get(0);
 			news.setTitle(title);
 			news.setContent(content);
@@ -248,32 +246,14 @@ public class FetchNewsService {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception {
-		//获取新闻内容
-		//Document contentDocument = Jsoup.connect("http://www.sporttery.cn/football/jcdj/2013/0416/53972.html").timeout(5000).get();
-		/*String url = "http://www.sporttery.cn/football/jcdj/2013/0416/53972.html";
-		Document contentDocument = Jsoup.parse(new URL(url).openStream(), HttpUtil.GBK, url);
-		Date publishTime = new Date(); //发布时间
-		Element dateBox = contentDocument.select("div.DateBox > div").first();
-		String dateBoxString = dateBox.text();
-		String[] dateBoxStrings = dateBoxString.split(" ");
-		if (dateBoxStrings!=null&&dateBoxStrings.length>2) {
-			String publishTimeString = dateBoxStrings[0] + " " + dateBoxStrings[1] + ":00";
-			publishTime = DateUtil.parse(publishTimeString);
-		}
-		Elements contents = contentDocument.select("div.Con");
-		Elements ps = contents.select("p");
-		StringBuilder builder = new StringBuilder();
-		for (Element p : ps) {
-			if (!StringUtil.isEmpty(p.text())) {
-				builder.append(p.text());
-			}
-		}
-		String content = builder.toString(); //新闻内容
-		System.out.println(content);*/
+	private List<News> getNewsListByTitle(String title) {
+		StringBuilder builder = new StringBuilder(" where");
+		List<Object> params = new ArrayList<Object>();
 		
-		/*String str = "http://www.sporttery.cn/football/jczj/2013/0417/54063.html";
-		System.out.println(StringUtils.substring(str, StringUtils.lastIndexOf(str, "/")+1, StringUtils.lastIndexOf(str, ".")));*/
+		builder.append(" o.title=? ");
+		params.add(title);
+		List<News> list = News.getList(builder.toString(), "order by o.publishtime asc", params);
+		return list;
 	}
 	
 }
