@@ -2,12 +2,12 @@ package com.ruyicai.dataanalysis.listener.jcl;
 
 import java.math.BigDecimal;
 import org.apache.camel.Header;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.jcl.JingCaiResult;
 import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
-import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**
  * 竞彩篮球-更新赛事让分、总分盘的JMS
@@ -22,7 +22,7 @@ public class ScheduleJclUpdateListener {
 	public void update(@Header("EVENT") String event) {
 		logger.info("竞彩篮球-更新赛事让分、总分盘的JMS start, event="+event);
 		try {
-			if (StringUtil.isEmpty(event)||!event.startsWith("0")) { //不是篮球
+			if (StringUtils.isBlank(event)||!StringUtils.startsWith(event, "0")) { //不是篮球
 				return ;
 			}
 			ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event);
@@ -38,13 +38,15 @@ public class ScheduleJclUpdateListener {
 				return ;
 			}
 			boolean isMerge = false;
-			if (!StringUtil.isEmpty(jingCaiResult.getLetpoint())) { //让分
+			String letpoint = jingCaiResult.getLetpoint(); //让分
+			if (StringUtils.isNotBlank(letpoint)) { //让分
 				isMerge = true;
-				scheduleJcl.setLetScore(jingCaiResult.getLetpoint());
+				scheduleJcl.setLetScore(letpoint);
 			}
-			if (!StringUtil.isEmpty(jingCaiResult.getBasepoint())) { //总分盘
+			String basePoint = jingCaiResult.getBasepoint(); //总分盘
+			if (StringUtils.isNotBlank(basePoint)) { //总分盘
 				isMerge = true;
-				scheduleJcl.setTotalScore(jingCaiResult.getBasepoint());
+				scheduleJcl.setTotalScore(basePoint);
 			}
 			if (isMerge) {
 				scheduleJcl.merge();
