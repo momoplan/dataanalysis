@@ -1,7 +1,6 @@
 package com.ruyicai.dataanalysis.jms;
 
 import javax.annotation.Resource;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoutesConfiguration implements ApplicationListener<ContextRefreshedEvent> {
 
-	Logger logger = LoggerFactory.getLogger(RoutesConfiguration.class);
+	private Logger logger = LoggerFactory.getLogger(RoutesConfiguration.class);
 
 	@Resource(name = "camelContext")
 	private CamelContext camelContext;
@@ -23,7 +22,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		logger.info("init camel routes");
+		logger.info("init dataanalysis camel routes");
 		try {
 			camelContext.addRoutes(new RouteBuilder() {
 				@Override
@@ -31,31 +30,37 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					//竞彩足球
-					from("jms:queue:updateStandard?concurrentConsumers=5").to("bean:standarJczUpdateListener?method=update").routeId("竞彩足球-百家欧赔更新");
-					from("jms:queue:updateRanking?concurrentConsumers=5").to("bean:rankingJczUpdateListener?method=update").routeId("竞彩足球-联赛排名更新");
+					from("jms:queue:updateStandard?concurrentConsumers=5").to(
+							"bean:standarJczUpdateListener?method=update").routeId("竞彩足球-百家欧赔更新");
+					from("jms:queue:updateRanking?concurrentConsumers=5").to(
+							"bean:rankingJczUpdateListener?method=update").routeId("竞彩足球-联赛排名更新");
 					//竞彩篮球
-					from("jms:queue:standardJclUpdate?concurrentConsumers=5").to("bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
-					from("jms:queue:rankingJclUpdate?concurrentConsumers=5").to("bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
-					from("jms:queue:scheduleJclUpdate?concurrentConsumers=5").to("bean:scheduleJclUpdateListener?method=update").routeId("竞彩篮球-赛事让分、预设总分更新");
+					from("jms:queue:standardJclUpdate?concurrentConsumers=5").to(
+							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
+					from("jms:queue:rankingJclUpdate?concurrentConsumers=5").to(
+							"bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
+					from("jms:queue:scheduleJclUpdate?concurrentConsumers=5").to(
+							"bean:scheduleJclUpdateListener?method=update").routeId("竞彩篮球-赛事让分、预设总分更新");
 				}
 			});
 		} catch (Exception e) {
-			logger.error("camel context start failed", e.getMessage());
+			logger.error("dataanalysis camel context start failed", e.getMessage());
 			e.printStackTrace();
 		}
 		
-		logger.info("init lotteryCamel routes");
+		logger.info("init lottery camel routes");
 		try {
 			lotteryCamelContext.addRoutes(new RouteBuilder() {
 				@Override
 				public void configure() throws Exception {
 					deadLetterChannel("jmsLottery:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
-					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic").to("bean:scheduleJclUpdateListener?method=update").routeId("竞彩赛果更新通知");
+					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=5").to(
+							"bean:scheduleJclUpdateListener?method=update").routeId("竞彩赛果更新通知");
 				}
 			});
 		} catch (Exception e) {
-			logger.error("lotteryCamel context start failed", e.getMessage());
+			logger.error("lottery camel context start failed", e.getMessage());
 			e.printStackTrace();
 		}
 	}
