@@ -177,6 +177,14 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
         this.matchState = matchState;
     }
     
+    public String ScheduleJclDTO.getRemainTime() {
+        return this.remainTime;
+    }
+    
+    public void ScheduleJclDTO.setRemainTime(String remainTime) {
+        this.remainTime = remainTime;
+    }
+    
     public String ScheduleJclDTO.getEvent() {
         return this.event;
     }

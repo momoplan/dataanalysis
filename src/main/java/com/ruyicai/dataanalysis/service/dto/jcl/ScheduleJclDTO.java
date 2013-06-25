@@ -51,6 +51,8 @@ public class ScheduleJclDTO {
 	
 	private String matchState;
 	
+	private String remainTime;
+	
 	private String event;
 	
 	private String letScore;
