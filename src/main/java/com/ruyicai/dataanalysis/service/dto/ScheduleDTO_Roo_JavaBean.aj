@@ -99,6 +99,14 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.matchTime = matchTime;
     }
     
+    public Date ScheduleDTO.getMatchTime2() {
+        return this.matchTime2;
+    }
+    
+    public void ScheduleDTO.setMatchTime2(Date matchTime2) {
+        this.matchTime2 = matchTime2;
+    }
+    
     public String ScheduleDTO.getLocation() {
         return this.location;
     }

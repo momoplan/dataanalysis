@@ -36,6 +36,8 @@ public class ScheduleDTO {
 	
 	private Date matchTime;
 	
+	private Date matchTime2;
+	
 	private String location;
 	
 	private String home_Order;
