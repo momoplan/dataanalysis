@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.jcl.MatchStateJcl;
 import com.ruyicai.dataanalysis.domain.jcl.GlobalCacheJcl;
@@ -16,6 +15,7 @@ import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
 import com.ruyicai.dataanalysis.domain.jcl.SclassJcl;
 import com.ruyicai.dataanalysis.service.dto.jcl.RankingJclDTO;
 import com.ruyicai.dataanalysis.service.dto.jcl.ScheduleJclDTO;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcl.CalcJclUtil;
 
@@ -234,17 +234,6 @@ public class AnalysisJclService {
 		for(ScheduleJcl s : schedules) {
 			ScheduleJclDTO dto = buildDTO(s);
 			dtos.add(dto);
-			
-			/*ScheduleJclDTO dto = new ScheduleJclDTO();
-			try {
-				SclassJcl sclass = SclassJcl.findSclassJcl(s.getSclassId());
-				BeanUtils.copyProperties(dto, s);
-				dto.setSclassName(sclass.getNameJ());
-				dto.setSclassShortName(sclass.getNameJs());
-				dtos.add(dto);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} */
 		}
 		return dtos;
 	}
@@ -258,7 +247,7 @@ public class AnalysisJclService {
 		ScheduleJclDTO dto = new ScheduleJclDTO();
 		try {
 			SclassJcl sclass = SclassJcl.findSclassJcl(scheduleJcl.getSclassId());
-			BeanUtils.copyProperties(dto, scheduleJcl);
+			BeanUtilsEx.copyProperties(dto, scheduleJcl);
 			dto.setSclassName(sclass.getNameJ());
 			dto.setSclassShortName(sclass.getNameJs());
 		} catch (Exception e) {

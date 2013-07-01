@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
@@ -235,7 +235,7 @@ public class AnalysisService {
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
 			Sclass sclass = Sclass.findSclass(schedule.getSclassID());
-			BeanUtils.copyProperties(dto, schedule);
+			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
 		} catch (Exception e) {

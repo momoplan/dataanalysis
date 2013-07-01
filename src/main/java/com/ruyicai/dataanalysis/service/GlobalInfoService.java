@@ -3,7 +3,6 @@ package com.ruyicai.dataanalysis.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.service.dto.InfoDTO;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.CalcUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ZuCaiUtil;
@@ -261,7 +261,7 @@ public class GlobalInfoService {
 			ScheduleDTO dto = new ScheduleDTO();
 			try {
 				Sclass sclass = Sclass.findSclass(s.getSclassID());
-				BeanUtils.copyProperties(dto, s);
+				BeanUtilsEx.copyProperties(dto, s);
 				dto.setSclassName(sclass.getName_J());
 				dto.setSclassName_j(sclass.getName_JS());
 				String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(s.getScheduleID()));
@@ -307,7 +307,7 @@ public class GlobalInfoService {
 					}
 				}
 				Sclass sclass = Sclass.findSclass(s.getSclassID());
-				BeanUtils.copyProperties(dto, s);
+				BeanUtilsEx.copyProperties(dto, s);
 				dto.setSclassName(sclass.getName_J());
 				dto.setSclassName_j(sclass.getName_JS());
 				String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(s.getScheduleID()));
@@ -339,7 +339,7 @@ public class GlobalInfoService {
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
 			Sclass sclass = Sclass.findSclass(schedule.getSclassID());
-			BeanUtils.copyProperties(dto, schedule);
+			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
 			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(schedule.getScheduleID()));

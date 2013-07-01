@@ -2,13 +2,13 @@ package com.ruyicai.dataanalysis.service.bd;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
@@ -50,7 +50,7 @@ public class SelectBdService {
 				}
 			}
 			Sclass sclass = Sclass.findSclass(s.getSclassID());
-			BeanUtils.copyProperties(dto, s);
+			BeanUtilsEx.copyProperties(dto, s);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
 			String id = StringUtil.join("_", "dataanalysis", "DetailResult",
@@ -87,7 +87,7 @@ public class SelectBdService {
 		}
 		ScheduleDTO dto = new ScheduleDTO();
 		Sclass sclass = Sclass.findSclass(schedule.getSclassID());
-		BeanUtils.copyProperties(dto, schedule);
+		BeanUtilsEx.copyProperties(dto, schedule);
 		dto.setSclassName(sclass.getName_J());
 		dto.setSclassName_j(sclass.getName_JS());
 		String id = StringUtil.join("_", "dataanalysis", "DetailResult",

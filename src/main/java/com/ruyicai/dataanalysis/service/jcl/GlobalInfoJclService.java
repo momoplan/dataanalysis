@@ -3,7 +3,6 @@ package com.ruyicai.dataanalysis.service.jcl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import com.ruyicai.dataanalysis.domain.jcl.TotalScoreJcl;
 import com.ruyicai.dataanalysis.service.dto.jcl.InfoJclDTO;
 import com.ruyicai.dataanalysis.service.dto.jcl.RankingJclDTO;
 import com.ruyicai.dataanalysis.service.dto.jcl.ScheduleJclDTO;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcl.CalcJclUtil;
 
@@ -142,7 +142,7 @@ public class GlobalInfoJclService {
 					}
 				}
 				SclassJcl sclassJcl = SclassJcl.findSclassJcl(s.getSclassId());
-				BeanUtils.copyProperties(dto, s);
+				BeanUtilsEx.copyProperties(dto, s);
 				dto.setSclassName(sclassJcl.getNameJ());
 				dto.setSclassShortName(sclassJcl.getNameJs());
 				dtos.add(dto);
@@ -166,7 +166,7 @@ public class GlobalInfoJclService {
 		ScheduleJclDTO dto = new ScheduleJclDTO();
 		try {
 			SclassJcl sclass = SclassJcl.findSclassJcl(schedule.getSclassId());
-			BeanUtils.copyProperties(dto, schedule);
+			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getNameJ());
 			dto.setSclassShortName(sclass.getNameJs());
 		} catch (Exception e) {
