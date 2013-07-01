@@ -2,6 +2,8 @@ package com.ruyicai.dataanalysis.timer.jcl;
 
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -119,9 +121,12 @@ public class QiuTanMatchesJclUpdateService {
 					qiuTanMatches.setID_bet007(Integer.parseInt(iD_bet007));
 				}
 				Date time_old = qiuTanMatches.getTime();
-				if (!StringUtil.isEmpty(time) && (time_old==null||!time.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", time_old)))) {
-					isModify = true;
-					qiuTanMatches.setTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", time));
+				if (StringUtils.isNotBlank(time)) {
+					Date dateTime = DateUtil.parse("yyyy/MM/dd HH:mm:ss", time);
+					if (time_old==null||!StringUtils.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", dateTime), DateUtil.format("yyyy/MM/dd HH:mm:ss", time_old))) {
+						isModify = true;
+						qiuTanMatches.setTime(dateTime);
+					}
 				}
 				String home_old = qiuTanMatches.getHome();
 				if (!StringUtil.isEmpty(home) && (StringUtil.isEmpty(home_old)||!home.equals(home_old))) {
@@ -157,7 +162,8 @@ public class QiuTanMatchesJclUpdateService {
 			//更新赛事event
 			updateScheduleEvent(qiuTanMatches, scheduleJcl);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("竞彩篮球-解析彩票赛事与球探网的关联发生异常", e);
+			//logger.error(e.getMessage(), e);
 		}
 	}
 	
