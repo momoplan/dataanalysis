@@ -89,11 +89,7 @@ public class UpdateQiuTanMatchesService {
 			String homeID = match.elementTextTrim("HomeID");
 			String awayID = match.elementTextTrim("AwayID");
 			String turn = match.elementTextTrim("Turn"); //主客队是否需要反转
-			if (StringUtils.equals(turn, "True")) { //反转
-				turn = "1";
-			} else {
-				turn = "0";
-			}
+			turn = StringUtils.equals(turn, "True") ? "1" : "0";
 			//如果是竞彩篮球则不执行
 			if (JingCaiUtil.isJcLq(lotteryName)) { //竞彩篮球
 				return;
@@ -114,25 +110,30 @@ public class UpdateQiuTanMatchesService {
 				qiuTanMatches.setAway(away);
 				qiuTanMatches.setHomeID(Integer.parseInt(homeID));
 				qiuTanMatches.setAwayID(Integer.parseInt(awayID));
-				qiuTanMatches.setTurn(turn);
+				//qiuTanMatches.setTurn(turn);
 				//设置event
 				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 					qiuTanMatches.setEvent(event);
+					qiuTanMatches.setTurn(turn);
 				} else if (ZuCaiUtil.isZuCai(lotteryName)) { //足彩
 					String zcEvent = ZuCaiUtil.getZcEvent(lotteryName, issueNum, iD);
 					if (ZuCaiUtil.isZcSfc(lotteryName)) { //足彩胜负彩
 						qiuTanMatches.setZcSfcEvent(zcEvent);
+						qiuTanMatches.setZcSfcTurn(turn);
 					} else if (ZuCaiUtil.isZcJqc(lotteryName)) { //足彩进球彩
 						qiuTanMatches.setZcJqcEvent(zcEvent);
+						qiuTanMatches.setZcJqcTurn(turn);
 					} else if (ZuCaiUtil.isZcBqc(lotteryName)) { //足彩半全场
 						qiuTanMatches.setZcBqcEvent(zcEvent);
+						qiuTanMatches.setZcBqcTurn(turn);
 					}
 					//足彩处理
 					ZuCaiUtil.zcProcess(lotteryName, issueNum, iD, iD_bet007);
 				} else if (BeiDanUtil.isBeiDan(lotteryName)) { //北单
 					String bdEvent = BeiDanUtil.getBdEvent(issueNum, iD);
 					qiuTanMatches.setBdEvent(bdEvent);
+					qiuTanMatches.setBdTurn(turn);
 				}
  				qiuTanMatches.persist();
 			} else { //记录已存在
@@ -186,11 +187,6 @@ public class UpdateQiuTanMatchesService {
 					isModify = true;
 					qiuTanMatches.setAwayID(Integer.parseInt(awayID));
 				}
-				String turn_old = qiuTanMatches.getTurn();
-				if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(turn_old)||!StringUtils.equals(turn, turn_old))) {
-					isModify = true;
-					qiuTanMatches.setTurn(turn);
-				}
 				//设置event
 				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
@@ -198,6 +194,11 @@ public class UpdateQiuTanMatchesService {
 					if (!StringUtil.isEmpty(event) && (StringUtil.isEmpty(event_old)||!event.equals(event_old))) {
 						isModify = true;
 						qiuTanMatches.setEvent(event);
+					}
+					String turn_old = qiuTanMatches.getTurn();
+					if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(turn_old)||!StringUtils.equals(turn, turn_old))) {
+						isModify = true;
+						qiuTanMatches.setTurn(turn);
 					}
 				} else if (ZuCaiUtil.isZuCai(lotteryName)) { //足彩
 					String zcEvent = ZuCaiUtil.getZcEvent(lotteryName, issueNum, iD);
@@ -207,17 +208,32 @@ public class UpdateQiuTanMatchesService {
 							isModify = true;
 							qiuTanMatches.setZcSfcEvent(zcEvent);
 						}
+						String zcSfcTurn_old = qiuTanMatches.getZcSfcTurn();
+						if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(zcSfcTurn_old)||!StringUtils.equals(turn, zcSfcTurn_old))) {
+							isModify = true;
+							qiuTanMatches.setZcSfcTurn(turn);
+						}
 					} else if (ZuCaiUtil.isZcJqc(lotteryName)) { //足彩进球彩
 						String zcJqcEvent_old = qiuTanMatches.getZcJqcEvent();
 						if (!StringUtil.isEmpty(zcEvent) && (StringUtil.isEmpty(zcJqcEvent_old)||!zcEvent.equals(zcJqcEvent_old))) {
 							isModify = true;
 							qiuTanMatches.setZcJqcEvent(zcEvent);
 						}
+						String zcJqcTurn_old = qiuTanMatches.getZcJqcTurn();
+						if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(zcJqcTurn_old)||!StringUtils.equals(turn, zcJqcTurn_old))) {
+							isModify = true;
+							qiuTanMatches.setZcJqcTurn(turn);
+						}
 					} else if (ZuCaiUtil.isZcBqc(lotteryName)) { //足彩半全场
 						String zcBqcEvent_old = qiuTanMatches.getZcBqcEvent();
 						if (!StringUtil.isEmpty(zcEvent) && (StringUtil.isEmpty(zcBqcEvent_old)||!zcEvent.equals(zcBqcEvent_old))) {
 							isModify = true;
 							qiuTanMatches.setZcBqcEvent(zcEvent);
+						}
+						String zcBqcTurn_old = qiuTanMatches.getZcBqcTurn();
+						if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(zcBqcTurn_old)||!StringUtils.equals(turn, zcBqcTurn_old))) {
+							isModify = true;
+							qiuTanMatches.setZcBqcTurn(turn);
 						}
 					}
 					//足彩处理
@@ -228,6 +244,11 @@ public class UpdateQiuTanMatchesService {
 					if (StringUtils.isNotBlank(bdEvent) && (StringUtils.isBlank(bdEvent_old)||!StringUtils.equals(bdEvent, bdEvent_old))) {
 						isModify = true;
 						qiuTanMatches.setBdEvent(bdEvent);
+					}
+					String bdTurn_old = qiuTanMatches.getBdTurn();
+					if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(bdTurn_old)||!StringUtils.equals(turn, bdTurn_old))) {
+						isModify = true;
+						qiuTanMatches.setBdTurn(turn);
 					}
 				}
 				if (isModify) {
@@ -256,11 +277,23 @@ public class UpdateQiuTanMatchesService {
 			schedule.setEvent(eventQ);
 			isUpdate = true;
 		}
+		String turnQ = qiuTanMatches.getTurn();
+		String turnS = schedule.getTurn();
+		if (StringUtils.isNotBlank(turnQ)&&(StringUtils.isBlank(turnS)||!StringUtils.equals(turnQ, turnS))) {
+			schedule.setTurn(turnQ);
+			isUpdate = true;
+		}
 		//足彩胜负彩
 		String zcSfcEventQ = qiuTanMatches.getZcSfcEvent();
 		String zcSfcEventS = schedule.getZcSfcEvent();
 		if(!StringUtil.isEmpty(zcSfcEventQ)&&(StringUtil.isEmpty(zcSfcEventS)||!zcSfcEventQ.equals(zcSfcEventS))) {
 			schedule.setZcSfcEvent(zcSfcEventQ);
+			isUpdate = true;
+		}
+		String zcSfcTurnQ = qiuTanMatches.getZcSfcTurn();
+		String zcSfcTurnS = schedule.getZcSfcTurn();
+		if (StringUtils.isNotBlank(zcSfcTurnQ)&&(StringUtils.isBlank(zcSfcTurnS)||!StringUtils.equals(zcSfcTurnQ, zcSfcTurnS))) {
+			schedule.setZcSfcTurn(zcSfcTurnQ);
 			isUpdate = true;
 		}
 		//足彩进球彩
@@ -270,11 +303,23 @@ public class UpdateQiuTanMatchesService {
 			schedule.setZcJqcEvent(zcJqcEventQ);
 			isUpdate = true;
 		}
+		String zcJqcTurnQ = qiuTanMatches.getZcJqcTurn();
+		String zcJqcTurnS = schedule.getZcJqcTurn();
+		if (StringUtils.isNotBlank(zcJqcEventQ)&&(StringUtils.isBlank(zcJqcEventS)||!StringUtils.equals(zcJqcTurnQ, zcJqcTurnS))) {
+			schedule.setZcJqcTurn(zcJqcTurnQ);
+			isUpdate = true;
+		}
 		//足彩半全场
 		String zcBqcEventQ = qiuTanMatches.getZcBqcEvent();
 		String zcBqcEventS = schedule.getZcBqcEvent();
 		if(!StringUtil.isEmpty(zcBqcEventQ)&&(StringUtil.isEmpty(zcBqcEventS)||!zcBqcEventQ.equals(zcBqcEventS))) {
 			schedule.setZcBqcEvent(zcBqcEventQ);
+			isUpdate = true;
+		}
+		String zcBqcTurnQ = qiuTanMatches.getZcBqcTurn();
+		String zcBqcTurnS = schedule.getZcBqcTurn();
+		if (StringUtils.isNotBlank(zcBqcTurnQ)&&(StringUtils.isBlank(zcBqcTurnS)||!StringUtils.equals(zcBqcTurnQ, zcBqcTurnS))) {
+			schedule.setZcBqcTurn(zcBqcTurnQ);
 			isUpdate = true;
 		}
 		//北单
@@ -284,11 +329,10 @@ public class UpdateQiuTanMatchesService {
 			schedule.setBdEvent(bdEventQ);
 			isUpdate = true;
 		}
-		//主客队反转
-		String turnQ = qiuTanMatches.getTurn();
-		String turnS = schedule.getTurn();
-		if (StringUtils.isNotBlank(turnQ)&&(StringUtils.isBlank(turnS)||!StringUtils.equals(turnQ, turnS))) {
-			schedule.setTurn(turnQ);
+		String bdTurnQ = qiuTanMatches.getBdTurn();
+		String bdTurnS = schedule.getBdTurn();
+		if (StringUtils.isNotBlank(bdTurnQ)&&(StringUtils.isBlank(bdTurnS)||!StringUtils.equals(bdTurnQ, bdTurnS))) {
+			schedule.setBdTurn(bdTurnQ);
 			isUpdate = true;
 		}
 		if (isUpdate) {

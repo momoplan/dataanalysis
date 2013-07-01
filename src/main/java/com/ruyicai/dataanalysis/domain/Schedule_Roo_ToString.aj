@@ -15,6 +15,7 @@ privileged aspect Schedule_Roo_ToString {
         sb.append("AvgS: ").append(getAvgS()).append(", ");
         sb.append("BbinShow: ").append(getBbinShow()).append(", ");
         sb.append("BdEvent: ").append(getBdEvent()).append(", ");
+        sb.append("BdTurn: ").append(getBdTurn()).append(", ");
         sb.append("BfShow: ").append(getBfShow()).append(", ");
         sb.append("Bf_changetime: ").append(getBf_changetime()).append(", ");
         sb.append("EuropeOddsShow: ").append(getEuropeOddsShow()).append(", ");
@@ -65,8 +66,11 @@ privileged aspect Schedule_Roo_ToString {
         sb.append("Weather: ").append(getWeather()).append(", ");
         sb.append("WeatherIcon: ").append(getWeatherIcon()).append(", ");
         sb.append("ZcBqcEvent: ").append(getZcBqcEvent()).append(", ");
+        sb.append("ZcBqcTurn: ").append(getZcBqcTurn()).append(", ");
         sb.append("ZcJqcEvent: ").append(getZcJqcEvent()).append(", ");
-        sb.append("ZcSfcEvent: ").append(getZcSfcEvent());
+        sb.append("ZcJqcTurn: ").append(getZcJqcTurn()).append(", ");
+        sb.append("ZcSfcEvent: ").append(getZcSfcEvent()).append(", ");
+        sb.append("ZcSfcTurn: ").append(getZcSfcTurn());
         return sb.toString();
     }
     

@@ -80,42 +80,15 @@ public class ZuCaiUtil {
 	}
 	
 	/**
-	 * 判断足彩对阵是否已发布
-	 * @param lotNo
-	 * @param flag
-	 * @return
-	 */
-	/*public static boolean isPublish(String lotNo, String flag) {
-		String publisString = "";
-		if (!StringUtil.isEmpty(flag)) {
-			String[] flags = flag.split("\\|");
-			if (flags!=null&&flags.length==3) {
-				if (lotNo.equals(LotType.ZC_SFC.getLotNo())||lotNo.equals(LotType.ZC_RX9.getLotNo())) { //胜负彩,任选九
-					publisString = flags[0];
-				} else if (lotNo.equals(LotType.ZC_JQC.getLotNo())) { //进球彩
-					publisString = flags[2];
-				} else if (lotNo.equals(LotType.ZC_BQC.getLotNo())) { //半全场
-					publisString = flags[1];
-				}
-			}
-		}
-		if (!StringUtil.isEmpty(publisString)&&publisString.equals("1")) { //已发布
-			return true;
-		}
-		return false;
-	}*/
-	
-	/**
 	 * 判断是否足彩
 	 * @param lotteryName
 	 * @return
 	 */
 	public static boolean isZuCai(String lotteryName) {
-		boolean isZuCai = false;
 		if (isZcSfc(lotteryName)||isZcJqc(lotteryName)||isZcBqc(lotteryName)) {
-			isZuCai = true;
+			return true;
 		}
-		return isZuCai;
+		return false;
 	}
 	
 	/**
@@ -124,14 +97,10 @@ public class ZuCaiUtil {
 	 * @return
 	 */
 	public static boolean isZcSfc(String lotteryName) {
-		boolean isZcSfc = false;
 		if (StringUtils.equals(lotteryName, "14场胜负彩")) {
-			isZcSfc = true;
+			return true;
 		}
-		/*if (lotteryName!=null&&lotteryName.equals("14场胜负彩")) {
-			isZcSfc = true;
-		}*/
-		return isZcSfc;
+		return false;
 	}
 	
 	/**
@@ -140,14 +109,10 @@ public class ZuCaiUtil {
 	 * @return
 	 */
 	public static boolean isZcJqc(String lotteryName) {
-		boolean isZcJqc = false;
 		if (StringUtils.equals(lotteryName, "四场进球彩")) {
-			isZcJqc = true;
+			return true;
 		}
-		/*if (lotteryName!=null&&lotteryName.equals("四场进球彩")) {
-			isZcJqc = true;
-		}*/
-		return isZcJqc;
+		return false;
 	}
 	
 	/**
@@ -156,14 +121,10 @@ public class ZuCaiUtil {
 	 * @return
 	 */
 	public static boolean isZcBqc(String lotteryName) {
-		boolean isZcBqc = false;
 		if (StringUtils.equals(lotteryName, "六场半全场")) {
-			isZcBqc = true;
+			return true;
 		}
-		/*if (lotteryName!=null&&lotteryName.equals("六场半全场")) {
-			isZcBqc = true;
-		}*/
-		return isZcBqc;
+		return false;
 	}
 	
 	/**
@@ -172,14 +133,13 @@ public class ZuCaiUtil {
 	 * @return
 	 */
 	public static String getLotNoByZcEvent(String zcEvent) {
-		String lotNo = ""; //彩种编号
-		if (!StringUtil.isEmpty(zcEvent)) {
+		if (StringUtils.isNotBlank(zcEvent)) {
 			String[] zcEvents = zcEvent.split("_");
 			if (zcEvents!=null&&zcEvents.length>0) {
-				lotNo = zcEvents[0];
+				return zcEvents[0];
 			}
 		}
-		return lotNo;
+		return "";
 	}
 	
 	/**

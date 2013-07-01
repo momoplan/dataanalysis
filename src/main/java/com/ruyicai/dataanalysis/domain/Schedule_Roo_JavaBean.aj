@@ -466,4 +466,36 @@ privileged aspect Schedule_Roo_JavaBean {
         this.turn = turn;
     }
     
+    public String Schedule.getZcSfcTurn() {
+        return this.zcSfcTurn;
+    }
+    
+    public void Schedule.setZcSfcTurn(String zcSfcTurn) {
+        this.zcSfcTurn = zcSfcTurn;
+    }
+    
+    public String Schedule.getZcJqcTurn() {
+        return this.zcJqcTurn;
+    }
+    
+    public void Schedule.setZcJqcTurn(String zcJqcTurn) {
+        this.zcJqcTurn = zcJqcTurn;
+    }
+    
+    public String Schedule.getZcBqcTurn() {
+        return this.zcBqcTurn;
+    }
+    
+    public void Schedule.setZcBqcTurn(String zcBqcTurn) {
+        this.zcBqcTurn = zcBqcTurn;
+    }
+    
+    public String Schedule.getBdTurn() {
+        return this.bdTurn;
+    }
+    
+    public void Schedule.setBdTurn(String bdTurn) {
+        this.bdTurn = bdTurn;
+    }
+    
 }

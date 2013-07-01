@@ -76,6 +76,14 @@ public class ScheduleDTO {
 	
 	private String turn;
 	
+	private String zcSfcTurn;
+	
+	private String zcJqcTurn;
+	
+	private String zcBqcTurn;
+	
+	private String bdTurn;
+	
 	private Collection<DetailResult> detailResults;
 	
 	public String toJson() {

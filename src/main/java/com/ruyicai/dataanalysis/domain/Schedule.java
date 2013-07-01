@@ -149,6 +149,14 @@ public class Schedule {
 	
 	private String turn;
 	
+	private String zcSfcTurn;
+	
+	private String zcJqcTurn;
+	
+	private String zcBqcTurn;
+	
+	private String bdTurn;
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	

@@ -12,6 +12,7 @@ privileged aspect QiuTanMatches_Roo_ToString {
         sb.append("Away: ").append(getAway()).append(", ");
         sb.append("AwayID: ").append(getAwayID()).append(", ");
         sb.append("BdEvent: ").append(getBdEvent()).append(", ");
+        sb.append("BdTurn: ").append(getBdTurn()).append(", ");
         sb.append("Event: ").append(getEvent()).append(", ");
         sb.append("Home: ").append(getHome()).append(", ");
         sb.append("HomeID: ").append(getHomeID()).append(", ");
@@ -23,8 +24,11 @@ privileged aspect QiuTanMatches_Roo_ToString {
         sb.append("Time: ").append(getTime()).append(", ");
         sb.append("Turn: ").append(getTurn()).append(", ");
         sb.append("ZcBqcEvent: ").append(getZcBqcEvent()).append(", ");
+        sb.append("ZcBqcTurn: ").append(getZcBqcTurn()).append(", ");
         sb.append("ZcJqcEvent: ").append(getZcJqcEvent()).append(", ");
-        sb.append("ZcSfcEvent: ").append(getZcSfcEvent());
+        sb.append("ZcJqcTurn: ").append(getZcJqcTurn()).append(", ");
+        sb.append("ZcSfcEvent: ").append(getZcSfcEvent()).append(", ");
+        sb.append("ZcSfcTurn: ").append(getZcSfcTurn());
         return sb.toString();
     }
     

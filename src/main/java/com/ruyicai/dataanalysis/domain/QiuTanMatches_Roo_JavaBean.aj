@@ -137,4 +137,36 @@ privileged aspect QiuTanMatches_Roo_JavaBean {
         this.turn = turn;
     }
     
+    public String QiuTanMatches.getZcSfcTurn() {
+        return this.zcSfcTurn;
+    }
+    
+    public void QiuTanMatches.setZcSfcTurn(String zcSfcTurn) {
+        this.zcSfcTurn = zcSfcTurn;
+    }
+    
+    public String QiuTanMatches.getZcJqcTurn() {
+        return this.zcJqcTurn;
+    }
+    
+    public void QiuTanMatches.setZcJqcTurn(String zcJqcTurn) {
+        this.zcJqcTurn = zcJqcTurn;
+    }
+    
+    public String QiuTanMatches.getZcBqcTurn() {
+        return this.zcBqcTurn;
+    }
+    
+    public void QiuTanMatches.setZcBqcTurn(String zcBqcTurn) {
+        this.zcBqcTurn = zcBqcTurn;
+    }
+    
+    public String QiuTanMatches.getBdTurn() {
+        return this.bdTurn;
+    }
+    
+    public void QiuTanMatches.setBdTurn(String bdTurn) {
+        this.bdTurn = bdTurn;
+    }
+    
 }
