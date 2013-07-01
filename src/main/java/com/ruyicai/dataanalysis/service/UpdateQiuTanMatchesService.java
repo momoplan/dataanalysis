@@ -159,9 +159,12 @@ public class UpdateQiuTanMatchesService {
 					qiuTanMatches.setID_bet007(Integer.parseInt(iD_bet007));
 				}
 				Date time_old = qiuTanMatches.getTime();
-				if (!StringUtil.isEmpty(time) && (time_old==null||!time.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", time_old)))) {
-					isModify = true;
-					qiuTanMatches.setTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", time));
+				if (StringUtils.isNotBlank(time)) {
+					Date dateTime = DateUtil.parse("yyyy/MM/dd HH:mm:ss", time);
+					if (time_old==null||!StringUtils.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", dateTime), DateUtil.format("yyyy/MM/dd HH:mm:ss", time_old))) {
+						isModify = true;
+						qiuTanMatches.setTime(dateTime);
+					}
 				}
 				String home_old = qiuTanMatches.getHome();
 				if (!StringUtil.isEmpty(home) && (StringUtil.isEmpty(home_old)||!home.equals(home_old))) {
@@ -234,7 +237,8 @@ public class UpdateQiuTanMatchesService {
 			//更新赛事的event
 			updateScheduleEvent(qiuTanMatches, schedule);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("解析彩票赛事与球探网的关联表发生异常", e);
+			//logger.error(e.getMessage(), e);
 		}
 	}
 	
