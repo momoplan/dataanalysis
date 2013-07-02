@@ -313,6 +313,17 @@ public class Schedule {
 		return schedules;
 	}
 	
+	public static List<Schedule> findJcProcessingMatches() {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where event is not null and matchState in('1', '2', '3', '4') order by matchTime asc", Schedule.class)
+				.getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
 	public static List<Schedule> findByZcSfcEventAndLotNoAndBatchCode(String lotNo, String batchCode) {
 		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where zcSfcEvent is not null and SUBSTR(zcSfcEvent,1,6)=? AND SUBSTR(zcSfcEvent,8,7)=? order by matchTime asc", Schedule.class)
 				.setParameter(1, lotNo).setParameter(2, batchCode).getResultList();

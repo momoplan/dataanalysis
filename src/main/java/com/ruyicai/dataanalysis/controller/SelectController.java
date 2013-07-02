@@ -132,4 +132,17 @@ public class SelectController {
 		}
 		return rd;
 	}
+	
+	@RequestMapping(value = "/getProcessingMatches", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getProcessingMatches() {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(infoService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }

@@ -383,4 +383,35 @@ public class GlobalInfoService {
 			logger.error(e.getMessage(), e);
 		} 
 	}
+	
+	public List<ScheduleDTO> getProcessingMatches() {
+		List<Schedule> schedules = Schedule.findJcProcessingMatches();
+		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+		for(Schedule s : schedules) {
+			ScheduleDTO dto = new ScheduleDTO();
+			try {
+				Sclass sclass = Sclass.findSclass(s.getSclassID());
+				BeanUtilsEx.copyProperties(dto, s);
+				dto.setSclassName(sclass.getName_J());
+				dto.setSclassName_j(sclass.getName_JS());
+				/*String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(s.getScheduleID()));
+				GlobalCache globalCache = GlobalCache.findGlobalCache(id);
+				if(null == globalCache) {
+					List<DetailResult> detailResults = DetailResult.findDetailResults(s.getScheduleID());
+					globalCache = new GlobalCache();
+					globalCache.setId(id);
+					globalCache.setValue(DetailResult.toJsonArray(detailResults));
+					globalCache.persist();
+					dto.setDetailResults(detailResults);
+				} else {
+					dto.setDetailResults(DetailResult.fromJsonArrayToDetailResults(globalCache.getValue()));
+				}*/
+				dtos.add(dto);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			} 
+		}
+		return dtos;
+	}
+	
 }
