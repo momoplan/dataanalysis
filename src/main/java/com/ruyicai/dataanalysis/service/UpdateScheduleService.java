@@ -166,17 +166,18 @@ public class UpdateScheduleService {
 				schedule.setMatchSeason(x);
 				schedule.setGrouping(y);
 				schedule.setNeutrality(neutrality);
-				/*schedule.setNeutrality(0);
-				if("True".equals(z)) {
-					schedule.setNeutrality(1);
-				}*/
 				schedule.persist();
 				updateRanking(schedule.getScheduleID(), updateRanking);
 			} else {
 				int matchstate = schedule.getMatchState();
-				if(d != null && !d.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", schedule.getMatchTime()))) {
-					ismod = true;
-					schedule.setMatchTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", d));
+				if (StringUtils.isNotBlank(d)) {
+					Date dDate = DateUtil.parse("yyyy/MM/dd HH:mm:ss", d);
+					String dDateStr = DateUtil.format("yyyy/MM/dd HH:mm:ss", dDate);
+					String matchTimeOldStr = DateUtil.format("yyyy/MM/dd HH:mm:ss", schedule.getMatchTime());
+					if (!StringUtils.equals(dDateStr, matchTimeOldStr)) {
+						ismod = true;
+						schedule.setMatchTime(dDate);
+					}
 				}
 				if(Integer.parseInt(f) != schedule.getMatchState()) {
 					ismod = true;
