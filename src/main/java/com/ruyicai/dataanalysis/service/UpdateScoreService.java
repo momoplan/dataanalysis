@@ -167,7 +167,7 @@ public class UpdateScoreService {
 		if (oldMatchTime==null) {
 			matchTime = "";
 		} else {
-			matchTime = DateUtil.format("yyyy-MM-dd", oldMatchTime)+" "+matchTime+"00";
+			matchTime = DateUtil.format("yyyy-MM-dd", oldMatchTime)+" "+matchTime+":00";
 		}
 		
 		String[] matchTime2s = StringUtils.split(matchTime2, ",");
