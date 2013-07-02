@@ -123,11 +123,11 @@ public class UpdateScoreService {
 				schedule.setGuest_Order(guestOrder);
 			}
 			//解析开赛时间
-			Map<String, String> matchTimeMap = getMatchTimeMap(matchTime, matchTime2);
+			Date oldMatchTime = schedule.getMatchTime();
+			Map<String, String> matchTimeMap = getMatchTimeMap(oldMatchTime, matchTime, matchTime2);
 			matchTime = matchTimeMap.get("matchTime");
 			matchTime2 = matchTimeMap.get("matchTime2");
 			//开赛时间
-			Date oldMatchTime = schedule.getMatchTime();
 			if (StringUtils.isNotBlank(matchTime)&&(oldMatchTime==null
 					||!StringUtils.equals(matchTime, DateUtil.format("yyyy-MM-dd HH:mm:ss", oldMatchTime)))) {
 				ismod = true;
@@ -135,10 +135,14 @@ public class UpdateScoreService {
 			}
 			//上下半场开始时间
 			Date oldMatchTime2 = schedule.getMatchTime2();
-			if (StringUtils.isNotBlank(matchTime2)&&(oldMatchTime2==null
-					||!StringUtils.equals(matchTime2, DateUtil.format("yyyy-MM-dd HH:mm:ss", oldMatchTime2)))) {
-				ismod = true;
-				schedule.setMatchTime2(DateUtil.parse("yyyy-MM-dd HH:mm:ss", matchTime2));
+			if (StringUtils.isNotBlank(matchTime2)) {
+				Date matchTime2Date = DateUtil.parse("yyyy-MM-dd HH:mm:ss", matchTime2);
+				String matchTime2DateStr = DateUtil.format("yyyy-MM-dd HH:mm:ss", matchTime2Date);
+				String oldMatchTime2Str = DateUtil.format("yyyy-MM-dd HH:mm:ss", oldMatchTime2);
+				if (oldMatchTime2==null||!StringUtils.equals(matchTime2DateStr, oldMatchTime2Str)) {
+					ismod = true;
+					schedule.setMatchTime2(matchTime2Date);
+				}
 			}
 			if(ismod) {
 				schedule.merge();
@@ -153,28 +157,22 @@ public class UpdateScoreService {
 	
 	/**
 	 * 解析比赛时间
-	 * @param matchTime
-	 * @param matchTime2
+	 * @param matchTime(18:30)
+	 * @param matchTime2(2013,6,1,19,24,25)
 	 * @return
 	 */
-	private Map<String, String> getMatchTimeMap(String matchTime, String matchTime2) {
+	private Map<String, String> getMatchTimeMap(Date oldMatchTime, String matchTime, String matchTime2) {
 		Map<String, String> map = new HashMap<String, String>();
-		String dateString = ""; //开赛日期
-		String sxStartTime = ""; //上下半场开始时间
+		if (oldMatchTime==null) {
+			matchTime = "";
+		} else {
+			matchTime = DateUtil.format("yyyy-MM-dd", oldMatchTime)+" "+matchTime+"00";
+		}
+		
 		String[] matchTime2s = StringUtils.split(matchTime2, ",");
 		if (matchTime2s!=null&&matchTime2s.length==6) {
-			dateString = matchTime2s[0]+"-"+matchTime2s[1]+"-"+matchTime2s[2];
-			sxStartTime = matchTime2s[3]+":"+matchTime2s[4]+":"+matchTime2s[5];
-		}
-		//开赛时间
-		if (StringUtils.isNotBlank(dateString)) {
-			matchTime = dateString + " " + matchTime+":00";
-		} else {
-			matchTime = "";
-		}
-		//上下半场开始时间
-		if (StringUtils.isNotBlank(dateString)&&StringUtils.isNotBlank(sxStartTime)) {
-			matchTime2 = dateString + " " + sxStartTime;
+			matchTime2 = matchTime2s[0]+"-"+matchTime2s[1]+"-"+matchTime2s[2]+" "
+					+matchTime2s[3]+":"+matchTime2s[4]+":"+matchTime2s[5];
 		} else {
 			matchTime2 = "";
 		}
