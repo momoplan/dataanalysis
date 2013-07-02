@@ -314,8 +314,8 @@ public class Schedule {
 	}
 	
 	public static List<Schedule> findJcProcessingMatches() {
-		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where event is not null and matchState in('1', '2', '3', '4') order by matchTime asc", Schedule.class)
-				.getResultList();
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where event is not null and matchState in('1', '2', '3', '4') AND SUBSTR(event,1,1)=? order by matchTime asc", Schedule.class)
+				.setParameter(1, "1").getResultList();
 		if(null != schedules) {
 			for(Schedule schedule : schedules) {
 				buildSchedule(schedule);
