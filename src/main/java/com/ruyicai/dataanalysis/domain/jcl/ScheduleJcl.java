@@ -204,8 +204,19 @@ public class ScheduleJcl {
 	}
 	
 	public static List<ScheduleJcl> findByEventAndDay(String day) {
-		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event is not null and SUBSTR(event,3,8)=?  AND SUBSTR(event,1,1)=? order by matchTime asc", ScheduleJcl.class)
+		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event is not null and SUBSTR(event,3,8)=? AND SUBSTR(event,1,1)=? order by matchTime asc", ScheduleJcl.class)
 				.setParameter(1, day).setParameter(2, "0").getResultList();
+		if(null != scheduleJcls) {
+			for(ScheduleJcl scheduleJcl : scheduleJcls) {
+				buildScheduleJcl(scheduleJcl);
+			}
+		}
+		return scheduleJcls;
+	}
+	
+	public static List<ScheduleJcl> findProcessingMatches() {
+		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event is not null and matchState in('1', '2', '3', '4') AND SUBSTR(event,1,1)=? order by matchTime asc", ScheduleJcl.class)
+				.setParameter(1, "0").getResultList();
 		if(null != scheduleJcls) {
 			for(ScheduleJcl scheduleJcl : scheduleJcls) {
 				buildScheduleJcl(scheduleJcl);

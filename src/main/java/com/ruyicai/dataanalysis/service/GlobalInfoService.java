@@ -385,7 +385,7 @@ public class GlobalInfoService {
 	}
 	
 	public List<ScheduleDTO> getProcessingMatches() {
-		List<Schedule> schedules = Schedule.findJcProcessingMatches();
+		List<Schedule> schedules = Schedule.findProcessingMatches();
 		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
 		for(Schedule s : schedules) {
 			ScheduleDTO dto = new ScheduleDTO();

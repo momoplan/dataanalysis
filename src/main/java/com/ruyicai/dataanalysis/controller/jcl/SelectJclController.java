@@ -57,4 +57,16 @@ public class SelectJclController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getProcessingMatches", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getProcessingMatches() {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(globalInfoJclService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }

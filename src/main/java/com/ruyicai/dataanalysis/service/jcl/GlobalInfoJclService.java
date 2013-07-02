@@ -176,6 +176,28 @@ public class GlobalInfoJclService {
 	}
 	
 	/**
+	 * 进行中比赛查询
+	 * @return
+	 */
+	public List<ScheduleJclDTO> getProcessingMatches() {
+		List<ScheduleJcl> schedules = ScheduleJcl.findProcessingMatches();
+		List<ScheduleJclDTO> dtos = new ArrayList<ScheduleJclDTO>();
+		for(ScheduleJcl s : schedules) {
+			ScheduleJclDTO dto = new ScheduleJclDTO();
+			try {
+				SclassJcl sclassJcl = SclassJcl.findSclassJcl(s.getSclassId());
+				BeanUtilsEx.copyProperties(dto, s);
+				dto.setSclassName(sclassJcl.getNameJ());
+				dto.setSclassShortName(sclassJcl.getNameJs());
+				dtos.add(dto);
+			} catch (Exception e) {
+				logger.error("竞彩篮球进行中比赛查询发生异常", e);
+			} 
+		}
+		return dtos;
+	}
+	
+	/**
 	 * 设置联赛排名
 	 * @param scheduleID
 	 * @param sclassID
