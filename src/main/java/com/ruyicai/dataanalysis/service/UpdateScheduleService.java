@@ -171,9 +171,10 @@ public class UpdateScheduleService {
 			} else {
 				int matchstate = schedule.getMatchState();
 				if (StringUtils.isNotBlank(d)) {
-					Date dDate = DateUtil.parse("yyyy/MM/dd HH:mm:ss", d);
-					String dDateStr = DateUtil.format("yyyy/MM/dd HH:mm:ss", dDate);
-					String matchTimeOldStr = DateUtil.format("yyyy/MM/dd HH:mm:ss", schedule.getMatchTime());
+					String pattern = "yyyy/MM/dd HH:mm:ss";
+					Date dDate = DateUtil.parse(pattern, d);
+					String dDateStr = DateUtil.format(pattern, dDate);
+					String matchTimeOldStr = DateUtil.format(pattern, schedule.getMatchTime());
 					if (!StringUtils.equals(dDateStr, matchTimeOldStr)) {
 						ismod = true;
 						schedule.setMatchTime(dDate);
