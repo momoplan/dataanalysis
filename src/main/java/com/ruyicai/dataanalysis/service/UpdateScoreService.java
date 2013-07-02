@@ -136,9 +136,10 @@ public class UpdateScoreService {
 			//上下半场开始时间
 			Date oldMatchTime2 = schedule.getMatchTime2();
 			if (StringUtils.isNotBlank(matchTime2)) {
-				Date matchTime2Date = DateUtil.parse("yyyy-MM-dd HH:mm:ss", matchTime2);
-				String matchTime2DateStr = DateUtil.format("yyyy-MM-dd HH:mm:ss", matchTime2Date);
-				String oldMatchTime2Str = DateUtil.format("yyyy-MM-dd HH:mm:ss", oldMatchTime2);
+				String pattern = "yyyy-MM-dd HH:mm:ss";
+				Date matchTime2Date = DateUtil.parse(pattern, matchTime2);
+				String matchTime2DateStr = DateUtil.format(pattern, matchTime2Date);
+				String oldMatchTime2Str = DateUtil.format(pattern, oldMatchTime2);
 				if (oldMatchTime2==null||!StringUtils.equals(matchTime2DateStr, oldMatchTime2Str)) {
 					ismod = true;
 					schedule.setMatchTime2(matchTime2Date);
