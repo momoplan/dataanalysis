@@ -215,7 +215,7 @@ public class ScheduleJcl {
 	}
 	
 	public static List<ScheduleJcl> findProcessingMatches() {
-		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event is not null and matchState in('1', '2', '3', '4', '50') AND SUBSTR(event,1,1)=? order by matchTime asc", ScheduleJcl.class)
+		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event is not null and matchState in('1','2','50','3','4','5','6','7') AND SUBSTR(event,1,1)=? order by matchTime asc", ScheduleJcl.class)
 				.setParameter(1, "0").getResultList();
 		if(null != scheduleJcls) {
 			for(ScheduleJcl scheduleJcl : scheduleJcls) {
