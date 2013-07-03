@@ -358,7 +358,7 @@ public class Schedule {
 	}
 	
 	public static List<Schedule> findByBdEventAndBatchCode(String batchCode) {
-		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where bdEvent is not null and SUBSTR(zcBqcEvent,1,8)=? order by matchTime asc", Schedule.class)
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where bdEvent is not null and SUBSTR(bdEvent,1,8)=? order by matchTime asc", Schedule.class)
 				.setParameter(1, batchCode).getResultList();
 		if(null != schedules) {
 			for(Schedule schedule : schedules) {
