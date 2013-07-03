@@ -172,8 +172,8 @@ public class UpdateScoreService {
 		
 		String[] matchTime2s = StringUtils.split(matchTime2, ",");
 		if (matchTime2s!=null&&matchTime2s.length==6) {
-			matchTime2 = matchTime2s[0]+"-"+matchTime2s[1]+"-"+matchTime2s[2]+" "
-					+matchTime2s[3]+":"+matchTime2s[4]+":"+matchTime2s[5];
+			matchTime2 = matchTime2s[0]+"-"+(Integer.valueOf(matchTime2s[1])+1)+"-"+matchTime2s[2]+" "
+					+matchTime2s[3]+":"+matchTime2s[4]+":"+matchTime2s[5]; //传过来6代表7月份
 		} else {
 			matchTime2 = "";
 		}
