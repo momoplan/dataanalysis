@@ -74,6 +74,8 @@ public class ScheduleDTO {
 	
 	private String event;
 	
+	private String bdEvent;
+	
 	private String turn;
 	
 	private String zcSfcTurn;
