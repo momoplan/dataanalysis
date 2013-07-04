@@ -2,7 +2,6 @@ package com.ruyicai.dataanalysis.timer.jcl;
 
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -122,8 +121,11 @@ public class QiuTanMatchesJclUpdateService {
 				}
 				Date time_old = qiuTanMatches.getTime();
 				if (StringUtils.isNotBlank(time)) {
-					Date dateTime = DateUtil.parse("yyyy/MM/dd HH:mm:ss", time);
-					if (time_old==null||!StringUtils.equals(DateUtil.format("yyyy/MM/dd HH:mm:ss", dateTime), DateUtil.format("yyyy/MM/dd HH:mm:ss", time_old))) {
+					String pattern = "yyyy/MM/dd HH:mm:ss";
+					Date dateTime = DateUtil.parse(pattern, time);
+					String dateTimeStr = DateUtil.format(pattern, dateTime);
+					String time_oldStr = DateUtil.format(pattern, time_old);
+					if (time_old==null||!StringUtils.equals(dateTimeStr, time_oldStr)) {
 						isModify = true;
 						qiuTanMatches.setTime(dateTime);
 					}
