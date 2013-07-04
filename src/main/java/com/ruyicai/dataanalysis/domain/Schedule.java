@@ -368,6 +368,17 @@ public class Schedule {
 		return schedules;
 	}
 	
+	public static List<Schedule> findBdProcessingMatches() {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where bdEvent is not null and matchState in('1', '2', '3', '4') order by matchTime asc", Schedule.class)
+				.getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
 	public static List<Schedule> findBySclassID(Integer sclassID, String matchSeason) {
 		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where sclassID=? and matchSeason=?", Schedule.class)
 				.setParameter(1, sclassID).setParameter(2, matchSeason).getResultList();

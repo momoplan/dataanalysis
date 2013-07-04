@@ -2,19 +2,23 @@ package com.ruyicai.dataanalysis.service.bd;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.service.zc.SelectZcService;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
 public class SelectBdService {
 
-	// private Logger logger = LoggerFactory.getLogger(SelectZcService.class);
+	private Logger logger = LoggerFactory.getLogger(SelectZcService.class);
 
 	/**
 	 * 即时比分列表
@@ -106,6 +110,28 @@ public class SelectBdService {
 					.fromJsonArrayToDetailResults(globalCache.getValue()));
 		}
 		return dto;
+	}
+	
+	/**
+	 * 进行中比赛查询
+	 * @return
+	 */
+	public List<ScheduleDTO> getProcessingMatches() {
+		List<Schedule> schedules = Schedule.findBdProcessingMatches();
+		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+		for(Schedule s : schedules) {
+			ScheduleDTO dto = new ScheduleDTO();
+			try {
+				Sclass sclass = Sclass.findSclass(s.getSclassID());
+				BeanUtilsEx.copyProperties(dto, s);
+				dto.setSclassName(sclass.getName_J());
+				dto.setSclassName_j(sclass.getName_JS());
+				dtos.add(dto);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			} 
+		}
+		return dtos;
 	}
 
 }

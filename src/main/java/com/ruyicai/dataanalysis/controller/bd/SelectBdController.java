@@ -83,4 +83,20 @@ private Logger logger = LoggerFactory.getLogger(SelectBdController.class);
 		return rd;
 	}
 	
+	/**
+	 * 进行中比赛查询
+	 * @return
+	 */
+	@RequestMapping(value = "/getProcessingMatches", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getProcessingMatches() {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(selectBdService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }
