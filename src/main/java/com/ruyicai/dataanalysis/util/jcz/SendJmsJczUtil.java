@@ -6,12 +6,14 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * 竞彩足球Jms发送
  * @author Administrator
  *
  */
+@Service
 public class SendJmsJczUtil {
 
 	private Logger logger = LoggerFactory.getLogger(SendJmsJczUtil.class);
