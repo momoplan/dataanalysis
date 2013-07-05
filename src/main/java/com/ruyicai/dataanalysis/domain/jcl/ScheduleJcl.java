@@ -160,8 +160,8 @@ public class ScheduleJcl {
 	}
 	
 	public static List<ScheduleJcl> findBySclassID(Integer sclassID, String matchSeason) {
-		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where sclassId=? and matchSeason=?", ScheduleJcl.class)
-				.setParameter(1, sclassID).setParameter(2, matchSeason).getResultList();
+		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where sclassId=? and matchSeason=? and matchType=?", ScheduleJcl.class)
+				.setParameter(1, sclassID).setParameter(2, matchSeason).setParameter(3, "常规赛").getResultList();
 		if(null != scheduleJcls) {
 			for(ScheduleJcl scheduleJcl : scheduleJcls) {
 				buildScheduleJcl(scheduleJcl);
