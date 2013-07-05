@@ -135,7 +135,7 @@ public class SystemJclController {
 		ResponseData rd = new ResponseData();
 		try {
 			if (!StringUtil.isEmpty(event)) {
-				sendJmsJclUtil.sendScheduleUpdateJms(event);
+				sendJmsJclUtil.sendScheduleFinishJms(event);
 			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

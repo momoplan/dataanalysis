@@ -2,7 +2,6 @@ package com.ruyicai.dataanalysis.util.jcl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
@@ -22,8 +21,8 @@ public class SendJmsJclUtil {
 	@Produce(uri = "jms:queue:rankingJclUpdate")
 	private ProducerTemplate rankingJclUpdateTemplate;
 	
-	@Produce(uri = "jms:queue:scheduleJclUpdate")
-	private ProducerTemplate scheduleJclUpdateTemplate;
+	@Produce(uri = "jms:queue:scheduleJclFinish")
+	private ProducerTemplate scheduleJclFinishTemplate;
 	
 	/**
 	 * 联赛排名的JMS
@@ -31,7 +30,7 @@ public class SendJmsJclUtil {
 	 */
 	public void sendRankingUpdateJms(Integer body) {
 		try {
-			//logger.info("rankingJclUpdateTemplate start");
+			logger.info("rankingJclUpdateTemplate start, body={}", body);
 			rankingJclUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -42,12 +41,12 @@ public class SendJmsJclUtil {
 	 * 赛果更新的JMS
 	 * @param event
 	 */
-	public void sendScheduleUpdateJms(String event) {
+	public void sendScheduleFinishJms(String event) {
 		try {
-			logger.info("scheduleJclUpdateTemplate start, event="+event);
+			logger.info("scheduleJclFinishTemplate start, event={}", event);
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
-			scheduleJclUpdateTemplate.sendBodyAndHeaders(null, header);
+			scheduleJclFinishTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

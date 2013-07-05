@@ -10,17 +10,17 @@ import com.ruyicai.dataanalysis.domain.jcl.JingCaiResult;
 import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
 
 /**
- * 竞彩篮球-更新赛事让分、总分盘的JMS
+ * 竞彩篮球-完场的JMS
  * @author Administrator
  *
  */
 @Service
-public class ScheduleJclUpdateListener {
+public class ScheduleJclFinishListener {
 
-	private Logger logger = LoggerFactory.getLogger(ScheduleJclUpdateListener.class);
+	private Logger logger = LoggerFactory.getLogger(ScheduleJclFinishListener.class);
 	
 	public void update(@Header("EVENT") String event) {
-		logger.info("竞彩篮球-更新赛事让分、总分盘的JMS start, event="+event);
+		logger.info("竞彩篮球-完场的JMS start, event={}", event);
 		try {
 			if (StringUtils.isBlank(event)||!StringUtils.startsWith(event, "0")) { //不是篮球
 				return ;
@@ -54,7 +54,7 @@ public class ScheduleJclUpdateListener {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		logger.info("竞彩篮球-更新赛事让分、总分盘的JMS end, event="+event);
+		logger.info("竞彩篮球-完场的JMS end, event={}", event);
 	}
 	
 }

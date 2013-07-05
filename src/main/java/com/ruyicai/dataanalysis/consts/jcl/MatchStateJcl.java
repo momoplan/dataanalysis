@@ -28,6 +28,14 @@ public enum MatchStateJcl {
 	
 	public String memo;
 	
+	public String value() {
+		return value;
+	}
+	
+	public String memo() {
+		return memo;
+	}
+	
 	MatchStateJcl(String value, String memo) {
 		this.value = value;
 		this.memo = memo;

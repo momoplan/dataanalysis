@@ -28,6 +28,7 @@ public class SendJmsJczUtil {
 	 */
 	public void sendUpdateRankingJMS(Integer body) {
 		try {
+			logger.info("updateRankingTemplate start, body={}", body);
 			updateRankingTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

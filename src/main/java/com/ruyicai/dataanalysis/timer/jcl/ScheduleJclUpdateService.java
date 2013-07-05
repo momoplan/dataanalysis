@@ -2,6 +2,8 @@ package com.ruyicai.dataanalysis.timer.jcl;
 
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -358,16 +360,15 @@ public class ScheduleJclUpdateService {
 				if (isModify) {
 					scheduleJcl.merge();
 					//之前没有完场，现在已完场
-					String matchState_now = scheduleJcl.getMatchState();
-					if (matchState_old!=null && !matchState_old.equals(MatchStateJcl.wanChang.value) 
-							&& matchState_now!=null && matchState_now.equals(MatchStateJcl.wanChang.value)) {
-						//更新联赛排名
-						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId());
-						//更新让分、总分盘
+					if (!StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value())
+							&&StringUtils.equals(scheduleJcl.getMatchState(), MatchStateJcl.wanChang.value())) {
+						//发送完场的Jms
 						String event = scheduleJcl.getEvent();
-						if (!StringUtil.isEmpty(event)) {
-							sendJmsJclUtil.sendScheduleUpdateJms(event);
+						if (StringUtils.isNotBlank(event)) {
+							sendJmsJclUtil.sendScheduleFinishJms(event);
 						}
+						//更新排名
+						updateRanking(scheduleJcl.getScheduleId(), updateRanking);
 					}
 				}
 			}

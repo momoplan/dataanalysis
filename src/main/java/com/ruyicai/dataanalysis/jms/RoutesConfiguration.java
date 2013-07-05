@@ -39,8 +39,8 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
 					from("jms:queue:rankingJclUpdate?concurrentConsumers=5").to(
 							"bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
-					from("jms:queue:scheduleJclUpdate?concurrentConsumers=5").to(
-							"bean:scheduleJclUpdateListener?method=update").routeId("竞彩篮球-赛事让分、预设总分更新");
+					from("jms:queue:scheduleJclFinish?concurrentConsumers=5").to(
+							"bean:scheduleJclFinishListener?method=update").routeId("竞彩篮球-完场的监听");
 				}
 			});
 		} catch (Exception e) {
