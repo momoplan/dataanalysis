@@ -18,11 +18,11 @@ public class SendJmsJclUtil {
 	
 	private Logger logger = LoggerFactory.getLogger(SendJmsJclUtil.class);
 
+	@Produce(uri = "jms:topic:scheduleJclFinish")
+	private ProducerTemplate scheduleJclFinishTemplate;
+	
 	@Produce(uri = "jms:queue:rankingJclUpdate")
 	private ProducerTemplate rankingJclUpdateTemplate;
-	
-	@Produce(uri = "jms:queue:scheduleJclFinish")
-	private ProducerTemplate scheduleJclFinishTemplate;
 	
 	/**
 	 * 联赛排名的JMS

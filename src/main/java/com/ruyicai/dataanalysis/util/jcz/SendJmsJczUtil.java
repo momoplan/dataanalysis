@@ -18,7 +18,7 @@ public class SendJmsJczUtil {
 
 	private Logger logger = LoggerFactory.getLogger(SendJmsJczUtil.class);
 	
-	@Produce(uri = "jms:queue:scheduleFinish")
+	@Produce(uri = "jms:topic:scheduleFinish")
 	private ProducerTemplate scheduleFinishTemplate;
 	
 	@Produce(uri = "jms:queue:updateRanking")
