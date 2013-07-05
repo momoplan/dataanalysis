@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 
@@ -139,6 +138,18 @@ public class SelectController {
 		ResponseData rd = new ResponseData();
 		try {
 			rd.setValue(infoService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getScheduleByEvent", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getScheduleByEvent(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(infoService.getScheduleDtoByEvent(event));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

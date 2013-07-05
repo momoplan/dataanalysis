@@ -3,6 +3,8 @@ package com.ruyicai.dataanalysis.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -384,6 +386,10 @@ public class GlobalInfoService {
 		} 
 	}
 	
+	/**
+	 * 进行中的比赛查询
+	 * @return
+	 */
 	public List<ScheduleDTO> getProcessingMatches() {
 		List<Schedule> schedules = Schedule.findProcessingMatches();
 		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
@@ -400,6 +406,22 @@ public class GlobalInfoService {
 			} 
 		}
 		return dtos;
+	}
+	
+	/**
+	 * 根据event查询赛事信息
+	 * @param event
+	 * @return
+	 */
+	public ScheduleDTO getScheduleDtoByEvent(String event) {
+		if (StringUtils.isBlank(event)) {
+			return null;
+		}
+		Schedule schedule = Schedule.findByEvent(event);
+		if(schedule==null) {
+			return null;
+		}
+		return analysisService.buildDTO(schedule);
 	}
 	
 }
