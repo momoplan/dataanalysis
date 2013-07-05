@@ -18,14 +18,14 @@ public class SelectJclController {
 	private Logger logger = LoggerFactory.getLogger(SelectJclController.class);
 	
 	@Autowired
-	private GlobalInfoJclService globalInfoJclService;
+	private GlobalInfoJclService infoJclService;
 	
 	@RequestMapping(value = "/getInfo", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData getInfo(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(globalInfoJclService.getInfo(event));
+			rd.setValue(infoJclService.getInfo(event));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -38,7 +38,7 @@ public class SelectJclController {
 			@RequestParam(value = "state", required = false, defaultValue = "0") int state) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(globalInfoJclService.getImmediateScores(day, state));
+			rd.setValue(infoJclService.getImmediateScores(day, state));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -50,7 +50,7 @@ public class SelectJclController {
 	ResponseData getImmediateScore(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(globalInfoJclService.getImmediateScore(event));
+			rd.setValue(infoJclService.getImmediateScore(event));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -62,7 +62,19 @@ public class SelectJclController {
 	ResponseData getProcessingMatches() {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(globalInfoJclService.getProcessingMatches());
+			rd.setValue(infoJclService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getScheduleByEvent", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getScheduleByEvent(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(infoJclService.getScheduleDtoByEvent(event));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

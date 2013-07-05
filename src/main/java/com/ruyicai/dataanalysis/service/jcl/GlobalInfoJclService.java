@@ -3,6 +3,7 @@ package com.ruyicai.dataanalysis.service.jcl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -350,6 +351,22 @@ public class GlobalInfoJclService {
 			globalInfo.setValue(dto.toJson());
 			globalInfo.merge();
 		}
+	}
+	
+	/**
+	 * 根据event查询赛事信息
+	 * @param event
+	 * @return
+	 */
+	public ScheduleJclDTO getScheduleDtoByEvent(String event) {
+		if (StringUtils.isBlank(event)) {
+			return null;
+		}
+		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event);
+		if(scheduleJcl==null) {
+			return null;
+		}
+		return analysisJclService.buildDTO(scheduleJcl);
 	}
 	
 }
