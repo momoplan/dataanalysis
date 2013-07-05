@@ -3,20 +3,19 @@ package com.ruyicai.dataanalysis.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
 public class UpdateScoreService {
@@ -30,7 +29,7 @@ public class UpdateScoreService {
 	private HttpUtil httpUtil;
 	
 	@Autowired
-	private AnalysisService analysisService;
+	private SendJmsJczUtil sendJmsJczUtil;
 
 	public void process() {
 		logger.info("开始更新当天比分数据");
@@ -147,8 +146,15 @@ public class UpdateScoreService {
 			}
 			if(ismod) {
 				schedule.merge();
-				if(MatchState.WANCHANG.value != oldMatchState && MatchState.WANCHANG.value == schedule.getMatchState()) {
-					analysisService.sendUpdateRankingJMS(schedule.getScheduleID());
+				//已完场
+				if(MatchState.WANCHANG.value!=oldMatchState && MatchState.WANCHANG.value==schedule.getMatchState()) {
+					//发送完场的Jms
+					String event = schedule.getEvent();
+					if (StringUtils.isNotBlank(event)) {
+						sendJmsJczUtil.sendScheduleFinishJms(event);
+					}
+					//更新联赛排名的Jms
+					sendJmsJczUtil.sendUpdateRankingJMS(schedule.getScheduleID());
 				}
 			}
 		} catch(Exception e) {

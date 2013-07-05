@@ -2,7 +2,6 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
@@ -20,6 +18,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
 public class UpdateScheduleService {
@@ -34,6 +33,9 @@ public class UpdateScheduleService {
 	
 	@Autowired
 	private AnalysisService analysisService;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取所有联赛下所有赛事");
@@ -234,7 +236,14 @@ public class UpdateScheduleService {
 				}
 				if(ismod) {
 					schedule.merge();
+					//已完场
 					if(MatchState.WANCHANG.value != matchstate && MatchState.WANCHANG.value == schedule.getMatchState()) {
+						//发送完场的Jms
+						String event = schedule.getEvent();
+						if (StringUtils.isNotBlank(event)) {
+							sendJmsJczUtil.sendScheduleFinishJms(event);
+						}
+						//更新排名
 						updateRanking(schedule.getScheduleID(), updateRanking);
 					}
 				}

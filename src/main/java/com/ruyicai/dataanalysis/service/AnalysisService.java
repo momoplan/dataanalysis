@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +25,6 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 public class AnalysisService {
 
 	private Logger logger = LoggerFactory.getLogger(AnalysisService.class);
-	
-	@Produce(uri = "jms:queue:updateRanking")
-	private ProducerTemplate updateRankingProducer;
-	
-	public void sendUpdateRankingJMS(Integer body) {
-		try {
-			updateRankingProducer.sendBody(body);
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
 	
 	public void updateAllRanking() {
 		logger.info("开始更新所有联赛排名");
