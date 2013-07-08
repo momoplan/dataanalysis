@@ -14,22 +14,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<logback.version>0.9.30</logback.version>
 		<!-- 竞彩足球 -->
-		<liansaibeisai>http://bf.bet007.com/League_XML.aspx</liansaibeisai>
-		<qiuduiziliao>http://bf.bet007.com/Team_XML.aspx</qiuduiziliao>
+		<liansaibeisai>http://dxbf.bet007.com/League_XML.aspx</liansaibeisai>
+		<qiuduiziliao>http://dxbf.bet007.com/Team_XML.aspx</qiuduiziliao>
 		<qiutanmatches>http://www.310win.com/handle/MatchidInterface.aspx</qiutanmatches>
-		<saichensaiguo>http://bf.bet007.com/BF_XML.aspx</saichensaiguo>
-		<detailresult>http://bf.bet007.com/vbsxml/detail.js</detailresult>
+		<saichensaiguo>http://dxbf.bet007.com/BF_XML.aspx</saichensaiguo>
+		<detailresult>http://dxbf.bet007.com/vbsxml/detail.js</detailresult>
 		<baijiaoupei>http://data.nowgoal.com/1x2/datacn.aspx</baijiaoupei>
 		<peiluall>http://vip.bet007.com/xmlvbs/odds.txt</peiluall>
-		<todaybifeng>http://bf.bet007.com/vbsxml/bfdata.js</todaybifeng>
-		<detailResultDate>http://bf.bet007.com/Event_XML.aspx</detailResultDate>
+		<todaybifeng>http://dxbf.bet007.com/vbsxml/bfdata.js</todaybifeng>
+		<detailResultDate>http://dxbf.bet007.com/Event_XML.aspx</detailResultDate>
 		<!-- 竞彩篮球 -->
-		<leagueJclUrl>http://bf.bet007.com/LqLeague_Xml.aspx</leagueJclUrl>
-		<matchResultJclUrl>http://bf.bet007.com/nba_date.aspx</matchResultJclUrl>
-		<todayScoreJclUrl>http://bf.bet007.com/nba/today.xml</todayScoreJclUrl>
+		<leagueJclUrl>http://dxbf.bet007.com/LqLeague_Xml.aspx</leagueJclUrl>
+		<matchResultJclUrl>http://dxbf.bet007.com/nba_date.aspx</matchResultJclUrl>
+		<todayScoreJclUrl>http://dxbf.bet007.com/nba/today.xml</todayScoreJclUrl>
 		<standardJclUrl>http://data.nowgoal.com/1x2/fbdatacn.aspx</standardJclUrl>
 		<peiLvJclUrl>http://nba.bet007.com/odds/OddsData/oddsBsk.txt</peiLvJclUrl>
-		<teamJclUrl>http://bf.bet007.com/LqTeam_Xml.aspx</teamJclUrl>
+		<teamJclUrl>http://dxbf.bet007.com/LqTeam_Xml.aspx</teamJclUrl>
 		<!-- 新闻 -->
 		<!-- <jingCaiNewsUrl>http://info.sporttery.cn/roll/fb_list.php</jingCaiNewsUrl> -->
 		<jingCaiNewsUrl>http://info.sporttery.cn/roll/</jingCaiNewsUrl>
