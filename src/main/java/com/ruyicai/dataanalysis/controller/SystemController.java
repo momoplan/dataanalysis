@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 import com.ruyicai.dataanalysis.service.UpdateDetailResultService;
@@ -19,6 +18,7 @@ import com.ruyicai.dataanalysis.service.UpdateSclassService;
 import com.ruyicai.dataanalysis.service.UpdateScoreService;
 import com.ruyicai.dataanalysis.service.UpdateStandardService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
+import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @RequestMapping("/system")
 @Controller
@@ -55,6 +55,9 @@ public class SystemController {
 	
 	@Autowired
 	private GlobalInfoService globalInfoService;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	@RequestMapping(value = "/updatesclass", method = RequestMethod.POST)
 	public @ResponseBody
@@ -268,4 +271,17 @@ public class SystemController {
 		}
 		return rd;
 	}
+	
+	@RequestMapping(value = "/scheduleFinishJms", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			sendJmsJczUtil.sendScheduleFinishJms(event);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }
