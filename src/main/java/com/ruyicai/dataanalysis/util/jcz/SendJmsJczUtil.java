@@ -21,17 +21,32 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:scheduleFinish")
 	private ProducerTemplate scheduleFinishTemplate;
 	
-	@Produce(uri = "jms:queue:updateRanking")
-	private ProducerTemplate updateRankingTemplate;
+	@Produce(uri = "jms:topic:rankingUpdate")
+	private ProducerTemplate rankingUpdateTemplate;
+	
+	@Produce(uri = "jms:topic:standardUpdate")
+	private ProducerTemplate standardUpdateTemplate;
+	
+	/**
+	 * 更新欧赔的JMS
+	 * @param body
+	 */
+	public void sendStandardUpdateJMS(String body) {
+		try {
+			standardUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 	
 	/**
 	 * 联赛排名更新的Jms
 	 * @param body
 	 */
-	public void sendUpdateRankingJMS(Integer body) {
+	public void sendRankingUpdateJMS(Integer body) {
 		try {
-			logger.info("updateRankingTemplate start, body={}", body);
-			updateRankingTemplate.sendBody(body);
+			logger.info("rankingUpdateTemplate start, body={}", body);
+			rankingUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -30,14 +30,14 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					//竞彩足球
-					from("jms:queue:updateStandard?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardUpdate?concurrentConsumers=5").to(
 							"bean:standarJczUpdateListener?method=update").routeId("竞彩足球-百家欧赔更新");
-					from("jms:queue:updateRanking?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=5").to(
 							"bean:rankingJczUpdateListener?method=update").routeId("竞彩足球-联赛排名更新");
 					//竞彩篮球
-					from("jms:queue:standardJclUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=5").to(
 							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
-					from("jms:queue:rankingJclUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=5").to(
 							"bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=5").to(
 							"bean:scheduleJclFinishListener?method=update").routeId("竞彩篮球-完场的监听");

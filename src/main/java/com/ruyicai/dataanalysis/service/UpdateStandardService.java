@@ -1,8 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.List;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -15,6 +13,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
 public class UpdateStandardService {
@@ -25,18 +24,10 @@ public class UpdateStandardService {
 	private String url;
 	
 	@Autowired
-	private HttpUtil httpUtil; 
+	private HttpUtil httpUtil;
 	
-	@Produce(uri = "jms:queue:updateStandard")
-	private ProducerTemplate producerTemplate;
-	
-	public void sendJMS(String body) {
-		try {
-			producerTemplate.sendBody(body);
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -59,7 +50,7 @@ public class UpdateStandardService {
 				if (CommonUtil.isZqEventEmpty(schedule)) {
 					continue;
 				}
-				sendJMS(match.asXML());
+				sendJmsJczUtil.sendStandardUpdateJMS(match.asXML());
 			}
 		} catch(Exception e) {
 			logger.error("更新百家欧赔出错", e);

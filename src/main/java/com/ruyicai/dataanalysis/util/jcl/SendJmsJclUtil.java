@@ -21,8 +21,24 @@ public class SendJmsJclUtil {
 	@Produce(uri = "jms:topic:scheduleJclFinish")
 	private ProducerTemplate scheduleJclFinishTemplate;
 	
-	@Produce(uri = "jms:queue:rankingJclUpdate")
+	@Produce(uri = "jms:topic:rankingJclUpdate")
 	private ProducerTemplate rankingJclUpdateTemplate;
+	
+	@Produce(uri = "jms:topic:standardJclUpdate")
+	private ProducerTemplate standardJclUpdateTemplate;
+	
+	/**
+	 * 欧赔更新的JMS
+	 * @param body
+	 */
+	public void sendStandardUpdateJMS(String body) {
+		try {
+			//logger.info("standardJclUpdateTemplate start");
+			standardJclUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 	
 	/**
 	 * 联赛排名的JMS

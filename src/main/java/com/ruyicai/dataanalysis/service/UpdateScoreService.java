@@ -154,7 +154,7 @@ public class UpdateScoreService {
 						sendJmsJczUtil.sendScheduleFinishJms(event);
 					}
 					//更新联赛排名的Jms
-					sendJmsJczUtil.sendUpdateRankingJMS(schedule.getScheduleID());
+					sendJmsJczUtil.sendRankingUpdateJMS(schedule.getScheduleID());
 				}
 			}
 		} catch(Exception e) {

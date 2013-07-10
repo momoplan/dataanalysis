@@ -1,8 +1,6 @@
 package com.ruyicai.dataanalysis.timer.jcl;
 
 import java.util.List;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcl.SendJmsJclUtil;
 
 /**
  * 竞彩篮球-百家欧赔更新
@@ -31,8 +30,8 @@ public class StandardJclUpdateService {
 	@Autowired
 	private HttpUtil httpUtil;
 	
-	@Produce(uri = "jms:queue:standardJclUpdate")
-	private ProducerTemplate standardJclUpdateTemplate;
+	@Autowired
+	private SendJmsJclUtil sendJmsJclUtil;
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -52,26 +51,13 @@ public class StandardJclUpdateService {
 				if(scheduleJcl==null||StringUtil.isEmpty(scheduleJcl.getEvent())) {
 					continue;
 				}
-				sendJMS(match.asXML());
+				sendJmsJclUtil.sendStandardUpdateJMS(match.asXML());
 			}
 		} catch(Exception e) {
 			logger.error("竞彩篮球-百家欧赔更新异常", e);
 		}
 		long endmillis = System.currentTimeMillis();
 		logger.info("竞彩篮球-百家欧赔更新结束，共用时 " + (endmillis - startmillis));
-	}
-	
-	/**
-	 * 发送JMS
-	 * @param body
-	 */
-	public void sendJMS(String body) {
-		try {
-			//logger.info("standardJclUpdateTemplate start");
-			standardJclUpdateTemplate.sendBody(body);
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-		}
 	}
 	
 }
