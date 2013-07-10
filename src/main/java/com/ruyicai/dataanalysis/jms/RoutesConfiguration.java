@@ -56,7 +56,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jmsLottery:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=5").to(
-							"bean:scheduleJclUpdateListener?method=update").routeId("竞彩赛果更新通知");
+							"bean:scheduleJclFinishListener?method=update").routeId("竞彩赛果更新通知");
 				}
 			});
 		} catch (Exception e) {
