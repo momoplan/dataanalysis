@@ -1,6 +1,8 @@
-package com.ruyicai.dataanalysis.util;
+package com.ruyicai.dataanalysis.util.bd;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**
  * 北单公共类

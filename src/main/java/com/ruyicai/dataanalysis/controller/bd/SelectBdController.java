@@ -100,7 +100,7 @@ public class SelectBdController {
 	}
 	
 	/**
-	 * 
+	 * 根据event查询赛事信息
 	 * @param event
 	 * @return
 	 */
