@@ -38,15 +38,15 @@ public class UpdateScheduleService {
 	private SendJmsJczUtil sendJmsJczUtil;
 	
 	public void getAllScheduleBySclass() {
-		logger.info("开始获取所有联赛下所有赛事");
+		logger.info("开始获取足球所有联赛下所有赛事");
 		long startmillis = System.currentTimeMillis();
 		List<Sclass> sclasses = Sclass.findAllSclasses();
-		logger.info("联赛size:{}", new Integer[] {sclasses.size()});
+		logger.info("足球联赛size:{}", new Integer[] {sclasses.size()});
 		for(Sclass sclass : sclasses) {
 			processDateAndSclassID(null, String.valueOf(sclass.getSclassID()), false);
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("获取所有联赛下所有赛事结束, 共用时 " + (endmillis - startmillis));
+		logger.info("获取足球所有联赛下所有赛事结束, 共用时 " + (endmillis - startmillis));
 	}
 	
 	public void processCount(int count, int mode) {
@@ -63,7 +63,7 @@ public class UpdateScheduleService {
 	}
 	
 	public void process() {
-		logger.info("开始更新赛程赛果");
+		logger.info("开始更新足球赛程赛果");
 		long startmillis = System.currentTimeMillis();
 		processDateAndSclassID(DateUtil.getPreDate(2), null, true);
 		processDateAndSclassID(DateUtil.getPreDate(1), null, true);
@@ -72,12 +72,12 @@ public class UpdateScheduleService {
 		processDateAndSclassID(DateUtil.getAfterDate(2), null, true);
 		processDateAndSclassID(DateUtil.getAfterDate(3), null, true);
 		long endmillis = System.currentTimeMillis();
-		logger.info("更新赛程赛果结束, 共用时 " + (endmillis - startmillis));
+		logger.info("更新足球赛程赛果结束, 共用时 " + (endmillis - startmillis));
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void processDateAndSclassID(Date date, String sclassID, boolean updateRanking) {
-		logger.info("开始更新赛程赛果, date:{}, sclassID:{}", new String[] {DateUtil.format(date), sclassID});
+		logger.info("开始更新足球赛程赛果, date:{}, sclassID:{}", new String[] {DateUtil.format(date), sclassID});
 		long startmillis = System.currentTimeMillis();
 		try {
 			String param = "";
@@ -93,7 +93,7 @@ public class UpdateScheduleService {
 			}
 			String data = httpUtil.getResponse(url, HttpUtil.GET, HttpUtil.UTF8, param);
 			if (StringUtil.isEmpty(data)) {
-				logger.info("更新赛程赛果时获取数据为空");
+				logger.info("更新足球赛程赛果时获取数据为空");
 				return;
 			}
 			Document doc = DocumentHelper.parseText(data);
@@ -102,10 +102,10 @@ public class UpdateScheduleService {
 				doProcess(match, updateRanking);
 			}
 		} catch(Exception e) {
-			logger.error("更新赛程赛果出错, date:" + DateUtil.format(date) + ",sclassID:" + sclassID, e);
+			logger.error("更新足球赛程赛果出错, date:" + DateUtil.format(date) + ",sclassID:" + sclassID, e);
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("更新赛程赛果结束, date:{}, sclassID:{}, 共用时 {}", new String[] {DateUtil.format(date), sclassID, String.valueOf((endmillis - startmillis))});
+		logger.info("更新足球赛程赛果结束, date:{}, sclassID:{}, 共用时 {}", new String[] {DateUtil.format(date), sclassID, String.valueOf((endmillis - startmillis))});
 	}
 
 	private void doProcess(Element match, boolean updateRanking) {
@@ -258,7 +258,7 @@ public class UpdateScheduleService {
 			try {
 				analysisService.getRanking(scheduleID, false);
 			} catch(Exception e) {
-				logger.error("更新联赛排名出错, scheduleID:" + scheduleID, e);
+				logger.error("更新足球联赛排名出错, scheduleID:" + scheduleID, e);
 			}
 		}
 	}
@@ -270,6 +270,15 @@ public class UpdateScheduleService {
 	public void updateScheduleByDate(String dateString) {
 		Date date = DateUtil.parse("yyyy-MM-dd", dateString);
 		processDateAndSclassID(date, null, false);
+	}
+	
+	/**
+	 * 查询之后30天的赛事
+	 */
+	public void processMore() {
+		logger.info("获取之后30天的足球赛事开始");
+		processCount(30, 0);
+		logger.info("获取之后30天的足球赛事结束");
 	}
 	
 }
