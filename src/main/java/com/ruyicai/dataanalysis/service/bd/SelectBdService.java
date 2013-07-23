@@ -3,13 +3,16 @@ package com.ruyicai.dataanalysis.service.bd;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
+import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.service.zc.SelectZcService;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
@@ -19,6 +22,9 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 public class SelectBdService {
 
 	private Logger logger = LoggerFactory.getLogger(SelectZcService.class);
+	
+	@Autowired
+	private AnalysisService analysisService;
 
 	/**
 	 * 即时比分列表
@@ -132,6 +138,22 @@ public class SelectBdService {
 			} 
 		}
 		return dtos;
+	}
+	
+	/**
+	 * 根据event查询北单赛事信息
+	 * @param event
+	 * @return
+	 */
+	public ScheduleDTO getScheduleDtoByEvent(String event) {
+		if (StringUtils.isBlank(event)) {
+			return null;
+		}
+		Schedule schedule = Schedule.findByBdEvent(event);
+		if(schedule==null) {
+			return null;
+		}
+		return analysisService.buildDTO(schedule);
 	}
 
 }

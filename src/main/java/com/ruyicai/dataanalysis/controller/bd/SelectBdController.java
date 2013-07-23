@@ -21,7 +21,7 @@ import com.ruyicai.dataanalysis.service.bd.SelectBdService;
 @Controller
 public class SelectBdController {
 
-private Logger logger = LoggerFactory.getLogger(SelectBdController.class);
+	private Logger logger = LoggerFactory.getLogger(SelectBdController.class);
 	
 	@Autowired
 	private SelectBdService selectBdService;
@@ -93,6 +93,23 @@ private Logger logger = LoggerFactory.getLogger(SelectBdController.class);
 		ResponseData rd = new ResponseData();
 		try {
 			rd.setValue(selectBdService.getProcessingMatches());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@RequestMapping(value = "/getScheduleByEvent", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getScheduleByEvent(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(selectBdService.getScheduleDtoByEvent(event));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

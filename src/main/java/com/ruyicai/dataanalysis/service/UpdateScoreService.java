@@ -15,6 +15,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.bd.SendJmsBdUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
@@ -30,6 +31,9 @@ public class UpdateScoreService {
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
+	
+	@Autowired
+	private SendJmsBdUtil sendJmsBdUtil;
 
 	public void process() {
 		logger.info("开始更新当天比分数据");
@@ -149,9 +153,13 @@ public class UpdateScoreService {
 				//已完场
 				if(MatchState.WANCHANG.value!=oldMatchState && MatchState.WANCHANG.value==schedule.getMatchState()) {
 					//发送完场的Jms
-					String event = schedule.getEvent();
+					String event = schedule.getEvent(); //竞彩足球
 					if (StringUtils.isNotBlank(event)) {
 						sendJmsJczUtil.sendScheduleFinishJms(event);
+					}
+					String bdEvent = schedule.getBdEvent(); //北单
+					if (StringUtils.isNotBlank(bdEvent)) {
+						sendJmsBdUtil.sendScheduleFinishJms(bdEvent);
 					}
 					//更新联赛排名的Jms
 					sendJmsJczUtil.sendRankingUpdateJMS(schedule.getScheduleID());

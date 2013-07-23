@@ -409,7 +409,7 @@ public class GlobalInfoService {
 	}
 	
 	/**
-	 * 根据event查询赛事信息
+	 * 根据event查询竞彩赛事信息
 	 * @param event
 	 * @return
 	 */

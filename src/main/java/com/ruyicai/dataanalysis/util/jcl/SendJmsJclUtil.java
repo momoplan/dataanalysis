@@ -59,9 +59,10 @@ public class SendJmsJclUtil {
 	 */
 	public void sendScheduleFinishJms(String event) {
 		try {
-			logger.info("scheduleJclFinishTemplate start, event={}", event);
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
+			
+			logger.info("scheduleJclFinishTemplate start, event={}", event);
 			scheduleJclFinishTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

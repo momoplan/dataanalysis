@@ -18,6 +18,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.bd.SendJmsBdUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
@@ -36,6 +37,9 @@ public class UpdateScheduleService {
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
+	
+	@Autowired
+	private SendJmsBdUtil sendJmsBdUtil;
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取足球所有联赛下所有赛事");
@@ -237,11 +241,15 @@ public class UpdateScheduleService {
 				if(ismod) {
 					schedule.merge();
 					//已完场
-					if(MatchState.WANCHANG.value != matchstate && MatchState.WANCHANG.value == schedule.getMatchState()) {
+					if(MatchState.WANCHANG.value!=matchstate && MatchState.WANCHANG.value==schedule.getMatchState()) {
 						//发送完场的Jms
-						String event = schedule.getEvent();
+						String event = schedule.getEvent(); //竞彩足球
 						if (StringUtils.isNotBlank(event)) {
 							sendJmsJczUtil.sendScheduleFinishJms(event);
+						}
+						String bdEvent = schedule.getBdEvent(); //北单
+						if (StringUtils.isNotBlank(bdEvent)) {
+							sendJmsBdUtil.sendScheduleFinishJms(bdEvent);
 						}
 						//更新排名
 						updateRanking(schedule.getScheduleID(), updateRanking);
