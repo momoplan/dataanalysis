@@ -226,6 +226,7 @@
    				<ref bean="UpdateStandardServiceTrigger"/>
    				<ref bean="UpdateTeamServiceTrigger"/>
    				<ref bean="detailResultUpdatePreDayTrigger"/>
+   				<ref bean="updateScheduleMoreTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
