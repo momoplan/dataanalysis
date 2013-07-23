@@ -209,7 +209,7 @@
    
    <bean id="updateScheduleJclMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="updateScheduleJclMoreJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */1 * * ?"></property>  <!-- 1天 -->
+   		<property name="cronExpression" value="0 0 */0 * * ?"></property>  <!-- 1天 -->
    </bean>
    
    <!-- 新闻推荐 -->
