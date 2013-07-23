@@ -112,7 +112,7 @@
    		<property name="cronExpression" value="0 */20 * * * ?"></property>  <!-- 20分钟 -->
    </bean>
    
-   <!-- 更新之后30天的赛事 -->
+   <!-- 更新之后30天的足球赛事 -->
    <bean id="updateScheduleMoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="updateScheduleService"></property>
    		<property name="targetMethod" value="processMore"></property>
@@ -201,6 +201,17 @@
    		<property name="cronExpression" value="0 0 */23 * * ?"></property>  <!-- 1天 -->
    </bean>
    
+   <!-- 更新之后30天的篮球赛事 -->
+   <bean id="updateScheduleJclMoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="scheduleJclUpdateService"></property>
+   		<property name="targetMethod" value="processMore"></property>
+   </bean>
+   
+   <bean id="updateScheduleJclMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="updateScheduleJclMoreJobDetail"></property>
+   		<property name="cronExpression" value="0 0 */1 * * ?"></property>  <!-- 1天 -->
+   </bean>
+   
    <!-- 新闻推荐 -->
    <bean id="fetchNewsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="fetchNewsService"></property>
@@ -235,6 +246,7 @@
    				<ref bean="standardJclUpdateTrigger"/>
    				<ref bean="peiLvJclUpdateTrigger"/>
    				<ref bean="teamJclUpdateTrigger"/>
+   				<ref bean="updateScheduleJclMoreTrigger"/>
    				<!-- 新闻推荐 -->
    				<ref bean="fetchNewsTrigger"/>
    			</list>

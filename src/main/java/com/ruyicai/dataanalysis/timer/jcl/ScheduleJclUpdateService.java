@@ -417,4 +417,13 @@ public class ScheduleJclUpdateService {
 		processDateAndSclassID(date, false);
 	}
 	
+	/**
+	 * 查询之后30天的赛事
+	 */
+	public void processMore() {
+		logger.info("获取之后30天的篮球赛事开始");
+		updateScheduleByDays(30, 0);
+		logger.info("获取之后30天的篮球赛事结束");
+	}
+	
 }
