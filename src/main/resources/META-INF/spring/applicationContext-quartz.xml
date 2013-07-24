@@ -120,7 +120,7 @@
    
    <bean id="updateScheduleMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="updateScheduleMoreJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */23 * * ?"></property>  <!-- 1天 -->
+   		<property name="cronExpression" value="0 0 23 * * ?"></property>  <!-- 每天23点 -->
    </bean>
    
    <!--  竞彩篮球 -->
@@ -209,7 +209,7 @@
    
    <bean id="updateScheduleJclMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="updateScheduleJclMoreJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */0 * * ?"></property>  <!-- 1天 -->
+   		<property name="cronExpression" value="0 30 23 * * ?"></property>  <!-- 每天23点30分 -->
    </bean>
    
    <!-- 新闻推荐 -->
