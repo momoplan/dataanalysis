@@ -141,6 +141,13 @@ public class UpdateScheduleService {
 			if (StringUtils.equals(z, "True")) {
 				neutrality = 1;
 			}
+			String[] homeInfos = h.split("\\,"); //主队信息
+			String homeTeam = homeInfos[0]; //主队名称
+			int homeTeamID = Integer.parseInt(homeInfos[3]); //主队编号
+			String[] guestInfos = i.split("\\,"); //客队信息
+			String guestTeam = guestInfos[0]; //客队名称
+			int guestTeamID = Integer.parseInt(guestInfos[3]); //客队编号
+			
 			Schedule schedule = Schedule.findScheduleWOBuild(Integer.parseInt(a));
 			boolean ismod = false;
 			if(null == schedule) {
@@ -149,12 +156,16 @@ public class UpdateScheduleService {
 				schedule.setSclassID(Integer.parseInt(c.split("\\,")[3]));
 				schedule.setMatchTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", d));
 				schedule.setMatchState(Integer.parseInt(f));
-				String[] values = h.split("\\,");
-				schedule.setHomeTeam(values[0]);
-				schedule.setHomeTeamID(Integer.parseInt(values[3]));
-				values = i.split("\\,");
-				schedule.setGuestTeam(values[0]);
-				schedule.setGuestTeamID(Integer.parseInt(values[3]));
+				//String[] values = h.split("\\,");
+				//schedule.setHomeTeam(values[0]);
+				schedule.setHomeTeam(homeTeam);
+				//schedule.setHomeTeamID(Integer.parseInt(values[3]));
+				schedule.setHomeTeamID(homeTeamID);
+				//values = i.split("\\,");
+				//schedule.setGuestTeam(values[0]);
+				schedule.setGuestTeam(guestTeam);
+				//schedule.setGuestTeamID(Integer.parseInt(values[3]));
+				schedule.setGuestTeamID(guestTeamID);
 				schedule.setHomeScore(NumberUtil.parseInt(j, 0));
 				schedule.setGuestScore(NumberUtil.parseInt(k, 0));
 				schedule.setHomeHalfScore(NumberUtil.parseInt(l, 0));
@@ -185,6 +196,22 @@ public class UpdateScheduleService {
 						ismod = true;
 						schedule.setMatchTime(dDate);
 					}
+				}
+				if (!StringUtils.equals(schedule.getHomeTeam(), homeTeam)) {
+					ismod = true;
+					schedule.setHomeTeam(homeTeam);
+				}
+				if (schedule.getHomeTeamID()!=homeTeamID) {
+					ismod = true;
+					schedule.setHomeTeamID(homeTeamID);
+				}
+				if (StringUtils.equals(schedule.getGuestTeam(), guestTeam)) {
+					ismod = true;
+					schedule.setGuestTeam(guestTeam);
+				}
+				if (schedule.getGuestTeamID()!=guestTeamID) {
+					ismod = true;
+					schedule.setGuestTeamID(guestTeamID);
 				}
 				if(Integer.parseInt(f) != schedule.getMatchState()) {
 					ismod = true;
