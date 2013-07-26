@@ -272,6 +272,11 @@ public class SystemController {
 		return rd;
 	}
 	
+	/**
+	 * 发送赛事完场的Jms
+	 * @param event
+	 * @return
+	 */
 	@RequestMapping(value = "/scheduleFinishJms", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
