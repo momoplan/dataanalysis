@@ -17,7 +17,6 @@ import com.ruyicai.dataanalysis.timer.jcl.SclassJclUpdateService;
 import com.ruyicai.dataanalysis.timer.jcl.StandardJclUpdateService;
 import com.ruyicai.dataanalysis.timer.jcl.TeamJclUpdateService;
 import com.ruyicai.dataanalysis.timer.jcl.TodayScoreJclUpdateService;
-import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcl.SendJmsJclUtil;
 
 @RequestMapping("/systemJcl")
@@ -125,18 +124,16 @@ public class SystemJclController {
 	}
 	
 	/**
-	 * 更新赛事的让分和总分盘
+	 * 发送赛事完场的Jms
 	 * @param event
 	 * @return
 	 */
-	@RequestMapping(value = "/updateScheduleLetScoreTotalScore", method = RequestMethod.POST)
+	@RequestMapping(value = "/scheduleFinishJms", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData updateScheduleLetScoreTotalScore(@RequestParam("event") String event) {
+	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			if (!StringUtil.isEmpty(event)) {
-				sendJmsJclUtil.sendScheduleFinishJms(event);
-			}
+			sendJmsJclUtil.sendScheduleFinishJms(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
