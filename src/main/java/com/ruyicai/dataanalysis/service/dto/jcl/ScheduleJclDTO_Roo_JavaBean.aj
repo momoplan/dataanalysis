@@ -209,4 +209,12 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
         this.totalScore = totalScore;
     }
     
+    public String ScheduleJclDTO.getTurn() {
+        return this.turn;
+    }
+    
+    public void ScheduleJclDTO.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
 }

@@ -104,6 +104,9 @@ public class ScheduleJcl {
 	
 	private String totalScore;
 	
+	private String turn;
+	
+	
 	@Autowired
 	private transient ScheduleJclCache scheduleJclCache;
 	

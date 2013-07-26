@@ -46,7 +46,8 @@ privileged aspect ScheduleJcl_Roo_ToString {
         sb.append("SclassId: ").append(getSclassId()).append(", ");
         sb.append("SclassNameJs: ").append(getSclassNameJs()).append(", ");
         sb.append("SclassType: ").append(getSclassType()).append(", ");
-        sb.append("TotalScore: ").append(getTotalScore());
+        sb.append("TotalScore: ").append(getTotalScore()).append(", ");
+        sb.append("Turn: ").append(getTurn());
         return sb.toString();
     }
     

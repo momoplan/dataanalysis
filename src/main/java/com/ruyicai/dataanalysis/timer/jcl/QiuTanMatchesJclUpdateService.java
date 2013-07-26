@@ -72,6 +72,8 @@ public class QiuTanMatchesJclUpdateService {
 			String away = match.elementTextTrim("Away"); //客队
 			String homeID = match.elementTextTrim("HomeID"); //主队id
 			String awayID = match.elementTextTrim("AwayID"); //客队id
+			String turn = match.elementTextTrim("Turn"); //主客队是否需要反转
+			turn = StringUtils.equals(turn, "True") ? "1" : "0";
 			//如果不是竞彩篮球则不执行
 			if (!JingCaiUtil.isJcLq(lotteryName)) {
 				return;
@@ -92,6 +94,7 @@ public class QiuTanMatchesJclUpdateService {
 				qiuTanMatches.setAway(away);
 				qiuTanMatches.setHomeID(Integer.parseInt(homeID));
 				qiuTanMatches.setAwayID(Integer.parseInt(awayID));
+				qiuTanMatches.setTurn(turn);
 				//设置event
 				String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 				qiuTanMatches.setEvent(event);
@@ -157,6 +160,12 @@ public class QiuTanMatchesJclUpdateService {
 					isModify = true;
 					qiuTanMatches.setEvent(event);
 				}
+				//设置turn
+				String turn_old = qiuTanMatches.getTurn();
+				if (StringUtils.isNotBlank(turn) && (StringUtils.isBlank(turn_old)||!StringUtils.equals(turn, turn_old))) {
+					isModify = true;
+					qiuTanMatches.setTurn(turn);
+				}
 				if (isModify) {
 					qiuTanMatches.merge();
 				}
@@ -175,10 +184,20 @@ public class QiuTanMatchesJclUpdateService {
 	 * @param schedule
 	 */
 	private void updateScheduleEvent(QiuTanMatches qiuTanMatches, ScheduleJcl scheduleJcl) {
+		boolean isUpdate = false;
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = scheduleJcl.getEvent();
 		if(!StringUtil.isEmpty(eventQ)&&(StringUtil.isEmpty(eventS)||!eventQ.equals(eventS))) {
+			isUpdate = true;
 			scheduleJcl.setEvent(eventQ);
+		}
+		String turnQ = qiuTanMatches.getTurn();
+		String turnS = scheduleJcl.getTurn();
+		if (StringUtils.isNotBlank(turnQ)&&(StringUtils.isBlank(turnS)||!StringUtils.equals(turnQ, turnS))) {
+			isUpdate = true;
+			scheduleJcl.setTurn(turnQ);
+		}
+		if (isUpdate) {
 			scheduleJcl.merge();
 		}
 	}

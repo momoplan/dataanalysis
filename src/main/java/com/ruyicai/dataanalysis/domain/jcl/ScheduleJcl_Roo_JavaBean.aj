@@ -290,6 +290,14 @@ privileged aspect ScheduleJcl_Roo_JavaBean {
         this.avgG = avgG;
     }
     
+    public String ScheduleJcl.getTurn() {
+        return this.turn;
+    }
+    
+    public void ScheduleJcl.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
     public String ScheduleJcl.getLetScore() {
         return this.letScore;
     }

@@ -59,6 +59,8 @@ public class ScheduleJclDTO {
 	
 	private String totalScore;
 	
+	private String turn;
+	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class").deepSerialize(this);
     }
