@@ -19,11 +19,11 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
-import com.ruyicai.dataanalysis.util.CalcUtil;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 
 /**
  * 竞彩足球-百家欧赔更新JMS的处理

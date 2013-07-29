@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.util;
+package com.ruyicai.dataanalysis.util.jcz;
 
 import java.math.BigDecimal;
 

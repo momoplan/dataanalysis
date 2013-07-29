@@ -15,8 +15,8 @@ import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
-import com.ruyicai.dataanalysis.util.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 /**
  * 竞彩篮球-彩票赛事与球探网的关联更新
@@ -98,6 +98,8 @@ public class QiuTanMatchesJclUpdateService {
 				//设置event
 				String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 				qiuTanMatches.setEvent(event);
+				//判断是否有重复赛事
+				JingCaiUtil.jclProcess(event, iD_bet007);
  				qiuTanMatches.persist();
 			} else { //记录已存在
 				boolean isModify = false;
@@ -166,6 +168,8 @@ public class QiuTanMatchesJclUpdateService {
 					isModify = true;
 					qiuTanMatches.setTurn(turn);
 				}
+				//判断是否有重复赛事
+				JingCaiUtil.jclProcess(event, iD_bet007);
 				if (isModify) {
 					qiuTanMatches.merge();
 				}
@@ -174,7 +178,6 @@ public class QiuTanMatchesJclUpdateService {
 			updateScheduleEvent(qiuTanMatches, scheduleJcl);
 		} catch(Exception e) {
 			logger.error("竞彩篮球-解析彩票赛事与球探网的关联发生异常", e);
-			//logger.error(e.getMessage(), e);
 		}
 	}
 	

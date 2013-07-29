@@ -10,7 +10,7 @@ import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.ZuCaiUtil;
+import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 
 /**
  * 足彩查询

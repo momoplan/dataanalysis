@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.util;
+package com.ruyicai.dataanalysis.util.jc;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -9,6 +9,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
+
+import com.ruyicai.dataanalysis.domain.QiuTanMatches;
+import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
+import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**
  * 竞彩公共类
@@ -48,7 +53,6 @@ public class JingCaiUtil {
 	 * @return
 	 */
 	public static String getEvent(String lotteryName, String iD, Date time) {
-		//logger.info("lotteryName="+lotteryName+",iD="+iD+",time="+time);
 		BigDecimal weekid = WEEKID.get(iD.substring(0, 2));
 		String day = getDay(weekid.intValue(), time);
 		String teamid = iD.substring(2);
@@ -100,9 +104,6 @@ public class JingCaiUtil {
 		if (StringUtils.equals(lotteryName, "竞彩足球")) {
 			isJcZq = true;
 		}
-		/*if (lotteryName!=null&&lotteryName.equals("竞彩足球")) {
-			isJcZq = true;
-		}*/
 		return isJcZq;
 	}
 	
@@ -116,10 +117,51 @@ public class JingCaiUtil {
 		if (StringUtils.equals(lotteryName, "竞彩篮球")) {
 			isJcLq = true;
 		}
-		/*if (lotteryName!=null&&lotteryName.equals("竞彩篮球")) {
-			isJcLq = true;
-		}*/
 		return isJcLq;
+	}
+	
+	/**
+	 * 竞彩足球处理
+	 * @param event
+	 * @param iD_bet007
+	 */
+	public static void jczProcess(String event, String iD_bet007) {
+		QiuTanMatches qiuTanMatches = QiuTanMatches.findByEvent(event);
+		if (qiuTanMatches!=null) {
+			Integer scheduleId = qiuTanMatches.getID_bet007();
+			//防止同一个彩种同一个期号同一个场次有重复的比赛，将之前赛事的event置为空，以最新数据为准
+			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
+				qiuTanMatches.setEvent(null);
+				qiuTanMatches.merge();
+				Schedule schedule = Schedule.findSchedule(scheduleId);
+				if (schedule!=null) {
+					schedule.setEvent(null);
+					schedule.merge();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 竞彩篮球处理
+	 * @param event
+	 * @param iD_bet007
+	 */
+	public static void jclProcess(String event, String iD_bet007) {
+		QiuTanMatches qiuTanMatches = QiuTanMatches.findByEvent(event);
+		if (qiuTanMatches!=null) {
+			Integer scheduleId = qiuTanMatches.getID_bet007();
+			//防止同一个彩种同一个期号同一个场次有重复的比赛，将之前赛事的event置为空，以最新数据为准
+			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
+				qiuTanMatches.setEvent(null);
+				qiuTanMatches.merge();
+				ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJcl(scheduleId);
+				if (scheduleJcl!=null) {
+					scheduleJcl.setEvent(null);
+					scheduleJcl.merge();
+				}
+			}
+		}
 	}
 	
 }

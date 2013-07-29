@@ -17,10 +17,10 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.FileUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
-import com.ruyicai.dataanalysis.util.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.ZuCaiUtil;
 import com.ruyicai.dataanalysis.util.bd.BeiDanUtil;
+import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
+import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 
 @Service
 public class UpdateQiuTanMatchesService {
@@ -110,30 +110,37 @@ public class UpdateQiuTanMatchesService {
 				qiuTanMatches.setAway(away);
 				qiuTanMatches.setHomeID(Integer.parseInt(homeID));
 				qiuTanMatches.setAwayID(Integer.parseInt(awayID));
-				//qiuTanMatches.setTurn(turn);
 				//设置event
 				if (JingCaiUtil.isJcZq(lotteryName)) { //竞彩足球
 					String event = JingCaiUtil.getEvent(lotteryName, iD, qiuTanMatches.getTime());
 					qiuTanMatches.setEvent(event);
 					qiuTanMatches.setTurn(turn);
+					//判断是否有重复赛事
+					JingCaiUtil.jczProcess(event, iD_bet007);
 				} else if (ZuCaiUtil.isZuCai(lotteryName)) { //足彩
 					String zcEvent = ZuCaiUtil.getZcEvent(lotteryName, issueNum, iD);
 					if (ZuCaiUtil.isZcSfc(lotteryName)) { //足彩胜负彩
 						qiuTanMatches.setZcSfcEvent(zcEvent);
 						qiuTanMatches.setZcSfcTurn(turn);
+						//判断是否有重复赛事
+						ZuCaiUtil.sfcProcess(zcEvent, iD_bet007);
 					} else if (ZuCaiUtil.isZcJqc(lotteryName)) { //足彩进球彩
 						qiuTanMatches.setZcJqcEvent(zcEvent);
 						qiuTanMatches.setZcJqcTurn(turn);
+						//判断是否有重复赛事
+						ZuCaiUtil.jqcProcess(zcEvent, iD_bet007);
 					} else if (ZuCaiUtil.isZcBqc(lotteryName)) { //足彩半全场
 						qiuTanMatches.setZcBqcEvent(zcEvent);
 						qiuTanMatches.setZcBqcTurn(turn);
+						//判断是否有重复赛事
+						ZuCaiUtil.bqcProcess(zcEvent, iD_bet007);
 					}
-					//足彩处理
-					ZuCaiUtil.zcProcess(lotteryName, issueNum, iD, iD_bet007);
 				} else if (BeiDanUtil.isBeiDan(lotteryName)) { //北单
 					String bdEvent = BeiDanUtil.getBdEvent(issueNum, iD);
 					qiuTanMatches.setBdEvent(bdEvent);
 					qiuTanMatches.setBdTurn(turn);
+					//判断是否有重复赛事
+					BeiDanUtil.bdProcess(bdEvent, iD_bet007);
 				}
  				qiuTanMatches.persist();
 			} else { //记录已存在
@@ -203,6 +210,8 @@ public class UpdateQiuTanMatchesService {
 						isModify = true;
 						qiuTanMatches.setTurn(turn);
 					}
+					//判断是否有重复赛事
+					JingCaiUtil.jczProcess(event, iD_bet007);
 				} else if (ZuCaiUtil.isZuCai(lotteryName)) { //足彩
 					String zcEvent = ZuCaiUtil.getZcEvent(lotteryName, issueNum, iD);
 					if (ZuCaiUtil.isZcSfc(lotteryName)) { //足彩胜负彩
@@ -216,6 +225,8 @@ public class UpdateQiuTanMatchesService {
 							isModify = true;
 							qiuTanMatches.setZcSfcTurn(turn);
 						}
+						//判断是否有重复赛事
+						ZuCaiUtil.sfcProcess(zcEvent, iD_bet007);
 					} else if (ZuCaiUtil.isZcJqc(lotteryName)) { //足彩进球彩
 						String zcJqcEvent_old = qiuTanMatches.getZcJqcEvent();
 						if (!StringUtil.isEmpty(zcEvent) && (StringUtil.isEmpty(zcJqcEvent_old)||!zcEvent.equals(zcJqcEvent_old))) {
@@ -227,6 +238,8 @@ public class UpdateQiuTanMatchesService {
 							isModify = true;
 							qiuTanMatches.setZcJqcTurn(turn);
 						}
+						//判断是否有重复赛事
+						ZuCaiUtil.jqcProcess(zcEvent, iD_bet007);
 					} else if (ZuCaiUtil.isZcBqc(lotteryName)) { //足彩半全场
 						String zcBqcEvent_old = qiuTanMatches.getZcBqcEvent();
 						if (!StringUtil.isEmpty(zcEvent) && (StringUtil.isEmpty(zcBqcEvent_old)||!zcEvent.equals(zcBqcEvent_old))) {
@@ -238,9 +251,9 @@ public class UpdateQiuTanMatchesService {
 							isModify = true;
 							qiuTanMatches.setZcBqcTurn(turn);
 						}
+						//判断是否有重复赛事
+						ZuCaiUtil.bqcProcess(zcEvent, iD_bet007);
 					}
-					//足彩处理
-					ZuCaiUtil.zcProcess(lotteryName, issueNum, iD, iD_bet007);
 				} else if (BeiDanUtil.isBeiDan(lotteryName)) { //北单
 					String bdEvent = BeiDanUtil.getBdEvent(issueNum, iD);
 					String bdEvent_old = qiuTanMatches.getBdEvent();
@@ -253,6 +266,8 @@ public class UpdateQiuTanMatchesService {
 						isModify = true;
 						qiuTanMatches.setBdTurn(turn);
 					}
+					//判断是否有重复赛事
+					BeiDanUtil.bdProcess(bdEvent, iD_bet007);
 				}
 				if (isModify) {
 					qiuTanMatches.merge();
@@ -262,7 +277,6 @@ public class UpdateQiuTanMatchesService {
 			updateScheduleEvent(qiuTanMatches, schedule);
 		} catch(Exception e) {
 			logger.error("解析彩票赛事与球探网的关联表发生异常", e);
-			//logger.error(e.getMessage(), e);
 		}
 	}
 	

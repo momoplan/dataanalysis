@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.news.News;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
-import com.ruyicai.dataanalysis.util.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 /**
  * 抓取新闻的定时任务

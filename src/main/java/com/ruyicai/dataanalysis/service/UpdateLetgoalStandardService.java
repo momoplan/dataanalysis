@@ -18,11 +18,11 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.util.CalcUtil;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 
 @Service
 public class UpdateLetgoalStandardService {

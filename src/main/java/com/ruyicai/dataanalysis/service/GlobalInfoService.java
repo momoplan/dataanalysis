@@ -21,9 +21,9 @@ import com.ruyicai.dataanalysis.service.dto.InfoDTO;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
-import com.ruyicai.dataanalysis.util.CalcUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.ZuCaiUtil;
+import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
+import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 
 @Service
 public class GlobalInfoService {

@@ -73,9 +73,54 @@ public class QiuTanMatches {
 		return qiuTanMatches.get(0);
 	}
 	
-	public static QiuTanMatches findByLotteryName_issueNum_id(String lotteryName, String issueNum, String id) {
+	/*public static QiuTanMatches findByLotteryName_issueNum_id(String lotteryName, String issueNum, String id) {
 		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where lotteryName=? and issueNum=? and id=?", QiuTanMatches.class)
 		.setParameter(1, lotteryName).setParameter(2, issueNum).setParameter(3, id).getResultList();
+		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
+			return null;
+		}
+		return qiuTanMatches.get(0);
+	}*/
+	
+	public static QiuTanMatches findByEvent(String event) {
+		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where event=?", QiuTanMatches.class)
+		.setParameter(1, event).getResultList();
+		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
+			return null;
+		}
+		return qiuTanMatches.get(0);
+	}
+	
+	public static QiuTanMatches findByZcSfcEvent(String event) {
+		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where zcSfcEvent=?", QiuTanMatches.class)
+		.setParameter(1, event).getResultList();
+		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
+			return null;
+		}
+		return qiuTanMatches.get(0);
+	}
+	
+	public static QiuTanMatches findByZcJqcEvent(String event) {
+		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where zcJqcEvent=?", QiuTanMatches.class)
+		.setParameter(1, event).getResultList();
+		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
+			return null;
+		}
+		return qiuTanMatches.get(0);
+	}
+	
+	public static QiuTanMatches findByZcBqcEvent(String event) {
+		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where zcBqcEvent=?", QiuTanMatches.class)
+		.setParameter(1, event).getResultList();
+		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
+			return null;
+		}
+		return qiuTanMatches.get(0);
+	}
+	
+	public static QiuTanMatches findByBdEvent(String event) {
+		List<QiuTanMatches> qiuTanMatches = entityManager().createQuery("select o from QiuTanMatches o where bdEvent=?", QiuTanMatches.class)
+		.setParameter(1, event).getResultList();
 		if(null == qiuTanMatches || qiuTanMatches.isEmpty()) {
 			return null;
 		}
