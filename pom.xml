@@ -596,7 +596,7 @@
 				<news.database.url>jdbc:mysql://192.168.0.92:3306/news?characterEncoding=utf-8</news.database.url>
 				<news.database.username>jrtConsole</news.database.username>
 				<news.database.password>jrtConsole</news.database.password>
-				<database.partitionCount>1</database.partitionCount>
+				<!-- <database.partitionCount>1</database.partitionCount> -->
 				<logback.appender>STDOUT</logback.appender>
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
@@ -620,8 +620,8 @@
 				<news.database.username>jrtConsole</news.database.username>
 				<news.database.password>jrtConsole</news.database.password>
 				<logback.appender>dataanalysisLog</logback.appender>
-				<database.partitionCount>1</database.partitionCount>
-				<log.dir>/home/appusr/logs</log.dir>
+				<!-- <database.partitionCount>1</database.partitionCount> -->
+				<!-- <log.dir>/home/appusr/logs</log.dir> -->
 				<!-- <url.lottery>http://192.168.0.42:8080/lottery</url.lottery> -->
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
@@ -643,9 +643,9 @@
 				<news.database.driverClassName>com.mysql.jdbc.Driver</news.database.driverClassName>
 				<news.database.username>jrtConsole</news.database.username>
 				<news.database.password>jrtConsole</news.database.password>
-				<database.partitionCount>1</database.partitionCount>
+				<!-- <database.partitionCount>1</database.partitionCount> -->
 				<logback.appender>dataanalysisLog</logback.appender>
-				<log.dir>/home/appusr/prizecenter/apache-tomcat-6.0.32/logs</log.dir>
+				<!-- <log.dir>/home/appusr/prizecenter/apache-tomcat-6.0.32/logs</log.dir> -->
 				<!-- <url.lottery>http://192.168.99.6/lottery</url.lottery> -->
 				<memcache.client.ip>192.168.99.16:12000,192.168.99.17:12000</memcache.client.ip>
 				<jms.brokerURL>failover://(tcp://192.168.99.16:61616,tcp://192.168.99.17:61616)?randomize=false</jms.brokerURL>
