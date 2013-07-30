@@ -89,7 +89,7 @@ public class ZuCaiUtil {
 	 * @param iD_bet007
 	 */
 	public static void bqcProcess(String event, String iD_bet007) {
-		QiuTanMatches qiuTanMatches = QiuTanMatches.findByBdEvent(event);
+		QiuTanMatches qiuTanMatches = QiuTanMatches.findByZcBqcEvent(event);
 		if (qiuTanMatches!=null) {
 			Integer scheduleId = qiuTanMatches.getID_bet007();
 			//防止同一个彩种同一个期号同一个场次有重复的比赛，将之前赛事的event置为空，以最新数据为准
