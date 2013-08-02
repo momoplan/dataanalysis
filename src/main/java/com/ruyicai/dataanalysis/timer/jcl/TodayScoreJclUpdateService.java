@@ -1,7 +1,6 @@
 package com.ruyicai.dataanalysis.timer.jcl;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.jcl.MatchStateJcl;
 import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.HttpUtil;
+import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcl.SendJmsJclUtil;
 
@@ -149,65 +149,65 @@ public class TodayScoreJclUpdateService {
 				isModify = true;
 				scheduleJcl.setGuestTeam(guestTeam);
 			}
-			
+			//主队比分
 			String homeScore_old = scheduleJcl.getHomeScore();
-			if (!StringUtil.isEmpty(homeScore) && (StringUtil.isEmpty(homeScore_old)||!homeScore.equals(homeScore_old))) {
+			if (!StringUtils.equals(homeScore_old, NumberUtil.parseString(homeScore, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeScore(homeScore);
+				scheduleJcl.setHomeScore(NumberUtil.parseString(homeScore, "0"));
 			}
-			
+			//客队比分
 			String guestScore_old = scheduleJcl.getGuestScore();
-			if (!StringUtil.isEmpty(guestScore) && (StringUtil.isEmpty(guestScore_old)||!guestScore.equals(guestScore_old))) {
+			if (!StringUtils.equals(guestScore_old, NumberUtil.parseString(guestScore, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestScore(guestScore);
+				scheduleJcl.setGuestScore(NumberUtil.parseString(guestScore, "0"));
 			}
-			
+			//主队第一节比分
 			String homeOne_old = scheduleJcl.getHomeOne();
-			if (!StringUtil.isEmpty(homeOne) && (StringUtil.isEmpty(homeOne_old)||!homeOne.equals(homeOne_old))) {
+			if (!StringUtils.equals(homeOne_old, NumberUtil.parseString(homeOne, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeOne(homeOne);
+				scheduleJcl.setHomeOne(NumberUtil.parseString(homeOne, "0"));
 			}
-			
+			//客队第一节比分
 			String guestOne_old = scheduleJcl.getGuestOne();
-			if (!StringUtil.isEmpty(guestOne) && (StringUtil.isEmpty(guestOne_old)||!homeOne.equals(guestOne_old))) {
+			if (!StringUtils.equals(guestOne_old, NumberUtil.parseString(guestOne, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestOne(guestOne);
+				scheduleJcl.setGuestOne(NumberUtil.parseString(guestOne, "0"));
 			}
-			
+			//主队第二节比分
 			String homeTwo_old = scheduleJcl.getHomeTwo();
-			if (!StringUtil.isEmpty(homeTwo) && (StringUtil.isEmpty(homeTwo_old)||!homeTwo.equals(homeTwo_old))) {
+			if (!StringUtils.equals(homeTwo_old, NumberUtil.parseString(homeTwo, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeTwo(homeTwo);
+				scheduleJcl.setHomeTwo(NumberUtil.parseString(homeTwo, "0"));
 			}
-			
+			//客队第二节比分
 			String guestTwo_old = scheduleJcl.getGuestTwo();
-			if (!StringUtil.isEmpty(guestTwo) && (StringUtil.isEmpty(guestTwo_old)||!guestTwo.equals(guestTwo_old))) {
+			if (!StringUtils.equals(guestTwo_old, NumberUtil.parseString(guestTwo, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestTwo(guestTwo);
+				scheduleJcl.setGuestTwo(NumberUtil.parseString(guestTwo, "0"));
 			}
-			
+			//主队第三节比分
 			String homeThree_old = scheduleJcl.getHomeThree();
-			if (!StringUtil.isEmpty(homeThree) && (StringUtil.isEmpty(homeThree_old)||!homeThree.equals(homeThree_old))) {
+			if (!StringUtils.equals(homeThree_old, NumberUtil.parseString(homeThree, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeThree(homeThree);
+				scheduleJcl.setHomeThree(NumberUtil.parseString(homeThree, "0"));
 			}
-			
+			//客队第三节比分
 			String guestThree_old = scheduleJcl.getGuestThree();
-			if (!StringUtil.isEmpty(guestThree) && (StringUtil.isEmpty(guestThree_old)||!guestThree.equals(guestThree_old))) {
+			if (!StringUtils.equals(guestThree_old, NumberUtil.parseString(guestThree, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestThree(guestThree);
+				scheduleJcl.setGuestThree(NumberUtil.parseString(guestThree, "0"));
 			}
-			
+			//主队第四节比分
 			String homeFour_old = scheduleJcl.getHomeFour();
-			if (!StringUtil.isEmpty(homeFour) && (StringUtil.isEmpty(homeFour_old)||!homeFour.equals(homeFour_old))) {
+			if (!StringUtils.equals(homeFour_old, NumberUtil.parseString(homeFour, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeFour(homeFour);
+				scheduleJcl.setHomeFour(NumberUtil.parseString(homeFour, "0"));
 			}
-			
+			//客队第四节比分
 			String guestFour_old = scheduleJcl.getGuestFour();
-			if (!StringUtil.isEmpty(guestFour) && (StringUtil.isEmpty(guestFour_old)||!guestFour.equals(guestFour_old))) {
+			if (!StringUtils.equals(guestFour_old, NumberUtil.parseString(guestFour, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestFour(guestFour);
+				scheduleJcl.setGuestFour(NumberUtil.parseString(guestFour, "0"));
 			}
 			
 			String addTime_old = scheduleJcl.getAddTime();
@@ -215,41 +215,41 @@ public class TodayScoreJclUpdateService {
 				isModify = true;
 				scheduleJcl.setAddTime(addTime);
 			}
-			
+			//主队加时1比分
 			String homeAddTime1_old = scheduleJcl.getHomeAddTime1();
-			if (!StringUtil.isEmpty(homeAddTime1) && (StringUtil.isEmpty(homeAddTime1_old)||!homeAddTime1.equals(homeAddTime1_old))) {
+			if (!StringUtils.equals(homeAddTime1_old, NumberUtil.parseString(homeAddTime1, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeAddTime1(homeAddTime1);
+				scheduleJcl.setHomeAddTime1(NumberUtil.parseString(homeAddTime1, "0"));
 			}
-			
+			//客队加时1比分
 			String guestAddTime1_old = scheduleJcl.getGuestAddTime1();
-			if (!StringUtil.isEmpty(guestAddTime1) && (StringUtil.isEmpty(guestAddTime1_old)||!guestAddTime1.equals(guestAddTime1_old))) {
+			if (!StringUtils.equals(guestAddTime1_old, NumberUtil.parseString(guestAddTime1, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestAddTime1(guestAddTime1);
+				scheduleJcl.setGuestAddTime1(NumberUtil.parseString(guestAddTime1, "0"));
 			}
-			
+			//主队加时2比分
 			String homeAddTime2_old = scheduleJcl.getHomeAddTime2();
-			if (!StringUtil.isEmpty(homeAddTime2) && (StringUtil.isEmpty(homeAddTime2_old)||!homeAddTime2.equals(homeAddTime2_old))) {
+			if (!StringUtils.equals(homeAddTime2_old, NumberUtil.parseString(homeAddTime2, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeAddTime2(homeAddTime2);
+				scheduleJcl.setHomeAddTime2(NumberUtil.parseString(homeAddTime2, "0"));
 			}
-			
+			//客队加时2比分
 			String guestAddTime2_old = scheduleJcl.getGuestAddTime2();
-			if (!StringUtil.isEmpty(guestAddTime2) && (StringUtil.isEmpty(guestAddTime2_old)||!guestAddTime2.equals(guestAddTime2_old))) {
+			if (!StringUtils.equals(guestAddTime2_old, NumberUtil.parseString(guestAddTime2, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestAddTime2(guestAddTime2);
+				scheduleJcl.setGuestAddTime2(NumberUtil.parseString(guestAddTime2, "0"));
 			}
-			
+			//主队加时3比分
 			String homeAddTime3_old = scheduleJcl.getHomeAddTime3();
-			if (!StringUtil.isEmpty(homeAddTime3) && (StringUtil.isEmpty(homeAddTime3_old)||!homeAddTime3.equals(homeAddTime3_old))) {
+			if (!StringUtils.equals(homeAddTime3_old, NumberUtil.parseString(homeAddTime3, "0"))) {
 				isModify = true;
-				scheduleJcl.setHomeAddTime3(homeAddTime3);
+				scheduleJcl.setHomeAddTime3(NumberUtil.parseString(homeAddTime3, "0"));
 			}
-			
+			//客队加时3比分
 			String guestAddTime3_old = scheduleJcl.getGuestAddTime3();
-			if (!StringUtil.isEmpty(guestAddTime3) && (StringUtil.isEmpty(guestAddTime3_old)||!guestAddTime3.equals(guestAddTime3_old))) {
+			if (!StringUtils.equals(guestAddTime3_old, NumberUtil.parseString(guestAddTime3, "0"))) {
 				isModify = true;
-				scheduleJcl.setGuestAddTime3(guestAddTime3);
+				scheduleJcl.setGuestAddTime3(NumberUtil.parseString(guestAddTime3, "0"));
 			}
 			
 			if (isModify) {

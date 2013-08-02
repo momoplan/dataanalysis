@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.util;
 
 import java.math.BigDecimal;
+import org.apache.commons.lang.StringUtils;
 
 public class NumberUtil {
 
@@ -13,6 +14,13 @@ public class NumberUtil {
 		} catch(Exception e) {
 		}
 		return def;
+	}
+	
+	public static String parseString(String s, String def) {
+		if (StringUtils.isBlank(s)) {
+			return def;
+		}
+		return s;
 	}
 	
 	public static boolean compare(String nums, Double bd) {
