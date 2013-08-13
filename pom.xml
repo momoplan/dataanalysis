@@ -412,11 +412,6 @@
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>sqlserver</groupId>
-			<artifactId>jdbc</artifactId>
-			<version>4</version>
-		</dependency>
-		<dependency>
 			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz-all</artifactId>
 			<version>1.6.1</version>
