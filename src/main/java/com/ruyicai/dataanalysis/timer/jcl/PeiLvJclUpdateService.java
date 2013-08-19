@@ -51,11 +51,16 @@ public class PeiLvJclUpdateService {
 				return;
 			}
 			final String[] datas = data.split("\\$");
-			processLetGoal(datas[2]); //亚赔-让分盘
+			//防止数据为空(data=$$$$$$)时出现数组越界的异常
+			if (datas!=null&&datas.length>=2) {
+				processLetGoal(datas[2]); //亚赔-让分盘
+			}
 			//此处不处理欧赔,因为如果某场赛事没有亚赔,那么欧赔也不会返回,这样就不能更新这场赛事的缓存,
 			//迁移到插入欧赔数据的时候更新缓存
 			//processStandard(datas[3]); //欧赔
-			processTotalScore(datas[4]); //亚赔-总分盘
+			if (datas!=null&&datas.length>=4) {
+				processTotalScore(datas[4]); //亚赔-总分盘
+			}
 		} catch(Exception e) {
 			logger.error("竞彩篮球-赔率更新异常", e);
 		}
@@ -83,27 +88,6 @@ public class PeiLvJclUpdateService {
 			}
 		}).start();
 	}
-	
-	/**
-	 * 竞彩篮球-欧赔更新
-	 * @param data
-	 */
-	/*private void processStandard(final String data) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				logger.info("竞彩篮球-欧赔更新开始");
-				long startmillis = System.currentTimeMillis();
-				try {
-					doStandard(data);
-				} catch(Exception e) {
-					logger.error("竞彩篮球-欧赔更新异常", e);
-				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("竞彩篮球-欧赔更新结束, 共用时 " + (endmillis - startmillis));
-			}
-		}).start();
-	}*/
 	
 	/**
 	 * 竞彩篮球-亚赔-总分盘更新
@@ -271,120 +255,6 @@ public class PeiLvJclUpdateService {
 		}
 		return null;
 	}
-	
-	/**
-	 * 解析欧赔数据
-	 * @param value
-	 */
-	/*private void doStandard(String value) {
-		String[] datas = value.split("\\;");
-		Set<Integer> scheduleIds = new HashSet<Integer>();
-		for(String data : datas) {
-			String scheduleId = buildStandard(data);
-			if(!StringUtil.isEmpty(scheduleId)) {
-				scheduleIds.add(Integer.parseInt(scheduleId));
-			}
-		}
-		for(Integer scheduleId : scheduleIds) {
-			String id = StringUtil.join("_", "dataAnalysisJcl", "Standard", String.valueOf(scheduleId));
-			GlobalCacheJcl globalCache = GlobalCacheJcl.findGlobalCache(id);
-			List<StandardJcl> list = StandardJcl.findByScheduleID(scheduleId);
-			buildStandards(ScheduleJcl.findScheduleJcl(scheduleId), list);
-			if(null == globalCache) {
-				globalCache = new GlobalCacheJcl();
-				globalCache.setId(id);
-				globalCache.setValue(StandardJcl.toJsonArray(list));
-				globalCache.persist();
-				globalInfoJclService.updateInfo(scheduleId);
-			} else {
-				Collection<StandardJcl> collection = StandardJcl.fromJsonArrayToStandardJcls(globalCache.getValue());
-				if(list.size() != collection.size()) {
-					globalCache.setValue(StandardJcl.toJsonArray(list));
-					globalCache.merge();
-					globalInfoJclService.updateInfo(scheduleId);
-				} else {
-					List<StandardJcl> standards = convertStandardJcls(collection);
-					Collections.sort(standards);
-					Collections.sort(list);
-					boolean isUpdate = false;
-					for(int i = 0; i < standards.size(); i ++) {
-						StandardJcl s1 = standards.get(i);
-						StandardJcl s2 = list.get(i);
-						if(!s1.equals(s2)) {
-							isUpdate = true; 
-							break;
-						}
-					}
-					if(isUpdate) {
-						globalCache.setValue(StandardJcl.toJsonArray(list));
-						globalCache.merge();
-						globalInfoJclService.updateInfo(scheduleId);
-					}
-				}
-			}
-		}
-	}*/
-	
-	/**
-	 * 查询scheduleID是否在数据库中有记录
-	 * @param data
-	 * @return
-	 */
-	/*private String buildStandard(String data) {
-		try {
-			String[] datas = data.split("\\,");
-			String scheduleID = datas[0];
-			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJcl(Integer.parseInt(scheduleID));
-			if (scheduleJcl==null||StringUtil.isEmpty(scheduleJcl.getEvent())) {
-				return null;
-			}
-			return scheduleID;
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		return null;
-	}*/
-	
-	/**
-	 * 设置欧赔的返还率和凯利指数
-	 * @param schedule
-	 * @param standards
-	 */
-	/*private void buildStandards(ScheduleJcl scheduleJcl, Collection<StandardJcl> standards) {
-		if(null != standards && !standards.isEmpty()) {
-			for(StandardJcl standardJcl : standards) {
-				EuropeCompanyJcl europeCompanyJcl = EuropeCompanyJcl.findEuropeCompanyJcl(standardJcl.getCompanyId());
-				if (europeCompanyJcl!=null) {
-					standardJcl.setCompanyName(europeCompanyJcl.getNameC());
-				}
-				standardJcl.setHomeWin(standardJcl.getHomeWin()==null ? standardJcl.getFirstHomeWin() : standardJcl.getHomeWin());
-				standardJcl.setGuestWin(standardJcl.getGuestWin()==null ? standardJcl.getFirstGuestWin() : standardJcl.getGuestWin());
-				standardJcl.setHomeWinLv(CalcJclUtil.probability_H(standardJcl.getHomeWin(), standardJcl.getGuestWin()));
-				standardJcl.setGuestWinLv(CalcJclUtil.probability_G(standardJcl.getHomeWin(), standardJcl.getGuestWin()));
-				standardJcl.setFanHuanLv(CalcJclUtil.fanhuan(standardJcl.getHomeWinLv(), standardJcl.getHomeWin()));
-				
-				if (scheduleJcl.getAvgH()!=null) {
-					standardJcl.setK_h(CalcJclUtil.k_h(standardJcl.getHomeWinLv(), scheduleJcl.getAvgH()));
-				}
-				if (scheduleJcl.getAvgG()!=null) {
-					standardJcl.setK_g(CalcJclUtil.k_g(standardJcl.getGuestWinLv(), scheduleJcl.getAvgG()));
-				}
-			}
-		}
-	}*/
-	
-	/**
-	 * 转换欧赔
-	 * @param collection
-	 * @return
-	 */
-	/*private List<StandardJcl> convertStandardJcls(Collection<StandardJcl> collection) {
-		List<StandardJcl> standardJcls = new LinkedList<StandardJcl>();
-		for(StandardJcl standardJcl : collection) {
-			standardJcls.add(standardJcl);
-		}
-		return standardJcls;
-	}*/
 	
 	/**
 	 * 解析亚盘-总分盘数据
