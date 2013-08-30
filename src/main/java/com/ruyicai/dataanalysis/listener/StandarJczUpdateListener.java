@@ -64,14 +64,6 @@ public class StandarJczUpdateListener {
 			if (CommonUtil.isZqEventEmpty(schedule)) {
 				return;
 			}
-			/*String event = schedule.getEvent();
-			String zcSfcEvent = schedule.getZcSfcEvent();
-			String zcJqcEvent = schedule.getZcJqcEvent();
-			String zcBqcEvent = schedule.getZcBqcEvent();
-			if(StringUtil.isEmpty(event)&&StringUtil.isEmpty(zcSfcEvent)
-					&&StringUtil.isEmpty(zcJqcEvent)&&StringUtil.isEmpty(zcBqcEvent)) {
-				return;
-			}*/
 			List<Element> odds = match.element("odds").elements("o");
 			Double t_h = 0D;
 			Double t_s = 0D;
@@ -118,7 +110,7 @@ public class StandarJczUpdateListener {
 					standard.setHomeWin(StringUtil.isEmpty(homeWin) ? null : new Double(homeWin));
 					standard.setStandoff(StringUtil.isEmpty(standoff) ? null : new Double(standoff));
 					standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
-					standard.setModifyTime(DateUtil.parse("yyyy-MM-dd HH:mm:ss", modTime));
+					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.persist();
 					StandardDetail detail = new StandardDetail();
 					detail.setOddsID(standard.getOddsID());
@@ -145,7 +137,7 @@ public class StandarJczUpdateListener {
 						standard.setHomeWin(new Double(homeWin));
 						standard.setStandoff(new Double(standoff));
 						standard.setGuestWin(new Double(guestWin));
-						standard.setModifyTime(DateUtil.parse("yyyy-MM-dd HH:mm:ss", modTime));
+						standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 						standard.merge();
 						StandardDetail detail = new StandardDetail();
 						detail.setOddsID(standard.getOddsID());
