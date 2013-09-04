@@ -434,7 +434,7 @@ public class GlobalInfoService {
 		if (StringUtils.isBlank(oddsId)) {
 			return null;
 		}
-		return StandardDetail.findByOddsId(oddsId);
+		return StandardDetail.findByOddsId(Integer.valueOf(oddsId));
 	}
 	
 }
