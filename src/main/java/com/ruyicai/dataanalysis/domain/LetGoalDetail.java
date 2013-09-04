@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -44,4 +45,11 @@ public class LetGoalDetail {
 	private Date modifyTime;
 
 	private Integer isEarly;
+	
+	public static List<LetGoalDetail> findByOddsId(Integer oddsId) {
+		List<LetGoalDetail> letGoalDetail = entityManager().createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime asc", LetGoalDetail.class)
+				.setParameter(1, oddsId).getResultList();
+		return letGoalDetail;
+	}
+	
 }

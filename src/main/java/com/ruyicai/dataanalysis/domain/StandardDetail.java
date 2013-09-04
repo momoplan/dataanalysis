@@ -47,9 +47,9 @@ public class StandardDetail {
 	private Integer isEarly;
 	
 	public static List<StandardDetail> findByOddsId(Integer oddsId) {
-		List<StandardDetail> schedules = entityManager().createQuery("select o from StandardDetail o where oddsID=? order by modifyTime asc", StandardDetail.class)
+		List<StandardDetail> standardDetails = entityManager().createQuery("select o from StandardDetail o where oddsID=? order by modifyTime asc", StandardDetail.class)
 				.setParameter(1, oddsId).getResultList();
-		return schedules;
+		return standardDetails;
 	}
 	
 }

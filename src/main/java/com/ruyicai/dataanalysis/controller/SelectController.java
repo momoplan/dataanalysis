@@ -171,4 +171,19 @@ public class SelectController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getLetGoalDetails", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getLetGoalDetails(@RequestParam("oddsId") String oddsId) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startmillis = System.currentTimeMillis();
+			rd.setValue(infoService.getLetGoalDetails(oddsId));
+			long endmillis = System.currentTimeMillis();
+			logger.info("查询亚赔变化,用时:"+(endmillis - startmillis));
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }

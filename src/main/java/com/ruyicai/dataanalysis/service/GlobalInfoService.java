@@ -14,6 +14,7 @@ import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
+import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.domain.Standard;
@@ -435,6 +436,18 @@ public class GlobalInfoService {
 			return null;
 		}
 		return StandardDetail.findByOddsId(Integer.valueOf(oddsId));
+	}
+	
+	/**
+	 * 查询亚赔变化
+	 * @param oddsId
+	 * @return
+	 */
+	public List<LetGoalDetail> getLetGoalDetails(String oddsId) {
+		if (StringUtils.isBlank(oddsId)) {
+			return null;
+		}
+		return LetGoalDetail.findByOddsId(Integer.valueOf(oddsId));
 	}
 	
 }
