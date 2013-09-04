@@ -161,7 +161,10 @@ public class SelectController {
 	ResponseData getStandardDetails(@RequestParam("oddsId") String oddsId) {
 		ResponseData rd = new ResponseData();
 		try {
+			long startmillis = System.currentTimeMillis();
 			rd.setValue(infoService.getStandardDetails(oddsId));
+			long endmillis = System.currentTimeMillis();
+			logger.info("查询欧赔变化,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
