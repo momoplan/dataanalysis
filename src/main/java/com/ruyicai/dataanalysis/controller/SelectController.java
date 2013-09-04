@@ -156,4 +156,16 @@ public class SelectController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getStandardDetails", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getStandardDetails(@RequestParam("oddsId") String oddsId) {
+		ResponseData rd = new ResponseData();
+		try {
+			rd.setValue(infoService.getStandardDetails(oddsId));
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }

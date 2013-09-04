@@ -17,6 +17,7 @@ import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.domain.Standard;
+import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.service.dto.InfoDTO;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
@@ -422,6 +423,18 @@ public class GlobalInfoService {
 			return null;
 		}
 		return analysisService.buildDTO(schedule);
+	}
+	
+	/**
+	 * 查询欧赔变化
+	 * @param oddsId
+	 * @return
+	 */
+	public List<StandardDetail> getStandardDetails(String oddsId) {
+		if (StringUtils.isBlank(oddsId)) {
+			return null;
+		}
+		return StandardDetail.findByOddsId(oddsId);
 	}
 	
 }

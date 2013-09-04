@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -44,4 +45,11 @@ public class StandardDetail {
 	private Date modifyTime;
 	
 	private Integer isEarly;
+	
+	public static List<StandardDetail> findByOddsId(String oddsId) {
+		List<StandardDetail> schedules = entityManager().createQuery("select o from StandardDetail o where oddsID=? order by modifyTime asc", StandardDetail.class)
+				.setParameter(1, oddsId).getResultList();
+		return schedules;
+	}
+	
 }
