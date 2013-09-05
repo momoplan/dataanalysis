@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,9 +209,9 @@ public class UpdateLetgoalStandardService {
 				if("True".equals(zhoudi)) {
 					zd = 1;
 				}
-				if((!StringUtil.isEmpty(goal) && !NumberUtil.compare(goal, letGoal.getGoal())) || 
-						(!StringUtil.isEmpty(upOdds) && !NumberUtil.compare(upOdds, letGoal.getUpOdds())) ||
-						(!StringUtil.isEmpty(downOdds) && !NumberUtil.compare(downOdds, letGoal.getDownOdds()))) {
+				if ((StringUtils.isNotBlank(goal)&&!NumberUtil.compare(new Double(goal).toString(), letGoal.getGoal()))
+						||(StringUtils.isBlank(upOdds)&&!NumberUtil.compare(upOdds, letGoal.getUpOdds()))
+						||(StringUtils.isBlank(downOdds)&&!NumberUtil.compare(downOdds, letGoal.getDownOdds()))) {
 					ismod = true;
 					letGoal.setGoal(new Double(goal));
 					letGoal.setUpOdds(new Double(upOdds));
