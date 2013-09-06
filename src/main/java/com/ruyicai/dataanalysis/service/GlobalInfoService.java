@@ -447,7 +447,17 @@ public class GlobalInfoService {
 		if (StringUtils.isBlank(oddsId)) {
 			return null;
 		}
-		return LetGoalDetail.findByOddsId(Integer.valueOf(oddsId));
+		List<LetGoalDetail> details = LetGoalDetail.findByOddsId(Integer.valueOf(oddsId));
+		buildLetGoalDetails(details);
+		return details;
+	}
+	
+	private void buildLetGoalDetails(List<LetGoalDetail> details) {
+		if (details!=null&&!details.isEmpty()) {
+			for (LetGoalDetail letGoalDetail : details) {
+				letGoalDetail.setGoalName(CalcUtil.handicap(letGoalDetail.getGoal()));
+			}
+		}
 	}
 	
 }

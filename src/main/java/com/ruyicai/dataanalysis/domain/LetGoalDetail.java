@@ -46,6 +46,16 @@ public class LetGoalDetail {
 
 	private Integer isEarly;
 	
+	private transient String goalName;
+
+	public String getGoalName() {
+		return goalName;
+	}
+
+	public void setGoalName(String goalName) {
+		this.goalName = goalName;
+	}
+
 	public static List<LetGoalDetail> findByOddsId(Integer oddsId) {
 		List<LetGoalDetail> letGoalDetail = entityManager().createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime asc", LetGoalDetail.class)
 				.setParameter(1, oddsId).getResultList();
