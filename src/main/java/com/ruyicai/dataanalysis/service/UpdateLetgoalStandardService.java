@@ -210,8 +210,8 @@ public class UpdateLetgoalStandardService {
 					zd = 1;
 				}
 				if ((StringUtils.isNotBlank(goal)&&!NumberUtil.compare(new Double(goal).toString(), letGoal.getGoal()))
-						||(StringUtils.isBlank(upOdds)&&!NumberUtil.compare(upOdds, letGoal.getUpOdds()))
-						||(StringUtils.isBlank(downOdds)&&!NumberUtil.compare(downOdds, letGoal.getDownOdds()))) {
+						||(StringUtils.isNotBlank(upOdds)&&!NumberUtil.compare(upOdds, letGoal.getUpOdds()))
+						||(StringUtils.isNotBlank(downOdds)&&!NumberUtil.compare(downOdds, letGoal.getDownOdds()))) {
 					ismod = true;
 					letGoal.setGoal(new Double(goal));
 					letGoal.setUpOdds(new Double(upOdds));
