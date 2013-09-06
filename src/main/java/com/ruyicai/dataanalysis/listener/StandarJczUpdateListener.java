@@ -26,7 +26,7 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 
 /**
- * 竞彩足球-百家欧赔更新JMS的处理
+ * 足球欧赔更新Jms的处理
  * @author Administrator
  *
  */
@@ -43,7 +43,7 @@ public class StandarJczUpdateListener {
 		try {
 			document = DocumentHelper.parseText(body);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球欧赔更新Jms的处理-转Document发生异常", e);
 			return;
 		}
 		doProcess(document.getRootElement());
@@ -72,6 +72,7 @@ public class StandarJczUpdateListener {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
 				String companyID = values[0];
+				logger.info("足球欧赔更新Jms的处理,scheduleID="+scheduleID+";companyID="+companyID);
 				String companyName = values[1];
 				String firstHomeWin = values[2];
 				String firstStandoff = values[3];
@@ -165,7 +166,7 @@ public class StandarJczUpdateListener {
 			//查看是否需要更新缓存
 			updateCache(Integer.parseInt(scheduleID));
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
 	}
 	

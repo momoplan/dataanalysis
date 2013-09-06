@@ -15,6 +15,11 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
+/**
+ * 足球欧赔更新
+ * @author Administrator
+ *
+ */
 @Service
 public class UpdateStandardService {
 	
@@ -31,12 +36,12 @@ public class UpdateStandardService {
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
-		logger.info("开始更新百家欧赔");
+		logger.info("足球欧赔更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.getResponse(url, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
-				logger.info("更新百家欧赔时获取数据为空");
+				logger.info("足球欧赔更新时获取数据为空");
 				return;
 			}
 			Document doc = DocumentHelper.parseText(data);
@@ -53,10 +58,10 @@ public class UpdateStandardService {
 				sendJmsJczUtil.sendStandardUpdateJMS(match.asXML());
 			}
 		} catch(Exception e) {
-			logger.error("更新百家欧赔出错", e);
+			logger.error("足球欧赔更新发生异常", e);
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("更新百家欧赔结束，共用时 " + (endmillis - startmillis));
+		logger.info("足球欧赔更新结束，共用时 " + (endmillis - startmillis));
 	}
 
 }
