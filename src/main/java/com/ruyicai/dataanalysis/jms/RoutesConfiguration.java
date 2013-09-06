@@ -30,16 +30,16 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					//竞彩足球
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardUpdate?concurrentConsumers=10").to(
 							"bean:standarJczUpdateListener?method=update").routeId("竞彩足球-百家欧赔更新");
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=10").to(
 							"bean:rankingJczUpdateListener?method=update").routeId("竞彩足球-联赛排名更新");
 					//竞彩篮球
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=10").to(
 							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=10").to(
 							"bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=5").to(
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=10").to(
 							"bean:scheduleJclFinishListener?method=update").routeId("竞彩篮球-完场的监听");
 				}
 			});
@@ -55,7 +55,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 				public void configure() throws Exception {
 					deadLetterChannel("jmsLottery:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
-					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=5").to(
+					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=10").to(
 							"bean:scheduleJclFinishListener?method=update").routeId("竞彩赛果更新通知");
 				}
 			});
