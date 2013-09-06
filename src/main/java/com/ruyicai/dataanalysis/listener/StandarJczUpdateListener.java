@@ -72,7 +72,7 @@ public class StandarJczUpdateListener {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
 				String companyID = values[0];
-				logger.info("足球欧赔更新Jms的处理,scheduleID="+scheduleID+";companyID="+companyID);
+				//logger.info("足球欧赔更新Jms的处理,scheduleID="+scheduleID+";companyID="+companyID);
 				String companyName = values[1];
 				String firstHomeWin = values[2];
 				String firstStandoff = values[3];
