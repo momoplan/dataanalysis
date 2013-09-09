@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
@@ -29,7 +28,7 @@ public class PeiLvDetailUpdateService {
 		logger.info("足球赔率变化更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.getResponse(url, HttpUtil.GET, HttpUtil.UTF8, "");
+			String data = httpUtil.downfile(url, HttpUtil.GBK);
 			if (StringUtil.isEmpty(data)) {
 				logger.info("足球赔率变化更新时获取数据为空");
 				return;
