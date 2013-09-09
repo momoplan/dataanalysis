@@ -11,6 +11,7 @@ privileged aspect LetGoalDetail_Roo_ToString {
         StringBuilder sb = new StringBuilder();
         sb.append("DownOdds: ").append(getDownOdds()).append(", ");
         sb.append("Goal: ").append(getGoal()).append(", ");
+        sb.append("GoalName: ").append(getGoalName()).append(", ");
         sb.append("Id: ").append(getId()).append(", ");
         sb.append("IsEarly: ").append(getIsEarly()).append(", ");
         sb.append("ModifyTime: ").append(getModifyTime()).append(", ");
