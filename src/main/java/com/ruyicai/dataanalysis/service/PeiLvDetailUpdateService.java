@@ -28,7 +28,7 @@ public class PeiLvDetailUpdateService {
 		logger.info("足球赔率变化更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.downfile(url, HttpUtil.GBK);
+			String data = httpUtil.downfile(url, HttpUtil.UTF8);
 			if (StringUtil.isEmpty(data)) {
 				logger.info("足球赔率变化更新时获取数据为空");
 				return;
