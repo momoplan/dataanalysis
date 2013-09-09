@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
+import com.ruyicai.dataanalysis.service.PeiLvDetailUpdateService;
 import com.ruyicai.dataanalysis.service.UpdateDetailResultService;
 import com.ruyicai.dataanalysis.service.UpdateLetgoalStandardService;
 import com.ruyicai.dataanalysis.service.UpdateQiuTanMatchesService;
@@ -49,6 +51,9 @@ public class SystemController {
 	
 	@Autowired
 	private UpdateScoreService updateScoreService;
+	
+	@Autowired
+	private PeiLvDetailUpdateService peiLvDetailUpdateService;
 	
 	@Autowired
 	private AnalysisService analysisService;
@@ -283,6 +288,18 @@ public class SystemController {
 		ResponseData rd = new ResponseData();
 		try {
 			sendJmsJczUtil.sendScheduleFinishJms(event);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/peiLvDetailUpdate", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData peiLvDetailUpdate() {
+		ResponseData rd = new ResponseData();
+		try {
+			peiLvDetailUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

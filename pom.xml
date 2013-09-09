@@ -23,6 +23,7 @@
 		<peiluall>http://vip.bet007.com/xmlvbs/odds.txt</peiluall>
 		<todaybifeng>http://dxbf.bet007.com/vbsxml/bfdata.js</todaybifeng>
 		<detailResultDate>http://dxbf.bet007.com/Event_XML.aspx</detailResultDate>
+		<peiLvDetail>http://vip.bet007.com/xmlvbs/ch_odds.xml</peiLvDetail>
 		<!-- 竞彩篮球 -->
 		<leagueJclUrl>http://dxbf.bet007.com/LqLeague_Xml.aspx</leagueJclUrl>
 		<matchResultJclUrl>http://dxbf.bet007.com/nba_date.aspx</matchResultJclUrl>
