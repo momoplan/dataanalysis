@@ -37,8 +37,8 @@ public class UpdateLetgoalStandardService {
 	@Autowired
 	private HttpUtil httpUtil;
 	
-	@Autowired
-	private GlobalInfoService globalInfoService;
+	/*@Autowired
+	private GlobalInfoService globalInfoService;*/
 	
 	public void process() {
 		logger.info("开始更新赔率");
@@ -81,10 +81,12 @@ public class UpdateLetgoalStandardService {
 	private void doLetgoal(String value) {
 		String[] datas = value.split("\\;");
 		logger.info("亚赔size:{}", new Integer[] {datas.length});
-		Map<Integer, List<LetGoal>> map = new HashMap<Integer, List<LetGoal>>();
+		//Map<Integer, List<LetGoal>> map = new HashMap<Integer, List<LetGoal>>();
 		for(String data : datas) {
-			LetGoal letGoal = buildLetGoal(data);
-			if(null != letGoal) {
+			buildLetGoal(data);
+			
+			//LetGoal letGoal = buildLetGoal(data);
+			/*if(null != letGoal) {
 				Schedule schedule = Schedule.findSchedule(letGoal.getScheduleID());
 				if(null != schedule && (!CommonUtil.isZqEventEmpty(schedule))) {
 					List<LetGoal> list = map.get(letGoal.getScheduleID());
@@ -94,12 +96,12 @@ public class UpdateLetgoalStandardService {
 					}
 					list.add(letGoal);
 				}
-			}
+			}*/
 		}
-		isUpdateInfo(map);
+		//isUpdateInfo(map);
 	}
 	
-	public void isUpdateInfo(Map<Integer, List<LetGoal>> map) {
+	/*public void isUpdateInfo(Map<Integer, List<LetGoal>> map) {
 		for(Entry<Integer, List<LetGoal>> entry : map.entrySet()) {
 			GlobalCache globalCache = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(entry.getKey())));
 			if(null == globalCache) {
@@ -135,15 +137,15 @@ public class UpdateLetgoalStandardService {
 				}
 			}
 		}
-	}
+	}*/
 	
-	private List<LetGoal> convertLetGoals(Collection<LetGoal> collection) {
+	/*private List<LetGoal> convertLetGoals(Collection<LetGoal> collection) {
 		List<LetGoal> letGoals = new LinkedList<LetGoal>();
 		for(LetGoal letGoal : collection) {
 			letGoals.add(letGoal);
 		}
 		return letGoals;
-	}
+	}*/
 
 	private LetGoal buildLetGoal(String data) {
 		try {
@@ -203,7 +205,7 @@ public class UpdateLetgoalStandardService {
 					detail.setModifyTime(new Date());
 					detail.persist();
 				}
-			} else {
+			} /*else {
 				boolean ismod = false;
 				int cp = 0;
 				int zd = 0;
@@ -238,8 +240,8 @@ public class UpdateLetgoalStandardService {
 				if(ismod) {
 					letGoal.merge();
 				}
-			}
-			if(null != letGoal) {
+			}*/
+			/*if(null != letGoal) {
 				Company company = Company.findCompany(Integer.parseInt(companyID));
 				if(null != company) {
 					letGoal.setCompanyName(company.getName_Cn());
@@ -247,7 +249,7 @@ public class UpdateLetgoalStandardService {
 				}
 				letGoal.setFirstGoal_name(CalcUtil.handicap(letGoal.getFirstGoal()));
 				letGoal.setGoal_name(CalcUtil.handicap(letGoal.getGoal()));
-			}
+			}*/
 			return letGoal;
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
