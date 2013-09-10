@@ -53,8 +53,8 @@ public class PeiLvDetailUpdateService {
 			//去掉特殊字符(参考:http://blog.csdn.net/haffun_dao/article/details/7792820)
 			data = data.replaceAll("[^\\x20-\\x7e]", "");
 			Document doc = DocumentHelper.parseText(data);
-			Element cElement = doc.getRootElement().element("c");
-			List<Element> aList = cElement.elements("a");
+			Element rootElement = doc.getRootElement();
+			List<Element> aList = rootElement.elements("a");
 			if (aList!=null&&aList.size()>0) {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
 				processLetGoalDetail(letGoalElement);
