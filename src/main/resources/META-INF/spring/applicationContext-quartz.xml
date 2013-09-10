@@ -123,6 +123,17 @@
    		<property name="cronExpression" value="0 0 23 * * ?"></property>  <!-- 每天23点 -->
    </bean>
    
+   <!-- 赔率变化更新 -->
+   <bean id="peiLvDetailUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="peiLvDetailUpdateService"></property>
+   		<property name="targetMethod" value="process"></property>
+   </bean>
+   
+   <bean id="peiLvDetailUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="peiLvDetailUpdateJobDetail"></property>
+   		<property name="cronExpression" value="*/30 * * * * ?"></property>  <!-- 30秒 -->
+   </bean>
+   
    <!--  竞彩篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -238,6 +249,7 @@
    				<ref bean="UpdateTeamServiceTrigger"/>
    				<ref bean="detailResultUpdatePreDayTrigger"/>
    				<ref bean="updateScheduleMoreTrigger"/>
+   				<ref bean="peiLvDetailUpdateTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>

@@ -96,6 +96,10 @@ public class UpdateLetgoalStandardService {
 				}
 			}
 		}
+		isUpdateInfo(map);
+	}
+	
+	public void isUpdateInfo(Map<Integer, List<LetGoal>> map) {
 		for(Entry<Integer, List<LetGoal>> entry : map.entrySet()) {
 			GlobalCache globalCache = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(entry.getKey())));
 			if(null == globalCache) {
