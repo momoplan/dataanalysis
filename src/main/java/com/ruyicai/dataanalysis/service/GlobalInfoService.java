@@ -181,7 +181,7 @@ public class GlobalInfoService {
 		}
 	}
 
-	private void buildLetGoals(Collection<LetGoal> letGoals) {
+	public void buildLetGoals(Collection<LetGoal> letGoals) {
 		if(null != letGoals && !letGoals.isEmpty()) {
 			for(LetGoal letGoal : letGoals) {
 				Company company = Company.findCompany(letGoal.getCompanyID());

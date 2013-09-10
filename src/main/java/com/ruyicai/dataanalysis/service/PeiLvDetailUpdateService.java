@@ -1,11 +1,8 @@
 package com.ruyicai.dataanalysis.service;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -15,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.ruyicai.dataanalysis.domain.Company;
+import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -24,7 +20,6 @@ import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 
 @Service
 public class PeiLvDetailUpdateService {
@@ -38,7 +33,7 @@ public class PeiLvDetailUpdateService {
 	private HttpUtil httpUtil;
 	
 	@Autowired
-	private UpdateLetgoalStandardService updateLetgoalStandardService;
+	private GlobalInfoService infoService;
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -69,27 +64,36 @@ public class PeiLvDetailUpdateService {
 	@SuppressWarnings("unchecked")
 	private void processLetGoalDetail(Element element) {
 		List<Element> detailElements = element.elements("h");
-		Map<Integer, List<LetGoal>> map = new HashMap<Integer, List<LetGoal>>();
+		List<Integer> scheduleIds = new ArrayList<Integer>();
 		for (Element detailElement : detailElements) {
 			String data = detailElement.getText();
-			LetGoal letGoal = buildLetGoal(data);
-			if (letGoal!=null) {
-				Integer scheduleId = letGoal.getScheduleID();
-				Schedule schedule = Schedule.findSchedule(scheduleId);
-				if (schedule!=null && !CommonUtil.isZqEventEmpty(schedule)) {
-					List<LetGoal> list = map.get(scheduleId);
-					if(null == list) {
-						list = new LinkedList<LetGoal>();
-						map.put(scheduleId, list);
-					}
-					list.add(letGoal);
-				}
+			Integer scheduleId = buildLetGoal(data);
+			if (scheduleId!=null && !scheduleIds.contains(scheduleId)) {
+				scheduleIds.add(scheduleId);
 			}
 		}
-		updateLetgoalStandardService.isUpdateInfo(map);
+		for (Integer scheduleId : scheduleIds) {
+			updateLetGoalCache(scheduleId);
+		}
 	}
 	
-	private LetGoal buildLetGoal(String data) {
+	public void updateLetGoalCache(Integer scheduleId) {
+		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
+		infoService.buildLetGoals(letGoals);
+		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+		if (letGoal==null) {
+			letGoal = new GlobalCache();
+			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+			letGoal.setValue(LetGoal.toJsonArray(letGoals));
+			letGoal.persist();
+		} else {
+			letGoal.setValue(LetGoal.toJsonArray(letGoals));
+			letGoal.merge();
+		}
+		infoService.updateInfo(scheduleId);
+	}
+	
+	private Integer buildLetGoal(String data) {
 		try {
 			//<h>649557,35,-0.75,0.91,0.98,False,True</h>
 			String[] values = StringUtils.split(data, ",");
@@ -139,17 +143,8 @@ public class PeiLvDetailUpdateService {
 			}
 			if(ismod) {
 				letGoal.merge();
+				return letGoal.getScheduleID();
 			}
-			if(letGoal!=null) {
-				Company company = Company.findCompany(Integer.parseInt(companyId));
-				if(company!=null) {
-					letGoal.setCompanyName(company.getName_Cn());
-					letGoal.setCompanyName_e(company.getName_E());
-				}
-				letGoal.setFirstGoal_name(CalcUtil.handicap(letGoal.getFirstGoal()));
-				letGoal.setGoal_name(CalcUtil.handicap(letGoal.getGoal()));
-			}
-			return letGoal;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
