@@ -261,6 +261,7 @@
    				<ref bean="detailResultUpdatePreDayTrigger"/>
    				<ref bean="updateScheduleMoreTrigger"/>
    				<ref bean="peiLvDetailUpdateTrigger"/>
+   				<ref bean="standardDetailUpdateTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
