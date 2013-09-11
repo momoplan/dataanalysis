@@ -44,7 +44,7 @@ public class BeiDanUtil {
 				qiuTanMatches.merge();
 				Schedule schedule = Schedule.findSchedule(scheduleId);
 				if (schedule!=null) {
-					schedule.setBdEvent(event);
+					schedule.setBdEvent(null);
 					schedule.merge();
 				}
 			}
