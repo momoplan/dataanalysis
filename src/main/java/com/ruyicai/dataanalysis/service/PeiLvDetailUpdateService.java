@@ -1,7 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -17,8 +16,6 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.domain.Standard;
-import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -57,8 +54,6 @@ public class PeiLvDetailUpdateService {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
 				processLetGoalDetail(letGoalElement);
 			}
-			Element oElement = rootElement.element("o"); //欧赔（标准盘）变化数据
-			processStandardDetail(oElement);
 		} catch (Exception e) {
 			logger.error("足球赔率变化更新发生异常", e);
 		}
@@ -171,105 +166,6 @@ public class PeiLvDetailUpdateService {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
-	}
-	
-	private void processStandardDetail(final Element element) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				logger.info("足球赔率变化更新-standardDetail开始");
-				long startmillis = System.currentTimeMillis();
-				try {
-					doStandardDetail(element);
-				} catch(Exception e) {
-					logger.error("足球赔率变化更新-standardDetail发生异常", e);
-				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("足球赔率变化更新-standardDetail结束, 共用时 " + (endmillis - startmillis));
-			}
-		}).start();
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void doStandardDetail(Element element) {
-		List<Element> detailElements = element.elements("h");
-		List<Integer> scheduleIds = new ArrayList<Integer>();
-		for (Element detailElement : detailElements) {
-			String data = detailElement.getText();
-			Integer scheduleId = buildStandard(data);
-			if (scheduleId!=null && !scheduleIds.contains(scheduleId)) {
-				scheduleIds.add(scheduleId);
-			}
-		}
-		for (Integer scheduleId : scheduleIds) {
-			updateStandardCache(scheduleId);
-		}
-	}
-	
-	private Integer buildStandard(String data) {
-		try {
-			//<h>807414,3,4.3,3.80,1.60</h>
-			String[] values = StringUtils.split(data, ",");
-			String scheduleId = values[0]; //比赛ID
-			String companyId = values[1]; //公司ID
-			String homeWin = values[2]; //即时盘主胜赔率
-			String standoff = values[3]; //即时盘和局赔率
-			String guestWin = values[4]; //即时盘客胜赔率
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
-			if(schedule==null) {
-				return null;
-			}
-			if (CommonUtil.isZqEventEmpty(schedule)) {
-				return null;
-			}
-			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
-			if(standard==null) {
-				return null;
-			}
-			boolean ismod = false;
-			if ((StringUtils.isNotBlank(homeWin)&&!NumberUtil.compare(homeWin, standard.getHomeWin()))
-					||(StringUtils.isNotBlank(standoff)&&!NumberUtil.compare(standoff, standard.getStandoff()))
-					||(StringUtils.isNotBlank(guestWin)&&!NumberUtil.compare(guestWin, standard.getGuestWin()))) {
-				ismod = true;
-				standard.setHomeWin(new Double(homeWin));
-				standard.setStandoff(new Double(standoff));
-				standard.setGuestWin(new Double(guestWin));
-				//standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
-				standard.setModifyTime(new Date());
-				standard.merge();
-				StandardDetail detail = new StandardDetail();
-				detail.setOddsID(standard.getOddsID());
-				detail.setIsEarly(0);
-				detail.setHomeWin(new Double(homeWin));
-				detail.setStandoff(new Double(standoff));
-				detail.setGuestWin(new Double(guestWin));
-				detail.setModifyTime(standard.getModifyTime());
-				detail.persist();
-			}
-			if (ismod) {
-				return standard.getScheduleID();
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		return null;
-	}
-	
-	public void updateStandardCache(Integer scheduleId) {
-		Schedule schedule = Schedule.findSchedule(scheduleId);
-		Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
-		infoService.buildStandards(schedule, standards);
-		GlobalCache standard = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
-		if (standard==null) {
-			standard = new GlobalCache();
-			standard.setId(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
-			standard.setValue(Standard.toJsonArray(standards));
-			standard.persist();
-		} else {
-			standard.setValue(Standard.toJsonArray(standards));
-			standard.merge();
-		}
-		infoService.updateInfo(scheduleId);
 	}
 	
 }

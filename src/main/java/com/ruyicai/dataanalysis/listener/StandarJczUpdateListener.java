@@ -3,7 +3,6 @@ package com.ruyicai.dataanalysis.listener;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.camel.Body;
@@ -36,8 +35,8 @@ public class StandarJczUpdateListener {
 	
 	private Logger logger = LoggerFactory.getLogger(StandarJczUpdateListener.class);
 	
-	/*@Autowired
-	private GlobalInfoService globalInfoService;*/
+	@Autowired
+	private GlobalInfoService globalInfoService;
 	
 	public void update(@Body String body) {
 		Document document = null;
@@ -80,7 +79,7 @@ public class StandarJczUpdateListener {
 				String homeWin = values[5]; //主胜
 				String standoff = values[6]; //和局
 				String guestWin = values[7]; //客胜
-				//String modTime = values[8]; //变化时间
+				String modTime = values[8]; //变化时间
 				if(!StringUtil.isEmpty(homeWin) && !StringUtil.isEmpty(standoff) && !StringUtil.isEmpty(guestWin)) {
 					t_h = t_h + new Double(homeWin);
 					t_s = t_s + new Double(standoff);
@@ -111,8 +110,7 @@ public class StandarJczUpdateListener {
 					standard.setHomeWin(StringUtil.isEmpty(homeWin) ? null : new Double(homeWin));
 					standard.setStandoff(StringUtil.isEmpty(standoff) ? null : new Double(standoff));
 					standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
-					//standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
-					standard.setModifyTime(new Date());
+					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.persist();
 					StandardDetail detail = new StandardDetail();
 					detail.setOddsID(standard.getOddsID());
@@ -132,7 +130,7 @@ public class StandarJczUpdateListener {
 						detail.setModifyTime(standard.getModifyTime());
 						detail.persist();
 					}
-				} /*else {
+				} else {
 					if((!StringUtil.isEmpty(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin())) ||
 							(!StringUtil.isEmpty(standoff) && !NumberUtil.compare(standoff, standard.getStandoff())) ||
 							(!StringUtil.isEmpty(guestWin) && !NumberUtil.compare(guestWin, standard.getGuestWin()))) {
@@ -150,7 +148,7 @@ public class StandarJczUpdateListener {
 						detail.setModifyTime(standard.getModifyTime());
 						detail.persist();
 					}
-				}*/
+				}
 			}
 			if(null != schedule && odds.size() > 0) {
 				BigDecimal b = new BigDecimal(t_h / odds.size());
@@ -165,13 +163,13 @@ public class StandarJczUpdateListener {
 				schedule.merge();
 			}
 			//查看是否需要更新缓存
-			//updateCache(Integer.parseInt(scheduleID));
+			updateCache(Integer.parseInt(scheduleID));
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
 	}
 	
-	/*private void updateCache(Integer scheduleID) {
+	private void updateCache(Integer scheduleID) {
 		String id = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleID));
 		GlobalCache globalCache = GlobalCache.findGlobalCache(id);
 		List<Standard> list = Standard.findByScheduleID(scheduleID);
@@ -208,9 +206,9 @@ public class StandarJczUpdateListener {
 				}
 			}
 		}
-	}*/
+	}
 	
-	/*private void buildStandards(Schedule schedule, Collection<Standard> standards) {
+	private void buildStandards(Schedule schedule, Collection<Standard> standards) {
 		if(null != standards && !standards.isEmpty()) {
 			for(Standard standard : standards) {
 				EuropeCompany company = EuropeCompany.findEuropeCompany(standard.getCompanyID());
@@ -238,14 +236,14 @@ public class StandarJczUpdateListener {
 				}
 			}
 		}
-	}*/
+	}
 	
-	/*private List<Standard> convertStandards(Collection<Standard> collection) {
+	private List<Standard> convertStandards(Collection<Standard> collection) {
 		List<Standard> standards = new LinkedList<Standard>();
 		for(Standard standard : collection) {
 			standards.add(standard);
 		}
 		return standards;
-	}*/
+	}
 	
 }
