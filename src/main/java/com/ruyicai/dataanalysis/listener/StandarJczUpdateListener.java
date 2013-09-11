@@ -35,8 +35,8 @@ public class StandarJczUpdateListener {
 	
 	private Logger logger = LoggerFactory.getLogger(StandarJczUpdateListener.class);
 	
-	@Autowired
-	private GlobalInfoService globalInfoService;
+	/*@Autowired
+	private GlobalInfoService globalInfoService;*/
 	
 	public void update(@Body String body) {
 		Document document = null;
@@ -130,7 +130,7 @@ public class StandarJczUpdateListener {
 						detail.setModifyTime(standard.getModifyTime());
 						detail.persist();
 					}
-				} else {
+				} /*else {
 					if((!StringUtil.isEmpty(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin())) ||
 							(!StringUtil.isEmpty(standoff) && !NumberUtil.compare(standoff, standard.getStandoff())) ||
 							(!StringUtil.isEmpty(guestWin) && !NumberUtil.compare(guestWin, standard.getGuestWin()))) {
@@ -148,7 +148,7 @@ public class StandarJczUpdateListener {
 						detail.setModifyTime(standard.getModifyTime());
 						detail.persist();
 					}
-				}
+				}*/
 			}
 			if(null != schedule && odds.size() > 0) {
 				BigDecimal b = new BigDecimal(t_h / odds.size());
@@ -163,13 +163,13 @@ public class StandarJczUpdateListener {
 				schedule.merge();
 			}
 			//查看是否需要更新缓存
-			updateCache(Integer.parseInt(scheduleID));
+			//updateCache(Integer.parseInt(scheduleID));
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
 	}
 	
-	private void updateCache(Integer scheduleID) {
+	/*private void updateCache(Integer scheduleID) {
 		String id = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleID));
 		GlobalCache globalCache = GlobalCache.findGlobalCache(id);
 		List<Standard> list = Standard.findByScheduleID(scheduleID);
@@ -244,6 +244,6 @@ public class StandarJczUpdateListener {
 			standards.add(standard);
 		}
 		return standards;
-	}
+	}*/
 	
 }
