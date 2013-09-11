@@ -151,7 +151,7 @@ public class GlobalInfoService {
 		}
 	}
 	
-	private void buildStandards(Schedule schedule, Collection<Standard> standards) {
+	public void buildStandards(Schedule schedule, Collection<Standard> standards) {
 		if(null != standards && !standards.isEmpty()) {
 			for(Standard standard : standards) {
 				EuropeCompany company = EuropeCompany.findEuropeCompany(standard.getCompanyID());
