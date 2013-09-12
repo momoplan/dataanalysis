@@ -294,6 +294,23 @@ public class SystemController {
 		return rd;
 	}
 	
+	/**
+	 * 发送比分变化的Jms
+	 * @param event
+	 * @return
+	 */
+	@RequestMapping(value = "/scoreModifyJms", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData scoreModifyJms(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			sendJmsJczUtil.sendScoreModifyJms(event);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 	@RequestMapping(value = "/peiLvDetailUpdate", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData peiLvDetailUpdate() {

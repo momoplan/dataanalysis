@@ -21,6 +21,9 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:scheduleFinish")
 	private ProducerTemplate scheduleFinishTemplate;
 	
+	@Produce(uri = "jms:topic:scoreModify")
+	private ProducerTemplate scoreModifyTemplate;
+	
 	@Produce(uri = "jms:topic:rankingUpdate")
 	private ProducerTemplate rankingUpdateTemplate;
 	
@@ -61,8 +64,24 @@ public class SendJmsJczUtil {
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
 			
-			logger.info("scheduleJclFinishTemplate start, event={}", event);
+			logger.info("scheduleFinishTemplate start, event={}", event);
 			scheduleFinishTemplate.sendBodyAndHeaders(null, header);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 比分变化的JMS
+	 * @param event
+	 */
+	public void sendScoreModifyJms(String event) {
+		try {
+			Map<String, Object> header = new HashMap<String, Object>();
+			header.put("EVENT", event);
+			
+			logger.info("scoreModifyTemplate start, event={}", event);
+			scoreModifyTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

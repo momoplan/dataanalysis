@@ -114,70 +114,75 @@ public class UpdateScheduleService {
 
 	private void doProcess(Element match, boolean updateRanking) {
 		try {
-			String a = match.elementTextTrim("a"); 
-			String c = match.elementTextTrim("c");
-			String d = match.elementTextTrim("d");
-			String f = match.elementTextTrim("f");
-			String h = match.elementTextTrim("h");
-			String i = match.elementTextTrim("i");
-			String j = match.elementTextTrim("j");
-			String k = match.elementTextTrim("k");
-			String l = match.elementTextTrim("l");
-			String m = match.elementTextTrim("m");
-			String n = match.elementTextTrim("n");
-			String o = match.elementTextTrim("o");
-			String p = match.elementTextTrim("p");
-			String q = match.elementTextTrim("q");
-			String r = match.elementTextTrim("r");
-			String s = match.elementTextTrim("s");
-			String t = match.elementTextTrim("t");
-			String u = match.elementTextTrim("u");
-			String v = match.elementTextTrim("v");
-			String w = match.elementTextTrim("w");
-			String x = match.elementTextTrim("x");
-			String y = match.elementTextTrim("y");
-			String z = match.elementTextTrim("z");
-			Integer neutrality = 0; //是否是中立场(1:是;0:否)
-			if (StringUtils.equals(z, "True")) {
-				neutrality = 1;
-			}
+			String a = match.elementTextTrim("a"); //比赛ID
+			String c = match.elementTextTrim("c"); //联赛国语名,联赛繁体名,联赛英文名,联赛ID
+			String d = match.elementTextTrim("d"); //比赛时间
+			String f = match.elementTextTrim("f"); //比赛状态
+			String h = match.elementTextTrim("h"); //主队国语名, 主队繁体名, 主队英文名, 主队ID
+			String i = match.elementTextTrim("i"); //客队国语名, 客队繁体名, 客队英文名, 客队ID
+			String j = match.elementTextTrim("j"); //主队比分
+			String k = match.elementTextTrim("k"); //客队比分
+			String l = match.elementTextTrim("l"); //主队半场比分
+			String m = match.elementTextTrim("m"); //客队半场比分
+			String n = match.elementTextTrim("n"); //主队红牌
+			String o = match.elementTextTrim("o"); //客队红牌
+			String p = match.elementTextTrim("p"); //主队排名
+			String q = match.elementTextTrim("q"); //客队排名
+			String r = match.elementTextTrim("r"); //<![CDATA[赛事说明]]>
+			String s = match.elementTextTrim("s"); //轮次/分组名，例如 4/8强/准决赛
+			String t = match.elementTextTrim("t"); //比赛地点
+			String u = match.elementTextTrim("u"); //天气图标
+			String v = match.elementTextTrim("v"); //天气
+			String w = match.elementTextTrim("w"); //温度
+			String x = match.elementTextTrim("x"); //赛季
+			String y = match.elementTextTrim("y"); //小组分组
+			String z = match.elementTextTrim("z"); //是否中立场
+			
+			Integer neutrality = StringUtils.equals(z, "True") ? 1 : 0; //是否是中立场(1:是;0:否)
 			String[] homeInfos = h.split("\\,"); //主队信息
 			String homeTeam = homeInfos[0]; //主队名称
 			int homeTeamID = Integer.parseInt(homeInfos[3]); //主队编号
 			String[] guestInfos = i.split("\\,"); //客队信息
 			String guestTeam = guestInfos[0]; //客队名称
 			int guestTeamID = Integer.parseInt(guestInfos[3]); //客队编号
+			Integer scheduleId = Integer.parseInt(a); //比赛id
+			String[] sclassInfos = c.split("\\,"); //联赛信息
+			Integer sclassId = Integer.parseInt(sclassInfos[3]); //联赛ID
+			Date matchTime = DateUtil.parse("yyyy/MM/dd HH:mm:ss", d); //比赛时间
+			Integer matchState = Integer.parseInt(f); //比赛状态
+			Integer homeScore = NumberUtil.parseInt(j, 0); //主队比分
+			Integer guestScore = NumberUtil.parseInt(k, 0); //客队比分
+			Integer homeHalfScore = NumberUtil.parseInt(l, 0); //主队半场比分
+			Integer guestHalsScore = NumberUtil.parseInt(m, 0); //客队半场比分
+			Integer homeRed = NumberUtil.parseInt(n, 0); //主队红牌
+			Integer guestRed = NumberUtil.parseInt(o, 0); //客队红牌
+			Integer round = NumberUtil.parseInt(s, 0); //轮次
+			Integer weatherIcon = NumberUtil.parseInt(u, 0); //天气图标
 			
-			Schedule schedule = Schedule.findScheduleWOBuild(Integer.parseInt(a));
+			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
 			boolean ismod = false;
-			if(null == schedule) {
+			if(schedule == null) {
 				schedule = new Schedule();
-				schedule.setScheduleID(Integer.parseInt(a));
-				schedule.setSclassID(Integer.parseInt(c.split("\\,")[3]));
-				schedule.setMatchTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", d));
-				schedule.setMatchState(Integer.parseInt(f));
-				//String[] values = h.split("\\,");
-				//schedule.setHomeTeam(values[0]);
+				schedule.setScheduleID(scheduleId);
+				schedule.setSclassID(sclassId);
+				schedule.setMatchTime(matchTime);
+				schedule.setMatchState(matchState);
 				schedule.setHomeTeam(homeTeam);
-				//schedule.setHomeTeamID(Integer.parseInt(values[3]));
 				schedule.setHomeTeamID(homeTeamID);
-				//values = i.split("\\,");
-				//schedule.setGuestTeam(values[0]);
 				schedule.setGuestTeam(guestTeam);
-				//schedule.setGuestTeamID(Integer.parseInt(values[3]));
 				schedule.setGuestTeamID(guestTeamID);
-				schedule.setHomeScore(NumberUtil.parseInt(j, 0));
-				schedule.setGuestScore(NumberUtil.parseInt(k, 0));
-				schedule.setHomeHalfScore(NumberUtil.parseInt(l, 0));
-				schedule.setGuestHalfScore(NumberUtil.parseInt(m, 0));
-				schedule.setHome_Red(NumberUtil.parseInt(n, 0));
-				schedule.setGuest_Red(NumberUtil.parseInt(o, 0));
+				schedule.setHomeScore(homeScore);
+				schedule.setGuestScore(guestScore);
+				schedule.setHomeHalfScore(homeHalfScore);
+				schedule.setGuestHalfScore(guestHalsScore);
+				schedule.setHome_Red(homeRed);
+				schedule.setGuest_Red(guestRed);
 				schedule.setHome_Order(p);
 				schedule.setGuest_Order(q);
 				schedule.setExplain(r);
-				schedule.setRound(NumberUtil.parseInt(s, 0));
+				schedule.setRound(round);
 				schedule.setLocation(t);
-				schedule.setWeatherIcon(NumberUtil.parseInt(u, 0));
+				schedule.setWeatherIcon(weatherIcon);
 				schedule.setWeather(v);
 				schedule.setTemperature(w);
 				schedule.setMatchSeason(x);
@@ -186,7 +191,6 @@ public class UpdateScheduleService {
 				schedule.persist();
 				updateRanking(schedule.getScheduleID(), updateRanking);
 			} else {
-				int matchstate = schedule.getMatchState();
 				if (StringUtils.isNotBlank(d)) {
 					String pattern = "yyyy/MM/dd HH:mm:ss";
 					Date dDate = DateUtil.parse(pattern, d);
@@ -213,33 +217,38 @@ public class UpdateScheduleService {
 					ismod = true;
 					schedule.setGuestTeamID(guestTeamID);
 				}
-				if(Integer.parseInt(f) != schedule.getMatchState()) {
+				Integer oldMatchState = schedule.getMatchState();
+				if(matchState != oldMatchState) {
 					ismod = true;
-					schedule.setMatchState(Integer.parseInt(f));
+					schedule.setMatchState(matchState);
 				}
-				if(NumberUtil.parseInt(j, 0) != schedule.getHomeScore()) {
+				Integer oldHomeScore = schedule.getHomeScore();
+				if(homeScore != oldHomeScore) {
 					ismod = true;
-					schedule.setHomeScore(NumberUtil.parseInt(j, 0));
+					schedule.setHomeScore(homeScore);
 				}
-				if(NumberUtil.parseInt(k, 0) != schedule.getGuestScore()) {
+				Integer oldGuestScore = schedule.getGuestScore();
+				if(guestScore != oldGuestScore) {
 					ismod = true;
-					schedule.setGuestScore(NumberUtil.parseInt(k, 0));
+					schedule.setGuestScore(guestScore);
 				}
-				if(NumberUtil.parseInt(l, 0) != schedule.getHomeHalfScore()) {
+				Integer oldHomeHalfScore = schedule.getHomeHalfScore();
+				if(homeHalfScore != oldHomeHalfScore) {
 					ismod = true;
-					schedule.setHomeHalfScore(NumberUtil.parseInt(l, 0));
+					schedule.setHomeHalfScore(homeHalfScore);
 				}
-				if(NumberUtil.parseInt(m, 0) != schedule.getGuestHalfScore()) {
+				Integer oldGuestHalfScore = schedule.getGuestHalfScore();
+				if(guestHalsScore != oldGuestHalfScore) {
 					ismod = true;
-					schedule.setGuestHalfScore(NumberUtil.parseInt(m, 0));
+					schedule.setGuestHalfScore(guestHalsScore);
 				}
-				if(NumberUtil.parseInt(n, 0) != schedule.getHome_Red()) {
+				if(homeRed != schedule.getHome_Red()) {
 					ismod = true;
-					schedule.setHome_Red(NumberUtil.parseInt(n, 0));
+					schedule.setHome_Red(homeRed);
 				}
-				if(NumberUtil.parseInt(o, 0) != schedule.getGuest_Red()) {
+				if(guestRed != schedule.getGuest_Red()) {
 					ismod = true;
-					schedule.setGuest_Red(NumberUtil.parseInt(o, 0));
+					schedule.setGuest_Red(guestRed);
 				}
 				if(null != p && !p.equals(schedule.getHome_Order())) {
 					ismod = true;
@@ -249,9 +258,9 @@ public class UpdateScheduleService {
 					ismod = true;
 					schedule.setGuest_Order(q);
 				}
-				if(NumberUtil.parseInt(u, 0) != schedule.getWeatherIcon()) {
+				if(weatherIcon != schedule.getWeatherIcon()) {
 					ismod = true;
-					schedule.setWeatherIcon(NumberUtil.parseInt(u, 0));
+					schedule.setWeatherIcon(weatherIcon);
 				}
 				if(v != null && !v.equals(schedule.getWeather())) {
 					ismod = true;
@@ -268,18 +277,13 @@ public class UpdateScheduleService {
 				if(ismod) {
 					schedule.merge();
 					//已完场
-					if(MatchState.WANCHANG.value!=matchstate && MatchState.WANCHANG.value==schedule.getMatchState()) {
-						//发送完场的Jms
-						String event = schedule.getEvent(); //竞彩足球
-						if (StringUtils.isNotBlank(event)) {
-							sendJmsJczUtil.sendScheduleFinishJms(event);
-						}
-						String bdEvent = schedule.getBdEvent(); //北单
-						if (StringUtils.isNotBlank(bdEvent)) {
-							sendJmsBdUtil.sendScheduleFinishJms(bdEvent);
-						}
-						//更新排名
-						updateRanking(schedule.getScheduleID(), updateRanking);
+					if(MatchState.WANCHANG.value!=oldMatchState && MatchState.WANCHANG.value==schedule.getMatchState()) {
+						sendScheduleFinishJms(schedule, updateRanking); //发送完场的Jms
+					}
+					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
+					if (MatchState.WANCHANG.value==schedule.getMatchState()&&(homeScore!=oldHomeScore||guestScore!=oldGuestScore
+							||homeHalfScore!=oldHomeHalfScore||guestHalsScore!=oldGuestHalfScore)) {
+						sendScoreModifyJms(schedule, updateRanking); //发送比分变化的Jms
 					}
 				}
 			}
@@ -314,6 +318,44 @@ public class UpdateScheduleService {
 		logger.info("获取之后30天的足球赛事开始");
 		processCount(30, 0);
 		logger.info("获取之后30天的足球赛事结束");
+	}
+	
+	private void sendScheduleFinishJms(Schedule schedule, boolean updateRanking) {
+		String event = schedule.getEvent(); //竞彩足球
+		if (StringUtils.isNotBlank(event)) {
+			logger.info("sendScheduleFinishJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
+					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
+					+";guestHalfScore="+schedule.getGuestHalfScore());
+			sendJmsJczUtil.sendScheduleFinishJms(event);
+		}
+		String bdEvent = schedule.getBdEvent(); //北单
+		if (StringUtils.isNotBlank(bdEvent)) {
+			logger.info("sendScheduleFinishJms,bdEvent="+bdEvent+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
+					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
+					+";guestHalfScore="+schedule.getGuestHalfScore());
+			sendJmsBdUtil.sendScheduleFinishJms(bdEvent);
+		}
+		//更新排名
+		updateRanking(schedule.getScheduleID(), updateRanking);
+	}
+	
+	private void sendScoreModifyJms(Schedule schedule, boolean updateRanking) {
+		String event = schedule.getEvent(); //竞彩足球
+		if (StringUtils.isNotBlank(event)) {
+			logger.info("sendScoreModifyJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
+					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
+					+";guestHalfScore="+schedule.getGuestHalfScore());
+			sendJmsJczUtil.sendScoreModifyJms(event);
+		}
+		String bdEvent = schedule.getBdEvent(); //北单
+		if (StringUtils.isNotBlank(bdEvent)) {
+			logger.info("sendScoreModifyJms,bdEvent="+bdEvent+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
+					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
+					+";guestHalfScore="+schedule.getGuestHalfScore());
+			sendJmsBdUtil.sendScoreModifyJms(bdEvent);
+		}
+		//更新排名
+		updateRanking(schedule.getScheduleID(), updateRanking);
 	}
 	
 }

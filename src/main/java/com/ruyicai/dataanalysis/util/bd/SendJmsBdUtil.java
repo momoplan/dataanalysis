@@ -21,6 +21,9 @@ public class SendJmsBdUtil {
 	@Produce(uri = "jms:topic:scheduleBdFinish")
 	private ProducerTemplate scheduleBdFinishTemplate;
 	
+	@Produce(uri = "jms:topic:scoreBdModify")
+	private ProducerTemplate scoreBdModifyTemplate;
+	
 	/**
 	 * 赛果更新的JMS
 	 * @param event
@@ -32,6 +35,22 @@ public class SendJmsBdUtil {
 			
 			logger.info("scheduleBdFinishTemplate start, event={}", event);
 			scheduleBdFinishTemplate.sendBodyAndHeaders(null, header);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 比分变化的JMS
+	 * @param event
+	 */
+	public void sendScoreModifyJms(String event) {
+		try {
+			Map<String, Object> header = new HashMap<String, Object>();
+			header.put("EVENT", event);
+			
+			logger.info("scoreBdModifyTemplate start, event={}", event);
+			scoreBdModifyTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
