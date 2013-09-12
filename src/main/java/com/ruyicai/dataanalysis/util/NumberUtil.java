@@ -36,11 +36,11 @@ public class NumberUtil {
 		return removeWei0(nums).equals(removeWei0(bd.toString()));
 	} 
 	
-	public static String removeWei0(String nums) {
-		String s = nums.replaceAll("0+$", "");
-		if(s.endsWith(".")) {
-			s = s.substring(0, s.length() - 1);
-		}
+	public static String removeWei0(String s) {
+		if(s.indexOf(".") > 0){  
+            s = s.replaceAll("0+?$", "");//去掉多余的0  
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉  
+        }
 		return s;
 	}
 	
