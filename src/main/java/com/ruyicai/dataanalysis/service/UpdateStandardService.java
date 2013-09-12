@@ -159,6 +159,9 @@ public class UpdateStandardService {
 			if ((StringUtils.isNotBlank(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin()))
 					||(StringUtils.isNotBlank(standoff) && !NumberUtil.compare(standoff, standard.getStandoff()))
 					||(StringUtils.isNotBlank(guestWin) && !NumberUtil.compare(guestWin, standard.getGuestWin()))) {
+				logger.info("scheduleId="+scheduleId+";companyId="+companyId+";homeWin="+homeWin+";standard.getHomeWin()="+standard.getHomeWin()
+						+";standoff="+standoff+";standard.getStandoff()="+standard.getStandoff()
+						+";guestWin="+guestWin+";standard.getGuestWin()="+standard.getGuestWin());
 				standard.setHomeWin(new Double(homeWin));
 				standard.setStandoff(new Double(standoff));
 				standard.setGuestWin(new Double(guestWin));
