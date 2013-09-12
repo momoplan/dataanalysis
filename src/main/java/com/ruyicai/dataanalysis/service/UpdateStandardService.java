@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -80,21 +78,16 @@ public class UpdateStandardService {
 		logger.info("足球欧赔更新结束，共用时 " + (endmillis - startmillis));
 	}
 
-	@SuppressWarnings("unchecked")
 	public void processByMinute() {
 		logger.info("足球欧赔-processByMinute更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.getResponse(url+"?min=1", HttpUtil.GET, HttpUtil.UTF8, "");
+			String data = httpUtil.getResponse(url+"?min=5", HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("足球欧赔-processByMinute更新时获取数据为空");
 				return;
 			}
-			Document doc = DocumentHelper.parseText(data);
-			List<Element> matches = doc.getRootElement().elements("h");
-			for(Element match : matches) {
-				processStandard(match);
-			}
+			processStandard(data);
 		} catch (Exception e) {
 			logger.error("足球欧赔-processByMinute更新时发生异常", e);
 		}
@@ -103,7 +96,29 @@ public class UpdateStandardService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void processStandard(Element match) {
+	private void processStandard(final String data) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				logger.info("足球欧赔更新-processByMinute-processStandard开始");
+				long startmillis = System.currentTimeMillis();
+				try {
+					Document doc = DocumentHelper.parseText(data);
+					List<Element> matches = doc.getRootElement().elements("h");
+					for(Element match : matches) {
+						doStandard(match);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				long endmillis = System.currentTimeMillis();
+				logger.info("足球欧赔更新-processByMinute-processStandard结束, 共用时 " + (endmillis - startmillis));
+			}
+		}).start();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void doStandard(Element match) {
 		try {
 			String scheduleId = match.elementTextTrim("id");
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
@@ -115,7 +130,7 @@ public class UpdateStandardService {
 			}
 			List<Element> odds = match.element("odds").elements("o");
 			for(Element odd : odds) {
-				processOdd(scheduleId, odd);
+				doOdd(scheduleId, odd);
 			}
 			//查看是否需要更新缓存
 			updateCache(Integer.parseInt(scheduleId));
@@ -124,7 +139,7 @@ public class UpdateStandardService {
 		}
 	}
 	
-	private void processOdd(String scheduleId, Element odd) {
+	private void doOdd(String scheduleId, Element odd) {
 		try {
 			String o = odd.getTextTrim();
 			String[] values = o.split("\\,");
