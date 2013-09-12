@@ -150,16 +150,16 @@ public class UpdateLetgoalStandardService {
 	private LetGoal buildLetGoal(String data) {
 		try {
 			String[] values = data.split("\\,");
-			String scheduleID = values[0];
-			String companyID = values[1];
-			String firstGoal = values[2];
-			String firstUpOdds = values[3];
-			String firstDownOdds = values[4];
-			String goal = values[5];
-			String upOdds = values[6];
-			String downOdds = values[7];
-			String closePan = values[8];
-			String zhoudi = values[9];
+			String scheduleID = (values!=null&&values.length>=1) ? values[0] : "";
+			String companyID = (values!=null&&values.length>=2) ? values[1] : "";
+			String firstGoal = (values!=null&&values.length>=3) ? values[2] : "";
+			String firstUpOdds = (values!=null&&values.length>=4) ? values[3] : "";
+			String firstDownOdds = (values!=null&&values.length>=5) ? values[4] : "";
+			String goal = (values!=null&&values.length>=6) ? values[5] : "";
+			String upOdds = (values!=null&&values.length>=7) ? values[6] : "";
+			String downOdds = (values!=null&&values.length>=8) ? values[7] : "";
+			String closePan = (values!=null&&values.length>=9) ? values[8] : "";
+			String zhoudi = (values!=null&&values.length>=10) ? values[9] : "";
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
 			if(null == schedule) {
 				return null;
