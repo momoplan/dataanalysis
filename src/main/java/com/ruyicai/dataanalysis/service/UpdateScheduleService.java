@@ -14,12 +14,11 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.bd.SendJmsBdUtil;
-import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
 public class UpdateScheduleService {
@@ -36,10 +35,7 @@ public class UpdateScheduleService {
 	private AnalysisService analysisService;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
-	
-	@Autowired
-	private SendJmsBdUtil sendJmsBdUtil;
+	private CommonUtil commonUtil;
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取足球所有联赛下所有赛事");
@@ -161,6 +157,7 @@ public class UpdateScheduleService {
 			
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
 			boolean ismod = false;
+			boolean scoreModify = false;
 			if(schedule == null) {
 				schedule = new Schedule();
 				schedule.setScheduleID(scheduleId);
@@ -209,7 +206,7 @@ public class UpdateScheduleService {
 					ismod = true;
 					schedule.setHomeTeamID(homeTeamID);
 				}
-				if (StringUtils.equals(schedule.getGuestTeam(), guestTeam)) {
+				if (!StringUtils.equals(schedule.getGuestTeam(), guestTeam)) {
 					ismod = true;
 					schedule.setGuestTeam(guestTeam);
 				}
@@ -222,24 +219,24 @@ public class UpdateScheduleService {
 					ismod = true;
 					schedule.setMatchState(matchState);
 				}
-				Integer oldHomeScore = schedule.getHomeScore();
-				if(homeScore != oldHomeScore) {
+				if(homeScore != schedule.getHomeScore()) {
 					ismod = true;
+					scoreModify = true;
 					schedule.setHomeScore(homeScore);
 				}
-				Integer oldGuestScore = schedule.getGuestScore();
-				if(guestScore != oldGuestScore) {
+				if(guestScore != schedule.getGuestScore()) {
 					ismod = true;
+					scoreModify = true;
 					schedule.setGuestScore(guestScore);
 				}
-				Integer oldHomeHalfScore = schedule.getHomeHalfScore();
-				if(homeHalfScore != oldHomeHalfScore) {
+				if(homeHalfScore != schedule.getHomeHalfScore()) {
 					ismod = true;
+					scoreModify = true;
 					schedule.setHomeHalfScore(homeHalfScore);
 				}
-				Integer oldGuestHalfScore = schedule.getGuestHalfScore();
-				if(guestHalsScore != oldGuestHalfScore) {
+				if(guestHalsScore != schedule.getGuestHalfScore()) {
 					ismod = true;
+					scoreModify = true;
 					schedule.setGuestHalfScore(guestHalsScore);
 				}
 				if(homeRed != schedule.getHome_Red()) {
@@ -276,14 +273,16 @@ public class UpdateScheduleService {
 				}
 				if(ismod) {
 					schedule.merge();
-					//已完场
-					if(MatchState.WANCHANG.value!=oldMatchState && MatchState.WANCHANG.value==schedule.getMatchState()) {
-						sendScheduleFinishJms(schedule, updateRanking); //发送完场的Jms
-					}
-					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
-					if (MatchState.WANCHANG.value==schedule.getMatchState()&&(homeScore!=oldHomeScore||guestScore!=oldGuestScore
-							||homeHalfScore!=oldHomeHalfScore||guestHalsScore!=oldGuestHalfScore)) {
-						sendScoreModifyJms(schedule, updateRanking); //发送比分变化的Jms
+					if (MatchState.WANCHANG.value==schedule.getMatchState()) { //已完场
+						if (MatchState.WANCHANG.value!=oldMatchState) { //之前的状态不是完场
+							commonUtil.sendScheduleFinishJms(schedule); //发送完场的Jms
+							updateRanking(schedule.getScheduleID(), updateRanking); //更新排名
+						}
+						//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
+						if (MatchState.WANCHANG.value==oldMatchState && scoreModify) { //之前的状态是完场
+							commonUtil.sendScoreModifyJms(schedule); //发送比分变化的Jms
+							updateRanking(schedule.getScheduleID(), updateRanking); //更新排名
+						}
 					}
 				}
 			}
@@ -318,44 +317,6 @@ public class UpdateScheduleService {
 		logger.info("获取之后30天的足球赛事开始");
 		processCount(30, 0);
 		logger.info("获取之后30天的足球赛事结束");
-	}
-	
-	private void sendScheduleFinishJms(Schedule schedule, boolean updateRanking) {
-		String event = schedule.getEvent(); //竞彩足球
-		if (StringUtils.isNotBlank(event)) {
-			logger.info("sendScheduleFinishJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
-					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
-					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsJczUtil.sendScheduleFinishJms(event);
-		}
-		String bdEvent = schedule.getBdEvent(); //北单
-		if (StringUtils.isNotBlank(bdEvent)) {
-			logger.info("sendScheduleFinishJms,bdEvent="+bdEvent+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
-					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
-					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsBdUtil.sendScheduleFinishJms(bdEvent);
-		}
-		//更新排名
-		updateRanking(schedule.getScheduleID(), updateRanking);
-	}
-	
-	private void sendScoreModifyJms(Schedule schedule, boolean updateRanking) {
-		String event = schedule.getEvent(); //竞彩足球
-		if (StringUtils.isNotBlank(event)) {
-			logger.info("sendScoreModifyJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
-					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
-					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsJczUtil.sendScoreModifyJms(event);
-		}
-		String bdEvent = schedule.getBdEvent(); //北单
-		if (StringUtils.isNotBlank(bdEvent)) {
-			logger.info("sendScoreModifyJms,bdEvent="+bdEvent+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
-					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
-					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsBdUtil.sendScoreModifyJms(bdEvent);
-		}
-		//更新排名
-		updateRanking(schedule.getScheduleID(), updateRanking);
 	}
 	
 }
