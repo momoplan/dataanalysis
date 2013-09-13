@@ -66,9 +66,9 @@ public class UpdateStandardService {
 				if(null == schedule) {
 					continue;
 				}
-				if (CommonUtil.isZqEventEmpty(schedule)) {
+				/*if (CommonUtil.isZqEventEmpty(schedule)) {
 					continue;
-				}
+				}*/
 				sendJmsJczUtil.sendStandardUpdateJMS(match.asXML());
 			}
 		} catch(Exception e) {
@@ -125,9 +125,9 @@ public class UpdateStandardService {
 			if(schedule==null) {
 				return;
 			}
-			if (CommonUtil.isZqEventEmpty(schedule)) {
+			/*if (CommonUtil.isZqEventEmpty(schedule)) {
 				return;
-			}
+			}*/
 			List<Element> odds = match.element("odds").elements("o");
 			for(Element odd : odds) {
 				doOdd(scheduleId, odd);

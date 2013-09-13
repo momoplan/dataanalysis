@@ -61,9 +61,9 @@ public class StandarJczUpdateListener {
 			if(null == schedule) {
 				return;
 			}
-			if (CommonUtil.isZqEventEmpty(schedule)) {
+			/*if (CommonUtil.isZqEventEmpty(schedule)) {
 				return;
-			}
+			}*/
 			List<Element> odds = match.element("odds").elements("o");
 			Double t_h = 0D;
 			Double t_s = 0D;
