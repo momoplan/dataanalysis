@@ -3,6 +3,10 @@ package com.ruyicai.dataanalysis.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -20,11 +24,14 @@ import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 
 @Service
 public class PeiLvDetailUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(PeiLvDetailUpdateService.class);
+	
+	private ThreadPoolExecutor peiLvDetailUpdateExecutor;
 
 	@Value("${peiLvDetail}")
 	private String url;
@@ -34,6 +41,11 @@ public class PeiLvDetailUpdateService {
 	
 	@Autowired
 	private GlobalInfoService infoService;
+	
+	@PostConstruct
+	public void init() {
+		peiLvDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("peiLvDetailUpdate", 10);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -52,7 +64,9 @@ public class PeiLvDetailUpdateService {
 			List<Element> aList = rootElement.elements("a");
 			if (aList!=null&&aList.size()>0) {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
-				processLetGoalDetail(letGoalElement);
+				ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(letGoalElement);
+				peiLvDetailUpdateExecutor.execute(task);
+				//processLetGoalDetail(letGoalElement);
 			}
 		} catch (Exception e) {
 			logger.error("足球赔率变化更新发生异常", e);
@@ -61,7 +75,28 @@ public class PeiLvDetailUpdateService {
 		logger.info("足球赔率变化更新结束，共用时 " + (endmillis - startmillis));
 	}
 	
-	private void processLetGoalDetail(final Element element) {
+	private class ProcessLetGoalDetailThread implements Runnable {
+		private Element element;
+		
+		private ProcessLetGoalDetailThread(Element element) {
+			this.element = element;
+		}
+		
+		@Override
+		public void run() {
+			logger.info("足球赔率变化更新-letGoalDetail开始");
+			long startmillis = System.currentTimeMillis();
+			try {
+				doLetgoalDetail(element);
+			} catch(Exception e) {
+				logger.error("足球赔率变化更新-letGoalDetail发生异常", e);
+			}
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球赔率变化更新-letGoalDetail结束, 共用时 " + (endmillis - startmillis));
+		}
+	}
+	
+	/*private void processLetGoalDetail(final Element element) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -76,11 +111,12 @@ public class PeiLvDetailUpdateService {
 				logger.info("足球赔率变化更新-letGoalDetail结束, 共用时 " + (endmillis - startmillis));
 			}
 		}).start();
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	private void doLetgoalDetail(Element element) {
 		List<Element> detailElements = element.elements("h");
+		logger.info("足球赔率变化更新-letGoalDetail,size="+detailElements.size());
 		List<Integer> scheduleIds = new ArrayList<Integer>();
 		for (Element detailElement : detailElements) {
 			String data = detailElement.getText();
