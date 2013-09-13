@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -18,11 +20,11 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
-import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
@@ -35,6 +37,8 @@ import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 public class UpdateStandardService {
 	
 	private Logger logger = LoggerFactory.getLogger(UpdateStandardService.class);
+	
+	private ThreadPoolExecutor standardUpdateExecutor;
 
 	@Value("${baijiaoupei}")
 	private String url;
@@ -47,6 +51,11 @@ public class UpdateStandardService {
 	
 	@Autowired
 	private GlobalInfoService globalInfoService;
+	
+	@PostConstruct
+	public void init() {
+		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 10);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -83,12 +92,14 @@ public class UpdateStandardService {
 		logger.info("足球欧赔-processByMinute更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.getResponse(url+"?min=5", HttpUtil.GET, HttpUtil.UTF8, "");
+			String data = httpUtil.getResponse(url+"?min=2", HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("足球欧赔-processByMinute更新时获取数据为空");
 				return;
 			}
-			processStandard(data);
+			processStandardThread task = new processStandardThread(data);
+			standardUpdateExecutor.execute(task);
+			//processStandard(data);
 		} catch (Exception e) {
 			logger.error("足球欧赔-processByMinute更新时发生异常", e);
 		}
@@ -97,6 +108,33 @@ public class UpdateStandardService {
 	}
 	
 	@SuppressWarnings("unchecked")
+	private class processStandardThread implements Runnable {
+		private String data;
+		
+		private processStandardThread(String data) {
+			this.data = data;
+		}
+		
+		@Override
+		public void run() {
+			logger.info("足球欧赔更新-processByMinute-processStandard开始");
+			long startmillis = System.currentTimeMillis();
+			try {
+				Document doc = DocumentHelper.parseText(data);
+				List<Element> matches = doc.getRootElement().elements("h");
+				logger.info("足球欧赔更新-processByMinute-processStandard,size="+matches.size());
+				for(Element match : matches) {
+					doStandard(match);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球欧赔更新-processByMinute-processStandard结束, 共用时 " + (endmillis - startmillis));
+		}
+	}
+	
+	/*@SuppressWarnings("unchecked")
 	private void processStandard(final String data) {
 		new Thread(new Runnable() {
 			@Override
@@ -106,6 +144,7 @@ public class UpdateStandardService {
 				try {
 					Document doc = DocumentHelper.parseText(data);
 					List<Element> matches = doc.getRootElement().elements("h");
+					logger.info("足球欧赔更新-processByMinute-processStandard,size="+matches.size());
 					for(Element match : matches) {
 						doStandard(match);
 					}
@@ -116,7 +155,7 @@ public class UpdateStandardService {
 				logger.info("足球欧赔更新-processByMinute-processStandard结束, 共用时 " + (endmillis - startmillis));
 			}
 		}).start();
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	private void doStandard(Element match) {
