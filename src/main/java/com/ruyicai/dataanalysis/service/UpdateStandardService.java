@@ -60,6 +60,7 @@ public class UpdateStandardService {
 			}
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("h");
+			logger.info("足球欧赔,size="+matches.size());
 			for(Element match : matches) {
 				String scheduleID = match.elementTextTrim("id");
 				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));

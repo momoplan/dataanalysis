@@ -39,6 +39,7 @@ public class StandarJczUpdateListener {
 	private GlobalInfoService globalInfoService;*/
 	
 	public void update(@Body String body) {
+		long startmillis = System.currentTimeMillis();
 		Document document = null;
 		try {
 			document = DocumentHelper.parseText(body);
@@ -47,6 +48,8 @@ public class StandarJczUpdateListener {
 			return;
 		}
 		doProcess(document.getRootElement());
+		long endmillis = System.currentTimeMillis();
+		logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis));
 	}
 	
 	/**
