@@ -65,6 +65,7 @@ public class PeiLvDetailUpdateService {
 			if (aList!=null&&aList.size()>0) {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
 				ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(letGoalElement);
+				logger.info("peiLvDetailUpdateExecutor,size="+peiLvDetailUpdateExecutor.getQueue().size());
 				peiLvDetailUpdateExecutor.execute(task);
 				//processLetGoalDetail(letGoalElement);
 			}
