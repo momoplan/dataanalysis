@@ -50,7 +50,7 @@ public class UpdateStandardService {
 	private SendJmsJczUtil sendJmsJczUtil;
 	
 	@Autowired
-	private GlobalInfoService globalInfoService;
+	private GlobalInfoService infoService;
 	
 	@PostConstruct
 	public void init() {
@@ -97,7 +97,8 @@ public class UpdateStandardService {
 				logger.info("足球欧赔-processByMinute更新时获取数据为空");
 				return;
 			}
-			processStandardThread task = new processStandardThread(data);
+			ProcessStandardThread task = new ProcessStandardThread(data);
+			logger.info("standardUpdateExecutor,size="+standardUpdateExecutor.getQueue().size());
 			standardUpdateExecutor.execute(task);
 			//processStandard(data);
 		} catch (Exception e) {
@@ -108,10 +109,10 @@ public class UpdateStandardService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private class processStandardThread implements Runnable {
+	private class ProcessStandardThread implements Runnable {
 		private String data;
 		
-		private processStandardThread(String data) {
+		private ProcessStandardThread(String data) {
 			this.data = data;
 		}
 		
@@ -168,18 +169,25 @@ public class UpdateStandardService {
 			/*if (CommonUtil.isZqEventEmpty(schedule)) {
 				return;
 			}*/
+			boolean isModify = false; //欧赔是否发生变化
 			List<Element> odds = match.element("odds").elements("o");
 			for(Element odd : odds) {
-				doOdd(scheduleId, odd);
+				boolean modify = doOdd(scheduleId, odd);
+				if (!isModify&&modify) {
+					isModify = true;
+				}
+			}
+			if (isModify) {
+				updateStandardCache(schedule);
 			}
 			//查看是否需要更新缓存
-			updateCache(Integer.parseInt(scheduleId));
+			//updateCache(Integer.parseInt(scheduleId));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void doOdd(String scheduleId, Element odd) {
+	private boolean doOdd(String scheduleId, Element odd) {
 		try {
 			String o = odd.getTextTrim();
 			String[] values = o.split("\\,");
@@ -194,7 +202,7 @@ public class UpdateStandardService {
 			String modTime = values[8]; //变化时间
 			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			if (standard==null) {
-				return ;
+				return false;
 			}
 			if ((StringUtils.isNotBlank(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin()))
 					||(StringUtils.isNotBlank(standoff) && !NumberUtil.compare(standoff, standard.getStandoff()))
@@ -215,13 +223,32 @@ public class UpdateStandardService {
 				detail.setGuestWin(new Double(guestWin));
 				detail.setModifyTime(standard.getModifyTime());
 				detail.persist();
+				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
-	private void updateCache(Integer scheduleID) {
+	private void updateStandardCache(Schedule schedule) {
+		Integer scheduleId = schedule.getScheduleID();
+		Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
+		infoService.buildStandards(schedule, standards);
+		GlobalCache standard = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
+		if (standard==null) {
+			standard = new GlobalCache();
+			standard.setId(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
+			standard.setValue(Standard.toJsonArray(standards));
+			standard.persist();
+		} else {
+			standard.setValue(Standard.toJsonArray(standards));
+			standard.merge();
+		}
+		infoService.updateInfo(scheduleId);
+	}
+	
+	/*private void updateCache(Integer scheduleID) {
 		String id = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleID));
 		GlobalCache globalCache = GlobalCache.findGlobalCache(id);
 		List<Standard> list = Standard.findByScheduleID(scheduleID);
@@ -258,9 +285,9 @@ public class UpdateStandardService {
 				}
 			}
 		}
-	}
+	}*/
 	
-	private void buildStandards(Schedule schedule, Collection<Standard> standards) {
+	/*private void buildStandards(Schedule schedule, Collection<Standard> standards) {
 		if(null != standards && !standards.isEmpty()) {
 			for(Standard standard : standards) {
 				EuropeCompany company = EuropeCompany.findEuropeCompany(standard.getCompanyID());
@@ -288,14 +315,14 @@ public class UpdateStandardService {
 				}
 			}
 		}
-	}
+	}*/
 	
-	private List<Standard> convertStandards(Collection<Standard> collection) {
+	/*private List<Standard> convertStandards(Collection<Standard> collection) {
 		List<Standard> standards = new LinkedList<Standard>();
 		for(Standard standard : collection) {
 			standards.add(standard);
 		}
 		return standards;
-	}
+	}*/
 	
 }
