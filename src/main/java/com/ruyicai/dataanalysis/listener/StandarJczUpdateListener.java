@@ -48,9 +48,9 @@ public class StandarJczUpdateListener {
 			logger.error("足球欧赔更新Jms的处理-转Document发生异常", e);
 			return;
 		}
-		doProcess(document.getRootElement());
-		long endmillis = System.currentTimeMillis();
-		logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis));
+		doProcess(document.getRootElement(), startmillis);
+		//long endmillis = System.currentTimeMillis();
+		//logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis));
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class StandarJczUpdateListener {
 	 * @param match
 	 */
 	@SuppressWarnings("unchecked")
-	private void doProcess(Element match) {
+	private void doProcess(Element match, long startmillis) {
 		try {
 			String scheduleID = match.elementTextTrim("id");
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
@@ -72,7 +72,7 @@ public class StandarJczUpdateListener {
 			Double t_h = 0D;
 			Double t_s = 0D;
 			Double t_g = 0D;
-			logger.info("scheduleID_odds of scheduleId="+scheduleID+",size="+odds.size());
+			//logger.info("scheduleID_odds of scheduleId="+scheduleID+",size="+odds.size());
 			for(Element odd : odds) {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
@@ -169,6 +169,9 @@ public class StandarJczUpdateListener {
 			}
 			//查看是否需要更新缓存
 			//updateCache(Integer.parseInt(scheduleID));
+			
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis)+",scheduleId="+scheduleID+",size="+odds.size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
