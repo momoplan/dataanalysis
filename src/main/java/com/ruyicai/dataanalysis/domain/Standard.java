@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.TableGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-
+import com.ruyicai.dataanalysis.cache.StandardCache;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 
@@ -171,18 +170,32 @@ public class Standard implements Comparable<Standard> {
 		this.fanHuanLu = fanHuanLu;
 	}
 
+	@Autowired
+	private transient StandardCache standardCache;
+	
 	public static Standard findStandard(Integer scheduleID, Integer companyID) {
+		return new Standard().standardCache.getStandard(scheduleID, companyID);
+		
+		/*List<Standard> standards = entityManager().createQuery("select o from Standard o where scheduleID=? and companyID=?", Standard.class)
+				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
+		if(null == standards || standards.isEmpty()) {
+			return null;
+		}
+		return standards.get(0);*/
+	}
+	
+	public static List<Standard> findByScheduleID(Integer scheduleID) {
+		return entityManager().createQuery("select o from Standard o, EuropeCompany c where o.companyID=c.companyID and c.name_Cn is not null and o.scheduleID=? and c.isPrimary=1 order by o.companyID asc", Standard.class)
+				.setParameter(1, scheduleID).getResultList();
+	}
+	
+	public static Standard findByScheduleIdCompanyId(Integer scheduleID, Integer companyID) {
 		List<Standard> standards = entityManager().createQuery("select o from Standard o where scheduleID=? and companyID=?", Standard.class)
 				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
 		if(null == standards || standards.isEmpty()) {
 			return null;
 		}
 		return standards.get(0);
-	}
-	
-	public static List<Standard> findByScheduleID(Integer scheduleID) {
-		return entityManager().createQuery("select o from Standard o, EuropeCompany c where o.companyID=c.companyID and c.name_Cn is not null and o.scheduleID=? and c.isPrimary=1 order by o.companyID asc", Standard.class)
-				.setParameter(1, scheduleID).getResultList();
 	}
 	
 	public String toJson() {

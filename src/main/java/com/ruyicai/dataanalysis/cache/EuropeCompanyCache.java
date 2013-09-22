@@ -19,7 +19,7 @@ public class EuropeCompanyCache {
 		if(StringUtil.isEmpty(value)) {
 			company = EuropeCompany.findByID(companyID);
 			if(null != company) {
-					cacheService.set(StringUtil.join("_", "dadaanalysis", "EuropeCompany", String.valueOf(companyID)), 0, company.toJson());
+				cacheService.set(StringUtil.join("_", "dadaanalysis", "EuropeCompany", String.valueOf(companyID)), 0, company.toJson());
 			}
 		} else {
 			company = EuropeCompany.fromJsonToEuropeCompany(value);
@@ -27,7 +27,7 @@ public class EuropeCompanyCache {
 		return company;
 	}
 	
-	public void setToMemcache(EuropeCompany company) {
-			cacheService.set(StringUtil.join("_", "dadaanalysis", "EuropeCompany", String.valueOf(company.getCompanyID())), 0, company.toJson());
-	}
+	/*public void setToMemcache(EuropeCompany company) {
+		cacheService.set(StringUtil.join("_", "dadaanalysis", "EuropeCompany", String.valueOf(company.getCompanyID())), 0, company.toJson());
+	}*/
 }
