@@ -61,7 +61,10 @@ public class StandarJczUpdateListener {
 	private void doProcess(Element match, long startmillis) {
 		try {
 			String scheduleID = match.elementTextTrim("id");
+			long startmillis1 = System.currentTimeMillis();
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
+			long endmillis1 = System.currentTimeMillis();
+			logger.info("欧赔Jms获取Schedule,用时"+(endmillis1-startmillis1));
 			if(null == schedule) {
 				return;
 			}
@@ -94,7 +97,10 @@ public class StandarJczUpdateListener {
 					t_s = t_s + new Double(firstStandoff);
 					t_g = t_g + new Double(firstGuestWin);
 				}
+				long startmillis2 = System.currentTimeMillis();
 				EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
+				long endmillis2 = System.currentTimeMillis();
+				logger.info("欧赔Jms获取EuropeCompany,用时"+(endmillis2-startmillis2));
 				if(null == company) {
 					company = new EuropeCompany();
 					company.setCompanyID(Integer.parseInt(companyID));
@@ -104,7 +110,10 @@ public class StandarJczUpdateListener {
 					company.setIsExchange(0);
 					company.persist();
 				}
+				long startmillis3 = System.currentTimeMillis();
 				Standard standard = Standard.findStandard(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
+				long endmillis3 = System.currentTimeMillis();
+				logger.info("欧赔Jms获取Standard,用时"+(endmillis3-startmillis3));
 				if(null == standard) {
 					standard = new Standard();
 					standard.setScheduleID(Integer.parseInt(scheduleID));
