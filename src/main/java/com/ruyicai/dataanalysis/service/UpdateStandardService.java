@@ -70,6 +70,7 @@ public class UpdateStandardService {
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("h");
 			logger.info("足球欧赔,size="+matches.size());
+			int size = 0;
 			for(Element match : matches) {
 				String scheduleID = match.elementTextTrim("id");
 				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
@@ -80,7 +81,9 @@ public class UpdateStandardService {
 					continue;
 				}*/
 				sendJmsJczUtil.sendStandardUpdateJMS(match.asXML());
+				size++;
 			}
+			logger.info("欧赔size="+size);
 		} catch(Exception e) {
 			logger.error("足球欧赔更新发生异常", e);
 		}

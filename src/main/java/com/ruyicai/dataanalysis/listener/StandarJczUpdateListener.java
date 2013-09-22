@@ -39,6 +39,7 @@ public class StandarJczUpdateListener {
 	private GlobalInfoService globalInfoService;*/
 	
 	public void update(@Body String body) {
+		logger.info("足球欧赔更新Jms的处理开始");
 		long startmillis = System.currentTimeMillis();
 		Document document = null;
 		try {
@@ -71,6 +72,7 @@ public class StandarJczUpdateListener {
 			Double t_h = 0D;
 			Double t_s = 0D;
 			Double t_g = 0D;
+			logger.info("scheduleID_odds of scheduleId="+scheduleID+",size="+odds.size());
 			for(Element odd : odds) {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
