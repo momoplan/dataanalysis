@@ -20,6 +20,7 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -30,6 +31,8 @@ import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
 public class UpdateLetgoalStandardService {
 	
 	private Logger logger = LoggerFactory.getLogger(UpdateLetgoalStandardService.class);
+	
+	private Map<String, Boolean> letgoalMap = new HashMap<String, Boolean>();
 
 	@Value("${peiluall}")
 	private String url;
@@ -176,11 +179,17 @@ public class UpdateLetgoalStandardService {
 				return null;
 			}*/
 			long startmillis3 = System.currentTimeMillis();
-			LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
+			String lkey = StringUtil.join("_", scheduleID, companyID);
+			Boolean lHasExist = letgoalMap.get(lkey);
+			if (lHasExist==null||!lHasExist) {
+				LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
+				lHasExist = letGoal==null ? false : true;
+				letgoalMap.put(lkey, lHasExist);
+			}
 			long endmillis3 = System.currentTimeMillis();
 			logger.info("buildLetGoal,获取LetGoal用时 " + (endmillis3 - startmillis3));
-			if(null == letGoal) {
-				letGoal = new LetGoal();
+			if(!lHasExist) {
+				LetGoal letGoal = new LetGoal();
 				letGoal.setScheduleID(Integer.parseInt(scheduleID));
 				letGoal.setCompanyID(Integer.parseInt(companyID));
 				letGoal.setFirstGoal(new Double(firstGoal));

@@ -21,12 +21,6 @@ privileged aspect LetGoal_Roo_Entity {
     transient EntityManager LetGoal.entityManager;
     
     @Transactional("transactionManager")
-    public void LetGoal.persist() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.persist(this);
-    }
-    
-    @Transactional("transactionManager")
     public void LetGoal.remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
         if (this.entityManager.contains(this)) {
@@ -47,14 +41,6 @@ privileged aspect LetGoal_Roo_Entity {
     public void LetGoal.clear() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.clear();
-    }
-    
-    @Transactional("transactionManager")
-    public LetGoal LetGoal.merge() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        LetGoal merged = this.entityManager.merge(this);
-        this.entityManager.flush();
-        return merged;
     }
     
     public static final EntityManager LetGoal.entityManager() {

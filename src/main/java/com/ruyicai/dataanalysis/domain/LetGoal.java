@@ -12,9 +12,13 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.TableGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ruyicai.dataanalysis.cache.LetGoalCache;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -108,8 +112,38 @@ public class LetGoal implements Comparable<LetGoal> {
 	public void setCompanyName_e(String companyName_e) {
 		this.companyName_e = companyName_e;
 	}
+	
+	@Autowired
+	private transient LetGoalCache letGoalCache;
+	
+	@Transactional
+    public void persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+        letGoalCache.setToMemcache(this);
+    }
+	
+	@Transactional
+    public LetGoal merge() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        LetGoal merged = this.entityManager.merge(this);
+        this.entityManager.flush();
+        letGoalCache.setToMemcache(merged);
+        return merged;
+    }
 
 	public static LetGoal findLetGoal(Integer scheduleID, Integer companyID) {
+		return new LetGoal().letGoalCache.getLetGoal(scheduleID, companyID);
+		
+		/*List<LetGoal> letGoals = entityManager().createQuery("select o from LetGoal o where scheduleID=? and companyID=?", LetGoal.class)
+				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
+		if(null == letGoals || letGoals.isEmpty()) {
+			return null;
+		}
+		return letGoals.get(0);*/
+	}
+	
+	public static LetGoal findByScheduleIdCompanyId(Integer scheduleID, Integer companyID) {
 		List<LetGoal> letGoals = entityManager().createQuery("select o from LetGoal o where scheduleID=? and companyID=?", LetGoal.class)
 				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
 		if(null == letGoals || letGoals.isEmpty()) {
