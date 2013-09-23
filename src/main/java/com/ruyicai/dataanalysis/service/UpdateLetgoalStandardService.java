@@ -45,15 +45,15 @@ public class UpdateLetgoalStandardService {
 		long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.downfile(url, HttpUtil.UTF8);
-			if(StringUtil.isEmpty(data)) {
+			if(StringUtils.isBlank(data)) {
 				logger.error("更新赔率获取data为空");
-			} else {
-				final String[] datas = data.split("\\$");
-				processLetGoal(datas[2]);
-				//此处不处理欧赔,因为如果某场赛事没有亚赔,那么欧赔也不会返回,这样就不能更新这场赛事的缓存,
-				//迁移到插入欧赔数据的时候更新缓存
-				//processStandard(datas[3]);
+				return ;
 			}
+			final String[] datas = data.split("\\$");
+			processLetGoal(datas[2]);
+			//此处不处理欧赔,因为如果某场赛事没有亚赔,那么欧赔也不会返回,这样就不能更新这场赛事的缓存,
+			//迁移到插入欧赔数据的时候更新缓存
+			//processStandard(datas[3]);
 		} catch(Exception e) {
 			logger.error("更新赔率出错", e);
 		}
@@ -68,17 +68,17 @@ public class UpdateLetgoalStandardService {
 				logger.info("开始更新亚赔");
 				long startmillis = System.currentTimeMillis();
 				try {
-					doLetgoal(data);
+					doLetgoal(data, startmillis);
 				} catch(Exception e) {
 					logger.error("更新亚赔出错", e);
 				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("更新亚赔结束, 共用时 " + (endmillis - startmillis));
+				//long endmillis = System.currentTimeMillis();
+				//logger.info("更新亚赔结束, 共用时 " + (endmillis - startmillis));
 			}
 		}).start();
 	}
 	
-	private void doLetgoal(String value) {
+	private void doLetgoal(String value, long startmillis) {
 		String[] datas = value.split("\\;");
 		logger.info("亚赔size:{}", new Integer[] {datas.length});
 		//Map<Integer, List<LetGoal>> map = new HashMap<Integer, List<LetGoal>>();
@@ -98,6 +98,8 @@ public class UpdateLetgoalStandardService {
 				}
 			}*/
 		}
+		long endmillis = System.currentTimeMillis();
+		logger.info("更新亚赔结束, 共用时 " + (endmillis - startmillis)+",size="+datas.length);
 		//isUpdateInfo(map);
 	}
 	
@@ -147,8 +149,9 @@ public class UpdateLetgoalStandardService {
 		return letGoals;
 	}*/
 
-	private LetGoal buildLetGoal(String data) {
+	private void buildLetGoal(String data) {
 		try {
+			long startmillis = System.currentTimeMillis();
 			String[] values = data.split("\\,");
 			String scheduleID = (values!=null&&values.length>=1) ? values[0] : "";
 			String companyID = (values!=null&&values.length>=2) ? values[1] : "";
@@ -159,15 +162,23 @@ public class UpdateLetgoalStandardService {
 			String upOdds = (values!=null&&values.length>=7) ? values[6] : "";
 			String downOdds = (values!=null&&values.length>=8) ? values[7] : "";
 			String closePan = (values!=null&&values.length>=9) ? values[8] : "";
+			Integer cp = StringUtils.equals(closePan, "True") ? 1 : 0;
 			String zhoudi = (values!=null&&values.length>=10) ? values[9] : "";
+			Integer zd = StringUtils.equals(zhoudi, "True") ? 1 : 0;
+			long startmillis2 = System.currentTimeMillis();
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-			if(null == schedule) {
-				return null;
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("buildLetGoal,获取Schedule用时 " + (endmillis2 - startmillis2));
+			if(schedule==null) {
+				return ;
 			}
-			if (CommonUtil.isZqEventEmpty(schedule)) {
+			/*if (CommonUtil.isZqEventEmpty(schedule)) {
 				return null;
-			}
+			}*/
+			long startmillis3 = System.currentTimeMillis();
 			LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
+			long endmillis3 = System.currentTimeMillis();
+			logger.info("buildLetGoal,获取LetGoal用时 " + (endmillis3 - startmillis3));
 			if(null == letGoal) {
 				letGoal = new LetGoal();
 				letGoal.setScheduleID(Integer.parseInt(scheduleID));
@@ -178,14 +189,14 @@ public class UpdateLetgoalStandardService {
 				letGoal.setGoal(StringUtil.isEmpty(goal) ? null : new Double(goal));
 				letGoal.setUpOdds(StringUtil.isEmpty(upOdds) ? null : new Double(upOdds));
 				letGoal.setDownOdds(StringUtil.isEmpty(downOdds) ? null : new Double(downOdds));
-				letGoal.setClosePan(0);
-				letGoal.setZouDi(0);
-				if("True".equals(closePan)) {
+				letGoal.setClosePan(cp);
+				letGoal.setZouDi(zd);
+				/*if("True".equals(closePan)) {
 					letGoal.setClosePan(1);
 				}
 				if("True".equals(zhoudi)) {
 					letGoal.setZouDi(1);
-				}
+				}*/
 				letGoal.persist();
 				LetGoalDetail detail = new LetGoalDetail();
 				detail.setOddsID(letGoal.getOddsID());
@@ -250,10 +261,10 @@ public class UpdateLetgoalStandardService {
 				letGoal.setFirstGoal_name(CalcUtil.handicap(letGoal.getFirstGoal()));
 				letGoal.setGoal_name(CalcUtil.handicap(letGoal.getGoal()));
 			}*/
-			return letGoal;
+			long endmillis = System.currentTimeMillis();
+			logger.info("buildLetGoal用时 " + (endmillis - startmillis));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		return null;
 	}
 }
