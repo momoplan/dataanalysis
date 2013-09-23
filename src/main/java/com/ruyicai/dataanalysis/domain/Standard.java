@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ruyicai.dataanalysis.cache.StandardCache;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -172,6 +174,22 @@ public class Standard implements Comparable<Standard> {
 
 	@Autowired
 	private transient StandardCache standardCache;
+	
+	@Transactional
+    public void persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+        standardCache.setToMemcache(this);
+    }
+	
+	@Transactional
+    public Standard merge() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        Standard merged = this.entityManager.merge(this);
+        this.entityManager.flush();
+        standardCache.setToMemcache(merged);
+        return merged;
+    }
 	
 	public static Standard findStandard(Integer scheduleID, Integer companyID) {
 		return new Standard().standardCache.getStandard(scheduleID, companyID);

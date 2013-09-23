@@ -28,4 +28,9 @@ public class StandardCache {
 		return standard;
 	}
 	
+	public void setToMemcache(Standard standard) {
+		String key = StringUtil.join("_", "dadaanalysis", "Standard", String.valueOf(standard.getScheduleID()), String.valueOf(standard.getCompanyID()));
+		cacheService.set(key, 0, standard.toJson());
+	}
+	
 }

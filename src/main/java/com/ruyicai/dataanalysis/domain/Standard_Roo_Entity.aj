@@ -21,12 +21,6 @@ privileged aspect Standard_Roo_Entity {
     transient EntityManager Standard.entityManager;
     
     @Transactional("transactionManager")
-    public void Standard.persist() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.persist(this);
-    }
-    
-    @Transactional("transactionManager")
     public void Standard.remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
         if (this.entityManager.contains(this)) {
@@ -47,14 +41,6 @@ privileged aspect Standard_Roo_Entity {
     public void Standard.clear() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.clear();
-    }
-    
-    @Transactional("transactionManager")
-    public Standard Standard.merge() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        Standard merged = this.entityManager.merge(this);
-        this.entityManager.flush();
-        return merged;
     }
     
     public static final EntityManager Standard.entityManager() {
