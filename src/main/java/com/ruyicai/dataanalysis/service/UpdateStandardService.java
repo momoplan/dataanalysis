@@ -96,7 +96,9 @@ public class UpdateStandardService {
 		long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.getResponse(url+"?min=2", HttpUtil.GET, HttpUtil.UTF8, "");
-			if (StringUtil.isEmpty(data)) {
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("足球欧赔-processByMinute更新时获取数据,用时"+(endmillis2 - startmillis));
+			if (StringUtils.isBlank(data)) {
 				logger.info("足球欧赔-processByMinute更新时获取数据为空");
 				return;
 			}
@@ -104,11 +106,11 @@ public class UpdateStandardService {
 			logger.info("standardUpdateExecutor,size="+standardUpdateExecutor.getQueue().size());
 			standardUpdateExecutor.execute(task);
 			//processStandard(data);
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球欧赔-processByMinute更新结束，共用时 " + (endmillis - startmillis));
 		} catch (Exception e) {
 			logger.error("足球欧赔-processByMinute更新时发生异常", e);
 		}
-		long endmillis = System.currentTimeMillis();
-		logger.info("足球欧赔-processByMinute更新结束，共用时 " + (endmillis - startmillis));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -130,11 +132,11 @@ public class UpdateStandardService {
 				for(Element match : matches) {
 					doStandard(match);
 				}
+				long endmillis = System.currentTimeMillis();
+				logger.info("足球欧赔更新-processByMinute-processStandard结束, 共用时 " + (endmillis - startmillis)+",size="+matches.size());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔更新-processByMinute-processStandard结束, 共用时 " + (endmillis - startmillis));
 		}
 	}
 	
@@ -164,8 +166,12 @@ public class UpdateStandardService {
 	@SuppressWarnings("unchecked")
 	private void doStandard(Element match) {
 		try {
+			long startmillis = System.currentTimeMillis();
 			String scheduleId = match.elementTextTrim("id");
+			long startmillis2 = System.currentTimeMillis();
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("doStandard,获取Schedule用时："+(endmillis2-startmillis2));
 			if(schedule==null) {
 				return;
 			}
@@ -181,16 +187,22 @@ public class UpdateStandardService {
 				}
 			}
 			if (isModify) {
+				long startmillis3 = System.currentTimeMillis();
 				updateStandardCache(schedule);
+				long endmillis3 = System.currentTimeMillis();
+				logger.info("updateStandardCache,用时:"+(endmillis3-startmillis3));
 			}
 			//查看是否需要更新缓存
 			//updateCache(Integer.parseInt(scheduleId));
+			long endmillis = System.currentTimeMillis();
+			logger.info("doStandard,用时:"+(endmillis-startmillis));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private boolean doOdd(String scheduleId, Element odd) {
+		long startmillis = System.currentTimeMillis();
 		try {
 			String o = odd.getTextTrim();
 			String[] values = o.split("\\,");
@@ -203,7 +215,10 @@ public class UpdateStandardService {
 			String standoff = values[6]; //和局
 			String guestWin = values[7]; //客胜
 			String modTime = values[8]; //变化时间
+			long startmillis2 = System.currentTimeMillis();
 			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("doOdd,获取Standard用时:"+(endmillis2-startmillis2));
 			if (standard==null) {
 				return false;
 			}
@@ -231,10 +246,13 @@ public class UpdateStandardService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		long endmillis = System.currentTimeMillis();
+		logger.info("doOdd,用时:"+(endmillis-startmillis));
 		return false;
 	}
 	
 	private void updateStandardCache(Schedule schedule) {
+		long startmillis1 = System.currentTimeMillis();
 		Integer scheduleId = schedule.getScheduleID();
 		Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
 		infoService.buildStandards(schedule, standards);
@@ -248,7 +266,12 @@ public class UpdateStandardService {
 			standard.setValue(Standard.toJsonArray(standards));
 			standard.merge();
 		}
+		long endmillis1 = System.currentTimeMillis();
+		logger.info("更新Standard缓存，用时:"+(endmillis1-startmillis1));
+		long startmillis2 = System.currentTimeMillis();
 		infoService.updateInfo(scheduleId);
+		long endmillis2 = System.currentTimeMillis();
+		logger.info("updateStandardCache-updateInfo，用时:"+(endmillis2-startmillis2));
 	}
 	
 	/*private void updateCache(Integer scheduleID) {
