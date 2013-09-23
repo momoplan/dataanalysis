@@ -30,6 +30,21 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:standardUpdate")
 	private ProducerTemplate standardUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:infoUpdate")
+	private ProducerTemplate infoUpdateTemplate;
+	
+	/**
+	 * 更新数据分析的JMS
+	 * @param body
+	 */
+	public void sendInfoUpdateJMS(String body) {
+		try {
+			infoUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
 	/**
 	 * 更新欧赔的JMS
 	 * @param body

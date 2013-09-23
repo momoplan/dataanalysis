@@ -269,7 +269,8 @@ public class UpdateStandardService {
 		long endmillis1 = System.currentTimeMillis();
 		logger.info("更新Standard缓存，用时:"+(endmillis1-startmillis1));
 		long startmillis2 = System.currentTimeMillis();
-		infoService.updateInfo(scheduleId);
+		//infoService.updateInfo(scheduleId);
+		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
 		long endmillis2 = System.currentTimeMillis();
 		logger.info("updateStandardCache-updateInfo，用时:"+(endmillis2-startmillis2));
 	}
