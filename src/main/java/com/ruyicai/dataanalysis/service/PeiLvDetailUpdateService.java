@@ -127,11 +127,15 @@ public class PeiLvDetailUpdateService {
 			}
 		}
 		for (Integer scheduleId : scheduleIds) {
+			long startmillis = System.currentTimeMillis();
 			updateLetGoalCache(scheduleId);
+			long endmillis = System.currentTimeMillis();
+			logger.info("updateLetGoalCache用时 " + (endmillis - startmillis));
 		}
 	}
 	
 	public void updateLetGoalCache(Integer scheduleId) {
+		long startmillis = System.currentTimeMillis();
 		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
 		infoService.buildLetGoals(letGoals);
 		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
@@ -144,11 +148,17 @@ public class PeiLvDetailUpdateService {
 			letGoal.setValue(LetGoal.toJsonArray(letGoals));
 			letGoal.merge();
 		}
+		long endmillis = System.currentTimeMillis();
+		logger.info("更新亚赔缓存,用时 " + (endmillis - startmillis));
+		long startmillis2 = System.currentTimeMillis();
 		infoService.updateInfo(scheduleId);
+		long endmillis2 = System.currentTimeMillis();
+		logger.info("updateLetGoalCache-updateInfo,用时 " + (endmillis2 - startmillis2));
 	}
 	
 	private Integer buildLetGoal(String data) {
 		try {
+			long startmillis = System.currentTimeMillis();
 			//<h>649557,35,-0.75,0.91,0.98,False,True</h>
 			String[] values = StringUtils.split(data, ",");
 			String scheduleId = values[0]; //比赛ID
@@ -160,15 +170,20 @@ public class PeiLvDetailUpdateService {
 			String zhoudi = values[6]; //是否走地True or False
 			int cpInt = StringUtils.equals(closePan, "True") ? 1 : 0;
 			int zdInt = StringUtils.equals(zhoudi, "True") ? 1 : 0;
-			
+			long startmillis2 = System.currentTimeMillis();
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("buildLetGoal,获取Schedule用时 " + (endmillis2 - startmillis2));
 			if (schedule==null) {
 				return null;
 			}
-			if (CommonUtil.isZqEventEmpty(schedule)) {
+			/*if (CommonUtil.isZqEventEmpty(schedule)) {
 				return null;
-			}
+			}*/
+			long startmillis3 = System.currentTimeMillis();
 			LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			long endmillis3 = System.currentTimeMillis();
+			logger.info("buildLetGoal,获取LetGoal用时 " + (endmillis3 - startmillis3));
 			if (letGoal==null) {
 				return null;
 			}
@@ -199,6 +214,8 @@ public class PeiLvDetailUpdateService {
 				letGoal.merge();
 				return letGoal.getScheduleID();
 			}
+			long endmillis = System.currentTimeMillis();
+			logger.info("buildLetGoal共用时 " + (endmillis - startmillis));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
