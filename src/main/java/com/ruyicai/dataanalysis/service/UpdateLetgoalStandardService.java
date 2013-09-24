@@ -1,44 +1,35 @@
 package com.ruyicai.dataanalysis.service;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.ruyicai.dataanalysis.domain.Company;
-import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.domain.Standard;
-import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
-import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 
 @Service
 public class UpdateLetgoalStandardService {
 	
 	private Logger logger = LoggerFactory.getLogger(UpdateLetgoalStandardService.class);
 	
-	private Map<String, Boolean> letgoalMap = new HashMap<String, Boolean>();
+	//private Map<String, Boolean> scheduleMap = new HashMap<String, Boolean>();
+	//private Map<String, Boolean> letgoalMap = new HashMap<String, Boolean>();
 
 	@Value("${peiluall}")
 	private String url;
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
 	
 	/*@Autowired
 	private GlobalInfoService globalInfoService;*/
@@ -169,10 +160,15 @@ public class UpdateLetgoalStandardService {
 			String zhoudi = (values!=null&&values.length>=10) ? values[9] : "";
 			Integer zd = StringUtils.equals(zhoudi, "True") ? 1 : 0;
 			long startmillis2 = System.currentTimeMillis();
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
+			Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleID);
+			if (sHasExist==null||!sHasExist) {
+				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
+				sHasExist = schedule==null ? false : true;
+				footBallMapUtil.scheduleMap.put(scheduleID, sHasExist);
+			}
 			long endmillis2 = System.currentTimeMillis();
 			logger.info("buildLetGoal,获取Schedule用时 " + (endmillis2 - startmillis2));
-			if(schedule==null) {
+			if(!sHasExist) {
 				return ;
 			}
 			/*if (CommonUtil.isZqEventEmpty(schedule)) {
@@ -180,11 +176,11 @@ public class UpdateLetgoalStandardService {
 			}*/
 			long startmillis3 = System.currentTimeMillis();
 			String lkey = StringUtil.join("_", scheduleID, companyID);
-			Boolean lHasExist = letgoalMap.get(lkey);
+			Boolean lHasExist = footBallMapUtil.letgoalMap.get(lkey);
 			if (lHasExist==null||!lHasExist) {
 				LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
 				lHasExist = letGoal==null ? false : true;
-				letgoalMap.put(lkey, lHasExist);
+				footBallMapUtil.letgoalMap.put(lkey, lHasExist);
 			}
 			long endmillis3 = System.currentTimeMillis();
 			logger.info("buildLetGoal,获取LetGoal用时 " + (endmillis3 - startmillis3));

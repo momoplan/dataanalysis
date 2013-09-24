@@ -10,6 +10,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -17,6 +18,7 @@ import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 
 /**
  * 足球欧赔更新Jms的处理
@@ -28,8 +30,11 @@ public class StandarJczUpdateListener {
 	
 	private Logger logger = LoggerFactory.getLogger(StandarJczUpdateListener.class);
 	
-	private Map<String, Boolean> companyMap = new HashMap<String, Boolean>();
-	private Map<String, Boolean> standardMap = new HashMap<String, Boolean>();
+	//private Map<String, Boolean> companyMap = new HashMap<String, Boolean>();
+	//private Map<String, Boolean> standardMap = new HashMap<String, Boolean>();
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
 	
 	/*@Autowired
 	private GlobalInfoService globalInfoService;*/
@@ -94,11 +99,11 @@ public class StandarJczUpdateListener {
 					t_g = t_g + new Double(firstGuestWin);
 				}
 				long startmillis2 = System.currentTimeMillis();
-				Boolean cHasExist = companyMap.get(companyID);
+				Boolean cHasExist = footBallMapUtil.europeCompanyMap.get(companyID);
 				if (cHasExist==null||!cHasExist) {
 					EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
 					cHasExist = company==null ? false : true;
-					companyMap.put(companyID, cHasExist);
+					footBallMapUtil.europeCompanyMap.put(companyID, cHasExist);
 				}
 				long endmillis2 = System.currentTimeMillis();
 				logger.info("欧赔Jms获取EuropeCompany,用时"+(endmillis2-startmillis2));
@@ -113,11 +118,11 @@ public class StandarJczUpdateListener {
 				}
 				long startmillis3 = System.currentTimeMillis();
 				String skey = StringUtil.join("_", scheduleID, companyID);
-				Boolean sHasExist = standardMap.get(skey);
+				Boolean sHasExist = footBallMapUtil.standardMap.get(skey);
 				if (sHasExist==null||!sHasExist) {
 					Standard standard = Standard.findStandard(Integer.parseInt(scheduleID), Integer.parseInt(companyID));
 					sHasExist = standard==null ? false : true;
-					standardMap.put(skey, sHasExist);
+					footBallMapUtil.standardMap.put(skey, sHasExist);
 				}
 				long endmillis3 = System.currentTimeMillis();
 				logger.info("欧赔Jms获取Standard,用时"+(endmillis3-startmillis3));

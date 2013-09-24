@@ -2,7 +2,9 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.annotation.PostConstruct;
@@ -25,12 +27,15 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
+import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @Service
 public class PeiLvDetailUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(PeiLvDetailUpdateService.class);
 	
+	//private Map<String, Boolean> scheduleMap = new HashMap<String, Boolean>();
 	private ThreadPoolExecutor peiLvDetailUpdateExecutor;
 
 	@Value("${peiLvDetail}")
@@ -38,6 +43,12 @@ public class PeiLvDetailUpdateService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	@Autowired
 	private GlobalInfoService infoService;
@@ -53,7 +64,7 @@ public class PeiLvDetailUpdateService {
 		long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.downfile(url, HttpUtil.UTF8);
-			if (StringUtil.isEmpty(data)) {
+			if (StringUtils.isBlank(data)) {
 				logger.info("足球赔率变化更新时获取数据为空");
 				return;
 			}
@@ -151,7 +162,8 @@ public class PeiLvDetailUpdateService {
 		long endmillis = System.currentTimeMillis();
 		logger.info("更新亚赔缓存,用时 " + (endmillis - startmillis));
 		long startmillis2 = System.currentTimeMillis();
-		infoService.updateInfo(scheduleId);
+		//infoService.updateInfo(scheduleId);
+		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
 		long endmillis2 = System.currentTimeMillis();
 		logger.info("updateLetGoalCache-updateInfo,用时 " + (endmillis2 - startmillis2));
 	}
@@ -171,10 +183,15 @@ public class PeiLvDetailUpdateService {
 			int cpInt = StringUtils.equals(closePan, "True") ? 1 : 0;
 			int zdInt = StringUtils.equals(zhoudi, "True") ? 1 : 0;
 			long startmillis2 = System.currentTimeMillis();
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleId);
+			if (sHasExist==null||!sHasExist) {
+				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+				sHasExist = schedule==null ? false : true;
+				footBallMapUtil.scheduleMap.put(scheduleId, sHasExist);
+			}
 			long endmillis2 = System.currentTimeMillis();
 			logger.info("buildLetGoal,获取Schedule用时 " + (endmillis2 - startmillis2));
-			if (schedule==null) {
+			if (!sHasExist) {
 				return null;
 			}
 			/*if (CommonUtil.isZqEventEmpty(schedule)) {

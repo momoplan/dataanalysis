@@ -26,6 +26,7 @@ import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 import com.ruyicai.dataanalysis.util.jcz.CalcUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 /**
@@ -45,6 +46,9 @@ public class UpdateStandardService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
@@ -73,8 +77,13 @@ public class UpdateStandardService {
 			int size = 0;
 			for(Element match : matches) {
 				String scheduleID = match.elementTextTrim("id");
-				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-				if(null == schedule) {
+				Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleID);
+				if (sHasExist==null||!sHasExist) {
+					Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
+					sHasExist = schedule==null ? false : true;
+					footBallMapUtil.scheduleMap.put(scheduleID, sHasExist);
+				}
+				if(!sHasExist) {
 					continue;
 				}
 				/*if (CommonUtil.isZqEventEmpty(schedule)) {

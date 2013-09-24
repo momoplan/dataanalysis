@@ -32,7 +32,7 @@
    
    <bean id="UpdateLetgoalStandardServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="UpdateLetgoalStandardServiceJobDetail"></property>
-   		<property name="cronExpression" value="0 */3 * * * ?"></property>  <!-- 3分钟 -->
+   		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
    </bean>
    
    <!-- 彩票赛事与球探网的关联更新 -->
