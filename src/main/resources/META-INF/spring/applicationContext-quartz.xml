@@ -145,6 +145,17 @@
    		<property name="cronExpression" value="*/30 * * * * ?"></property>  <!-- 30秒 -->
    </bean>
    
+   <!-- 清空足球Map -->
+   <bean id="clearMapJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="footBallMapUtil"></property>
+   		<property name="targetMethod" value="clearMap"></property>
+   </bean>
+   
+   <bean id="clearMapTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="clearMapJobDetail"></property>
+   		<property name="cronExpression" value="0 0 */1 * * ?"></property>  <!-- 1天 -->
+   </bean>
+   
    <!--  竞彩篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -262,6 +273,7 @@
    				<ref bean="updateScheduleMoreTrigger"/>
    				<ref bean="peiLvDetailUpdateTrigger"/>
    				<ref bean="standardDetailUpdateTrigger"/>
+   				<ref bean="clearMapTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
