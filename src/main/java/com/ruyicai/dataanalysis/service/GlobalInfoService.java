@@ -220,11 +220,14 @@ public class GlobalInfoService {
 			standard.setValue(Standard.toJsonArray(standards));
 			standard.persist();
 		}
+		long startmillis2 = System.currentTimeMillis();
 		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID());
 		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID());
 		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID());
 		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID());
 		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID());
+		long endmillis2 = System.currentTimeMillis();
+		logger.info("更新球队信息,scheduleID="+scheduleID+",获取赛事用时:"+(endmillis2-startmillis2));
 		
 		InfoDTO dto = new InfoDTO();
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
