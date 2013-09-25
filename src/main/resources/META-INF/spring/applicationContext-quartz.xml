@@ -153,7 +153,7 @@
    
    <bean id="clearMapTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="clearMapJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */1 * * ?"></property>  <!-- 1天 -->
+   		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
    <!--  竞彩篮球 -->
@@ -165,7 +165,7 @@
    
    <bean id="sclassJclUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="sclassJclUpdateJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */1 * * ?"></property>  <!-- 1天 -->
+   		<property name="cronExpression" value="0 0 */23 * * ?"></property>  <!-- 1天 -->
    </bean>
    
    <!-- 赛程赛果更新 -->
