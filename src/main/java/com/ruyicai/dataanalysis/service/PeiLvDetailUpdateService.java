@@ -2,13 +2,9 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
-
 import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -22,7 +18,6 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -35,7 +30,6 @@ public class PeiLvDetailUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(PeiLvDetailUpdateService.class);
 	
-	//private Map<String, Boolean> scheduleMap = new HashMap<String, Boolean>();
 	private ThreadPoolExecutor peiLvDetailUpdateExecutor;
 
 	@Value("${peiLvDetail}")
@@ -78,13 +72,12 @@ public class PeiLvDetailUpdateService {
 				ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(letGoalElement);
 				logger.info("peiLvDetailUpdateExecutor,size="+peiLvDetailUpdateExecutor.getQueue().size());
 				peiLvDetailUpdateExecutor.execute(task);
-				//processLetGoalDetail(letGoalElement);
 			}
 		} catch (Exception e) {
 			logger.error("足球赔率变化更新发生异常", e);
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("足球赔率变化更新结束，共用时 " + (endmillis - startmillis));
+		logger.info("足球赔率变化更新结束，共用时" + (endmillis-startmillis));
 	}
 	
 	private class ProcessLetGoalDetailThread implements Runnable {
@@ -108,23 +101,6 @@ public class PeiLvDetailUpdateService {
 		}
 	}
 	
-	/*private void processLetGoalDetail(final Element element) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				logger.info("足球赔率变化更新-letGoalDetail开始");
-				long startmillis = System.currentTimeMillis();
-				try {
-					doLetgoalDetail(element);
-				} catch(Exception e) {
-					logger.error("足球赔率变化更新-letGoalDetail发生异常", e);
-				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("足球赔率变化更新-letGoalDetail结束, 共用时 " + (endmillis - startmillis));
-			}
-		}).start();
-	}*/
-	
 	@SuppressWarnings("unchecked")
 	private void doLetgoalDetail(Element element) {
 		List<Element> detailElements = element.elements("h");
@@ -138,15 +114,11 @@ public class PeiLvDetailUpdateService {
 			}
 		}
 		for (Integer scheduleId : scheduleIds) {
-			long startmillis = System.currentTimeMillis();
 			updateLetGoalCache(scheduleId);
-			long endmillis = System.currentTimeMillis();
-			logger.info("updateLetGoalCache用时 " + (endmillis - startmillis));
 		}
 	}
 	
 	public void updateLetGoalCache(Integer scheduleId) {
-		long startmillis = System.currentTimeMillis();
 		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
 		infoService.buildLetGoals(letGoals);
 		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
@@ -159,18 +131,11 @@ public class PeiLvDetailUpdateService {
 			letGoal.setValue(LetGoal.toJsonArray(letGoals));
 			letGoal.merge();
 		}
-		long endmillis = System.currentTimeMillis();
-		logger.info("更新亚赔缓存,用时 " + (endmillis - startmillis));
-		long startmillis2 = System.currentTimeMillis();
-		//infoService.updateInfo(scheduleId);
 		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
-		long endmillis2 = System.currentTimeMillis();
-		logger.info("updateLetGoalCache-updateInfo,用时 " + (endmillis2 - startmillis2));
 	}
 	
 	private Integer buildLetGoal(String data) {
 		try {
-			long startmillis = System.currentTimeMillis();
 			//<h>649557,35,-0.75,0.91,0.98,False,True</h>
 			String[] values = StringUtils.split(data, ",");
 			String scheduleId = values[0]; //比赛ID
@@ -182,25 +147,16 @@ public class PeiLvDetailUpdateService {
 			String zhoudi = values[6]; //是否走地True or False
 			int cpInt = StringUtils.equals(closePan, "True") ? 1 : 0;
 			int zdInt = StringUtils.equals(zhoudi, "True") ? 1 : 0;
-			long startmillis2 = System.currentTimeMillis();
 			Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleId);
 			if (sHasExist==null||!sHasExist) {
 				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
 				sHasExist = schedule==null ? false : true;
 				footBallMapUtil.scheduleMap.put(scheduleId, sHasExist);
 			}
-			long endmillis2 = System.currentTimeMillis();
-			logger.info("buildLetGoal,获取Schedule用时 " + (endmillis2 - startmillis2));
 			if (!sHasExist) {
 				return null;
 			}
-			/*if (CommonUtil.isZqEventEmpty(schedule)) {
-				return null;
-			}*/
-			long startmillis3 = System.currentTimeMillis();
 			LetGoal letGoal = LetGoal.findLetGoal(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
-			long endmillis3 = System.currentTimeMillis();
-			logger.info("buildLetGoal,获取LetGoal用时 " + (endmillis3 - startmillis3));
 			if (letGoal==null) {
 				return null;
 			}
@@ -231,8 +187,6 @@ public class PeiLvDetailUpdateService {
 				letGoal.merge();
 				return letGoal.getScheduleID();
 			}
-			long endmillis = System.currentTimeMillis();
-			logger.info("buildLetGoal共用时 " + (endmillis - startmillis));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

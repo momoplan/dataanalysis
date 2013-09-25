@@ -1,9 +1,7 @@
 package com.ruyicai.dataanalysis.listener;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.camel.Body;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -30,14 +28,8 @@ public class StandarJczUpdateListener {
 	
 	private Logger logger = LoggerFactory.getLogger(StandarJczUpdateListener.class);
 	
-	//private Map<String, Boolean> companyMap = new HashMap<String, Boolean>();
-	//private Map<String, Boolean> standardMap = new HashMap<String, Boolean>();
-	
 	@Autowired
 	private FootBallMapUtil footBallMapUtil;
-	
-	/*@Autowired
-	private GlobalInfoService globalInfoService;*/
 	
 	public void update(@Body String body) {
 		logger.info("足球欧赔更新Jms的处理开始");
@@ -50,8 +42,6 @@ public class StandarJczUpdateListener {
 			return;
 		}
 		doProcess(document.getRootElement(), startmillis);
-		//long endmillis = System.currentTimeMillis();
-		//logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis));
 	}
 	
 	/**
@@ -62,21 +52,14 @@ public class StandarJczUpdateListener {
 	private void doProcess(Element match, long startmillis) {
 		try {
 			String scheduleID = match.elementTextTrim("id");
-			long startmillis1 = System.currentTimeMillis();
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-			long endmillis1 = System.currentTimeMillis();
-			logger.info("欧赔Jms获取Schedule,用时"+(endmillis1-startmillis1));
 			if(null == schedule) {
 				return;
 			}
-			/*if (CommonUtil.isZqEventEmpty(schedule)) {
-				return;
-			}*/
 			List<Element> odds = match.element("odds").elements("o");
 			Double t_h = 0D;
 			Double t_s = 0D;
 			Double t_g = 0D;
-			//logger.info("scheduleID_odds of scheduleId="+scheduleID+",size="+odds.size());
 			for(Element odd : odds) {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
@@ -98,15 +81,12 @@ public class StandarJczUpdateListener {
 					t_s = t_s + new Double(firstStandoff);
 					t_g = t_g + new Double(firstGuestWin);
 				}
-				long startmillis2 = System.currentTimeMillis();
 				Boolean cHasExist = footBallMapUtil.europeCompanyMap.get(companyID);
 				if (cHasExist==null||!cHasExist) {
 					EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
 					cHasExist = company==null ? false : true;
 					footBallMapUtil.europeCompanyMap.put(companyID, cHasExist);
 				}
-				long endmillis2 = System.currentTimeMillis();
-				logger.info("欧赔Jms获取EuropeCompany,用时"+(endmillis2-startmillis2));
 				if(!cHasExist) {
 					EuropeCompany company = new EuropeCompany();
 					company.setCompanyID(Integer.parseInt(companyID));
@@ -116,7 +96,6 @@ public class StandarJczUpdateListener {
 					company.setIsExchange(0);
 					company.persist();
 				}
-				long startmillis3 = System.currentTimeMillis();
 				String skey = StringUtil.join("_", scheduleID, companyID);
 				Boolean sHasExist = footBallMapUtil.standardMap.get(skey);
 				if (sHasExist==null||!sHasExist) {
@@ -124,8 +103,6 @@ public class StandarJczUpdateListener {
 					sHasExist = standard==null ? false : true;
 					footBallMapUtil.standardMap.put(skey, sHasExist);
 				}
-				long endmillis3 = System.currentTimeMillis();
-				logger.info("欧赔Jms获取Standard,用时"+(endmillis3-startmillis3));
 				if(!sHasExist) {
 					Standard standard = new Standard();
 					standard.setScheduleID(Integer.parseInt(scheduleID));
@@ -156,25 +133,7 @@ public class StandarJczUpdateListener {
 						detail.setModifyTime(standard.getModifyTime());
 						detail.persist();
 					}
-				} /*else {
-					if((!StringUtil.isEmpty(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin())) ||
-							(!StringUtil.isEmpty(standoff) && !NumberUtil.compare(standoff, standard.getStandoff())) ||
-							(!StringUtil.isEmpty(guestWin) && !NumberUtil.compare(guestWin, standard.getGuestWin()))) {
-						standard.setHomeWin(new Double(homeWin));
-						standard.setStandoff(new Double(standoff));
-						standard.setGuestWin(new Double(guestWin));
-						standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
-						standard.merge();
-						StandardDetail detail = new StandardDetail();
-						detail.setOddsID(standard.getOddsID());
-						detail.setIsEarly(0);
-						detail.setHomeWin(new Double(homeWin));
-						detail.setStandoff(new Double(standoff));
-						detail.setGuestWin(new Double(guestWin));
-						detail.setModifyTime(standard.getModifyTime());
-						detail.persist();
-					}
-				}*/
+				}
 			}
 			if(null != schedule && odds.size() > 0) {
 				BigDecimal b = new BigDecimal(t_h / odds.size());
@@ -188,91 +147,11 @@ public class StandarJczUpdateListener {
 				schedule.setAvgG(b.doubleValue());
 				schedule.merge();
 			}
-			//查看是否需要更新缓存
-			//updateCache(Integer.parseInt(scheduleID));
-			
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新Jms的处理结束，共用时 " + (endmillis - startmillis)+",scheduleId="+scheduleID+",size="+odds.size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
 	}
-	
-	/*private void updateCache(Integer scheduleID) {
-		String id = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleID));
-		GlobalCache globalCache = GlobalCache.findGlobalCache(id);
-		List<Standard> list = Standard.findByScheduleID(scheduleID);
-		buildStandards(Schedule.findSchedule(scheduleID), list);
-		if(null == globalCache) {
-			globalCache = new GlobalCache();
-			globalCache.setId(id);
-			globalCache.setValue(Standard.toJsonArray(list));
-			globalCache.persist();
-			globalInfoService.updateInfo(scheduleID);
-		} else {
-			Collection<Standard> collection = Standard.fromJsonArrayToStandards(globalCache.getValue());
-			if(list.size() != collection.size()) {
-				globalCache.setValue(Standard.toJsonArray(list));
-				globalCache.merge();
-				globalInfoService.updateInfo(scheduleID);
-			} else {
-				List<Standard> standards = convertStandards(collection);
-				Collections.sort(standards);
-				Collections.sort(list);
-				boolean isupdate = false;
-				for(int i = 0; i < standards.size(); i ++) {
-					Standard s1 = standards.get(i);
-					Standard s2 = list.get(i);
-					if(!s1.equals(s2)) {
-						isupdate = true; 
-						break;
-					}
-				}
-				if(isupdate) {
-					globalCache.setValue(Standard.toJsonArray(list));
-					globalCache.merge();
-					globalInfoService.updateInfo(scheduleID);
-				}
-			}
-		}
-	}
-	
-	private void buildStandards(Schedule schedule, Collection<Standard> standards) {
-		if(null != standards && !standards.isEmpty()) {
-			for(Standard standard : standards) {
-				EuropeCompany company = EuropeCompany.findEuropeCompany(standard.getCompanyID());
-				if(null != company) {
-					standard.setCompanyName(company.getName_Cn());
-					standard.setCompanyName_e(company.getName_E());
-					standard.setIsPrimary(company.getIsPrimary());
-					standard.setIsExchange(company.getIsExchange());
-				}
-				standard.setHomeWin(null == standard.getHomeWin() ? standard.getFirstHomeWin() : standard.getHomeWin());
-				standard.setStandoff(null == standard.getStandoff() ? standard.getFirstStandoff() : standard.getStandoff());
-				standard.setGuestWin(null == standard.getGuestWin() ? standard.getFirstGuestWin() : standard.getGuestWin());
-				standard.setHomeWinLu(CalcUtil.probability_H(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setStandoffLu(CalcUtil.probability_S(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setGuestWinLu(CalcUtil.probability_G(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
-				standard.setFanHuanLu(CalcUtil.fanhuan(standard.getHomeWinLu(), standard.getHomeWin()));
-				if(null != schedule.getAvgH()) {
-					standard.setK_h(CalcUtil.k_h(standard.getHomeWinLu(), schedule.getAvgH()));
-				}
-				if(null != schedule.getAvgS()) {
-					standard.setK_s(CalcUtil.k_s(standard.getStandoffLu(), schedule.getAvgS()));
-				}
-				if(null != schedule.getAvgG()) {
-					standard.setK_g(CalcUtil.k_g(standard.getGuestWinLu(), schedule.getAvgG()));
-				}
-			}
-		}
-	}
-	
-	private List<Standard> convertStandards(Collection<Standard> collection) {
-		List<Standard> standards = new LinkedList<Standard>();
-		for(Standard standard : collection) {
-			standards.add(standard);
-		}
-		return standards;
-	}*/
 	
 }
