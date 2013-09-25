@@ -13,7 +13,8 @@
 		<property name="servers">
 			<value>${memcache.client.ip}</value>
 		</property>                 <!-- server's weights -->
-		<property name="connectionPoolSize" value="2"></property>
+		<property name="connectionPoolSize" value="5"></property>
+		<property name="opTimeout" value="500"></property>
 		<property name="failureMode" value="true"></property>
 	</bean>
 	<bean name="cacheService" class="com.ruyicai.cache.MemCachedCacheService"></bean>
