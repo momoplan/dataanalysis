@@ -111,11 +111,11 @@ public class GlobalInfoService {
 			standard.setValue(Standard.toJsonArray(standards));
 			standard.persist();
 		}
-		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID());
+		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID(), schedule);
 		
 		InfoDTO dto = new InfoDTO();
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
@@ -221,11 +221,11 @@ public class GlobalInfoService {
 			standard.persist();
 		}
 		long startmillis2 = System.currentTimeMillis();
-		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID());
-		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID());
+		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID(), schedule);
 		long endmillis2 = System.currentTimeMillis();
 		logger.info("更新球队信息,scheduleID="+scheduleID+",获取赛事用时:"+(endmillis2-startmillis2));
 		

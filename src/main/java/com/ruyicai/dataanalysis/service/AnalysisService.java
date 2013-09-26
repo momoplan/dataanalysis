@@ -148,11 +148,17 @@ public class AnalysisService {
 		}
 	}
 	
-	public Collection<ScheduleDTO> getPreHomeSchedules(int scheduleID) {
-		Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
+	public Collection<ScheduleDTO> getPreHomeSchedules(int scheduleID, Schedule schedule) {
+		if (schedule==null) {
+			schedule = Schedule.findSchedule(scheduleID);
+		}
+		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
+		/*Schedule Schedule schedule = Schedule.findSchedule(scheduleID);
+		if(null == schedule) {
+			return new ArrayList<ScheduleDTO>();
+		}*/
 		Integer teamId = schedule.getHomeTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getGuestTeamID();
@@ -161,11 +167,17 @@ public class AnalysisService {
 		return buildDTOS(schedules);
 	}
 
-	public Collection<ScheduleDTO> getPreGuestSchedules(int scheduleID) {
-		Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
+	public Collection<ScheduleDTO> getPreGuestSchedules(int scheduleID, Schedule schedule) {
+		if (schedule==null) {
+			schedule = Schedule.findSchedule(scheduleID);
+		}
+		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
+		/*Schedule schedule = Schedule.findSchedule(scheduleID);
+		if(null == schedule) {
+			return new ArrayList<ScheduleDTO>();
+		}*/
 		Integer teamId = schedule.getGuestTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getHomeTeamID();
@@ -174,11 +186,17 @@ public class AnalysisService {
 		return buildDTOS(schedules);
 	}
 	
-	public Collection<ScheduleDTO> getAfterHomeSchedules(int scheduleID) {
-		Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
+	public Collection<ScheduleDTO> getAfterHomeSchedules(int scheduleID, Schedule schedule) {
+		if (schedule==null) {
+			schedule = Schedule.findSchedule(scheduleID);
+		}
+		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
+		/*Schedule schedule = Schedule.findSchedule(scheduleID);
+		if(null == schedule) {
+			return new ArrayList<ScheduleDTO>();
+		}*/
 		Integer teamId = schedule.getHomeTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getGuestTeamID();
@@ -187,11 +205,17 @@ public class AnalysisService {
 		return buildDTOS(schedules);
 	}
 	
-	public Collection<ScheduleDTO> getAfterGuestSchedules(int scheduleID) {
-		Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
+	public Collection<ScheduleDTO> getAfterGuestSchedules(int scheduleID, Schedule schedule) {
+		if (schedule==null) {
+			schedule = Schedule.findSchedule(scheduleID);
+		}
+		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
+		/*Schedule schedule = Schedule.findSchedule(scheduleID);
+		if(null == schedule) {
+			return new ArrayList<ScheduleDTO>();
+		}*/
 		Integer teamId = schedule.getGuestTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getHomeTeamID();
@@ -200,11 +224,17 @@ public class AnalysisService {
 		return buildDTOS(schedules);
 	}
 	
-	public Collection<ScheduleDTO> getPreClashSchedules(int scheduleID) {
-		Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
+	public Collection<ScheduleDTO> getPreClashSchedules(int scheduleID, Schedule schedule) {
+		if (schedule==null) {
+			schedule = Schedule.findSchedule(scheduleID);
+		}
+		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
+		/*Schedule schedule = Schedule.findSchedule(scheduleID);
+		if(null == schedule) {
+			return new ArrayList<ScheduleDTO>();
+		}*/
 		List<Schedule> schedules = Schedule.findPreClashSchedules(schedule.getHomeTeamID(), schedule.getGuestTeamID(), schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}

@@ -52,7 +52,7 @@ public class SelectController {
 	ResponseData getPreHomeSchedules(@RequestParam("scheduleID") int scheduleID) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(analysisService.getPreHomeSchedules(scheduleID));
+			rd.setValue(analysisService.getPreHomeSchedules(scheduleID, null));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -64,7 +64,7 @@ public class SelectController {
 	ResponseData getPreGuestSchedules(@RequestParam("scheduleID") int scheduleID) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(analysisService.getPreGuestSchedules(scheduleID));
+			rd.setValue(analysisService.getPreGuestSchedules(scheduleID, null));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -76,7 +76,7 @@ public class SelectController {
 	ResponseData getAfterHomeSchedules(@RequestParam("scheduleID") int scheduleID) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(analysisService.getAfterHomeSchedules(scheduleID));
+			rd.setValue(analysisService.getAfterHomeSchedules(scheduleID, null));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -88,7 +88,7 @@ public class SelectController {
 	ResponseData getAfterGuestSchedules(@RequestParam("scheduleID") int scheduleID) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(analysisService.getAfterGuestSchedules(scheduleID));
+			rd.setValue(analysisService.getAfterGuestSchedules(scheduleID, null));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -100,7 +100,7 @@ public class SelectController {
 	ResponseData getPreClashSchedules(@RequestParam("scheduleID") int scheduleID) {
 		ResponseData rd = new ResponseData();
 		try {
-			rd.setValue(analysisService.getPreClashSchedules(scheduleID));
+			rd.setValue(analysisService.getPreClashSchedules(scheduleID, null));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
