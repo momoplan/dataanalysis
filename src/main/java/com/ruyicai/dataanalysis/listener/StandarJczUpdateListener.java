@@ -35,7 +35,7 @@ public class StandarJczUpdateListener {
 	
 	@PostConstruct
 	public void init() {
-		standardJmsExecutor = ThreadPoolUtil.createTaskExecutor("standardJms", 20);
+		standardJmsExecutor = ThreadPoolUtil.createTaskExecutor("standardJms", 10);
 	}
 	
 	@Autowired
