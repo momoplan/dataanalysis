@@ -45,7 +45,7 @@ public class StandardUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardJms", 50);
+		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardJms", 20);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -51,7 +51,7 @@ public class StandardDetailUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		standardDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardDetailUpdate", 50);
+		standardDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardDetailUpdate", 20);
 	}
 	
 	public void process() {
