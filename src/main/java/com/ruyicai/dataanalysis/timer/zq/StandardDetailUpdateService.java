@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
@@ -23,6 +24,7 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 /**
@@ -42,6 +44,9 @@ public class StandardDetailUpdateService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
@@ -137,6 +142,27 @@ public class StandardDetailUpdateService {
 			String standoff = values[6]; //和局
 			String guestWin = values[7]; //客胜
 			String modTime = values[8]; //变化时间
+			
+			Boolean isValid = footBallMapUtil.europeCompanyMap.get(companyId);
+			if (isValid==null) {
+				EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyId));
+				if (company!=null) {
+					String name_Cn = company.getName_Cn();
+					Integer isPrimary = company.getIsPrimary();
+					//只保存接口需要的公司欧赔
+					if (StringUtils.isNotBlank(name_Cn)&&isPrimary!=null&&isPrimary==1) {
+						isValid = true;
+					} else {
+						isValid = false;
+					}
+				} else {
+					isValid = false;
+				}
+				footBallMapUtil.europeCompanyMap.put(companyId, isValid);
+			}
+			if (!isValid) {
+				return false;
+			}
 			
 			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			if (standard==null) {

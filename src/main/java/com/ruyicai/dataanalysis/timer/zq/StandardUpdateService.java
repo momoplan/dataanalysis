@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import javax.annotation.PostConstruct;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -116,11 +117,12 @@ public class StandardUpdateService {
 			Double t_h = 0D;
 			Double t_s = 0D;
 			Double t_g = 0D;
+			int validSize = 0;
 			for(Element odd : odds) {
 				String o = odd.getTextTrim();
 				String[] values = o.split("\\,");
 				String companyID = values[0]; //博彩公司ID
-				String companyName = values[1]; //博彩公司名
+				//String companyName = values[1]; //博彩公司名
 				String firstHomeWin = values[2]; //初盘主胜
 				String firstStandoff = values[3]; //初盘和局
 				String firstGuestWin = values[4]; //初盘客胜
@@ -137,8 +139,28 @@ public class StandardUpdateService {
 					t_s = t_s + new Double(firstStandoff);
 					t_g = t_g + new Double(firstGuestWin);
 				}
-				Boolean cHasExist = footBallMapUtil.europeCompanyMap.get(companyID);
-				if (cHasExist==null||!cHasExist) {
+				Boolean isValid = footBallMapUtil.europeCompanyMap.get(companyID);
+				if (isValid==null) {
+					EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
+					if (company!=null) {
+						String name_Cn = company.getName_Cn();
+						Integer isPrimary = company.getIsPrimary();
+						//只保存接口需要的公司欧赔
+						if (StringUtils.isNotBlank(name_Cn)&&isPrimary!=null&&isPrimary==1) {
+							isValid = true;
+						} else {
+							isValid = false;
+						}
+					} else {
+						isValid = false;
+					}
+					footBallMapUtil.europeCompanyMap.put(companyID, isValid);
+				}
+				if (!isValid) {
+					continue;
+				}
+				validSize++;
+				/*if (cHasExist==null||!cHasExist) {
 					EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
 					cHasExist = company==null ? false : true;
 					footBallMapUtil.europeCompanyMap.put(companyID, cHasExist);
@@ -151,7 +173,7 @@ public class StandardUpdateService {
 					company.setIsPrimary(0);
 					company.setIsExchange(0);
 					company.persist();
-				}
+				}*/
 				String skey = StringUtil.join("_", scheduleID, companyID);
 				Boolean sHasExist = footBallMapUtil.standardMap.get(skey);
 				if (sHasExist==null||!sHasExist) {
@@ -205,7 +227,7 @@ public class StandardUpdateService {
 			}
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新-doStandard，共用时 "+(endmillis-startmillis)+",scheduleId="+scheduleID+",size="+odds.size()
-					+",threadPoolSize="+standardUpdateExecutor.getQueue().size());
+					+"validSize="+validSize+",threadPoolSize="+standardUpdateExecutor.getQueue().size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
 		}
