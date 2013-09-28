@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 import com.ruyicai.dataanalysis.service.PeiLvDetailUpdateService;
@@ -18,8 +17,8 @@ import com.ruyicai.dataanalysis.service.UpdateQiuTanMatchesService;
 import com.ruyicai.dataanalysis.service.UpdateScheduleService;
 import com.ruyicai.dataanalysis.service.UpdateSclassService;
 import com.ruyicai.dataanalysis.service.UpdateScoreService;
-import com.ruyicai.dataanalysis.service.UpdateStandardService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
+import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @RequestMapping("/system")
@@ -47,7 +46,7 @@ public class SystemController {
 	private UpdateScheduleService updateScheduleService;
 	
 	@Autowired
-	private UpdateStandardService updateStandardService;
+	private StandardUpdateService standardUpdateService;
 	
 	@Autowired
 	private UpdateScoreService updateScoreService;
@@ -192,7 +191,7 @@ public class SystemController {
 	ResponseData updatestandard() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateStandardService.process();
+			standardUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

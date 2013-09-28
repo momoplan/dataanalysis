@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.timer.jcl;
+package com.ruyicai.dataanalysis.timer.lq;
 
 import java.util.List;
 import org.apache.commons.lang.StringUtils;

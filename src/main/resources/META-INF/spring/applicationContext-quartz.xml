@@ -80,13 +80,13 @@
    </bean>
    
    <!-- 欧赔更新 -->
-   <bean id="UpdateStandardServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateStandardService"></property>
+   <bean id="standardUpdateServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="standardUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
    <bean id="UpdateStandardServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateStandardServiceJobDetail"></property>
+   		<property name="jobDetail" ref="standardUpdateServiceJobDetail"></property>
    		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
    </bean>
    
@@ -134,10 +134,10 @@
    		<property name="cronExpression" value="*/30 * * * * ?"></property>  <!-- 30秒 -->
    </bean>
    
-   <!-- 欧赔赔率变化更新 -->
+   <!-- 欧赔Detail更新 -->
    <bean id="standardDetailUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateStandardService"></property>
-   		<property name="targetMethod" value="processByMinute"></property>
+   		<property name="targetObject" ref="standardDetailUpdateService"></property>
+   		<property name="targetMethod" value="process"></property>
    </bean>
    
    <bean id="standardDetailUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">

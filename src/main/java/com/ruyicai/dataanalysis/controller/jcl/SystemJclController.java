@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruyicai.dataanalysis.controller.ResponseData;
 import com.ruyicai.dataanalysis.service.jcl.AnalysisJclService;
-import com.ruyicai.dataanalysis.timer.jcl.PeiLvJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.QiuTanMatchesJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.ScheduleJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.SclassJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.StandardJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.TeamJclUpdateService;
-import com.ruyicai.dataanalysis.timer.jcl.TodayScoreJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.PeiLvJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.QiuTanMatchesJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.ScheduleJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.SclassJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.StandardJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.TeamJclUpdateService;
+import com.ruyicai.dataanalysis.timer.lq.TodayScoreJclUpdateService;
 import com.ruyicai.dataanalysis.util.jcl.SendJmsJclUtil;
 
 @RequestMapping("/systemJcl")
