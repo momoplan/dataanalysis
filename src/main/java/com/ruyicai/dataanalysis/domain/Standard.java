@@ -36,7 +36,8 @@ public class Standard implements Comparable<Standard> {
 			@Parameter(name = TableGenerator.SEGMENT_COLUMN_PARAM, value = "ID"),
 			@Parameter(name = TableGenerator.SEGMENT_VALUE_PARAM, value = "Standard"),
 			@Parameter(name = TableGenerator.VALUE_COLUMN_PARAM, value = "SEQ"),
-			@Parameter(name = TableGenerator.TABLE_PARAM, value = "TSEQ") })
+			@Parameter(name = TableGenerator.TABLE_PARAM, value = "TSEQ"),
+			@Parameter(name = TableGenerator.INCREMENT_PARAM, value = "100")})
 	@Column(name = "OddsID")
 	private int oddsID;
 	
