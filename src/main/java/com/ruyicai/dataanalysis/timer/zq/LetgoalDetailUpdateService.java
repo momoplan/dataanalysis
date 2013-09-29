@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.service;
+package com.ruyicai.dataanalysis.timer.zq;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +18,8 @@ import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.service.GlobalInfoService;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -25,12 +27,17 @@ import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
+/**
+ * 足球亚赔Detail更新
+ * @author Administrator
+ *
+ */
 @Service
-public class PeiLvDetailUpdateService {
+public class LetgoalDetailUpdateService {
 
-	private Logger logger = LoggerFactory.getLogger(PeiLvDetailUpdateService.class);
+	private Logger logger = LoggerFactory.getLogger(LetgoalDetailUpdateService.class);
 	
-	private ThreadPoolExecutor peiLvDetailUpdateExecutor;
+	private ThreadPoolExecutor letgoalDetailUpdateExecutor;
 
 	@Value("${peiLvDetail}")
 	private String url;
@@ -49,7 +56,7 @@ public class PeiLvDetailUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		peiLvDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("peiLvDetailUpdate", 10);
+		letgoalDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("letgoalDetailUpdate", 20);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -70,8 +77,8 @@ public class PeiLvDetailUpdateService {
 			if (aList!=null&&aList.size()>0) {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
 				ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(letGoalElement);
-				logger.info("peiLvDetailUpdateExecutor,size="+peiLvDetailUpdateExecutor.getQueue().size());
-				peiLvDetailUpdateExecutor.execute(task);
+				logger.info("letgoalDetailUpdateExecutor,size="+letgoalDetailUpdateExecutor.getQueue().size());
+				letgoalDetailUpdateExecutor.execute(task);
 			}
 		} catch (Exception e) {
 			logger.error("足球赔率变化更新发生异常", e);
@@ -116,22 +123,6 @@ public class PeiLvDetailUpdateService {
 		for (Integer scheduleId : scheduleIds) {
 			updateLetGoalCache(scheduleId);
 		}
-	}
-	
-	public void updateLetGoalCache(Integer scheduleId) {
-		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
-		infoService.buildLetGoals(letGoals);
-		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-		if (letGoal==null) {
-			letGoal = new GlobalCache();
-			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-			letGoal.setValue(LetGoal.toJsonArray(letGoals));
-			letGoal.persist();
-		} else {
-			letGoal.setValue(LetGoal.toJsonArray(letGoals));
-			letGoal.merge();
-		}
-		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
 	}
 	
 	private Integer buildLetGoal(String data) {
@@ -191,6 +182,26 @@ public class PeiLvDetailUpdateService {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	public void updateLetGoalCache(Integer scheduleId) {
+		Schedule schedule = Schedule.findSchedule(scheduleId);
+		if (schedule==null||CommonUtil.isZqEventEmpty(schedule)) { //如果event为空,则不需要更新缓存
+			return ;
+		}
+		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
+		infoService.buildLetGoals(letGoals);
+		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+		if (letGoal==null) {
+			letGoal = new GlobalCache();
+			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+			letGoal.setValue(LetGoal.toJsonArray(letGoals));
+			letGoal.persist();
+		} else {
+			letGoal.setValue(LetGoal.toJsonArray(letGoals));
+			letGoal.merge();
+		}
+		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
 	}
 	
 }

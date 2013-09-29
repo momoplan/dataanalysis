@@ -123,14 +123,14 @@
    		<property name="cronExpression" value="0 0 23 * * ?"></property>  <!-- 每天23点 -->
    </bean>
    
-   <!-- 亚赔赔率变化更新 -->
-   <bean id="peiLvDetailUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="peiLvDetailUpdateService"></property>
+   <!-- 亚赔Detail更新 -->
+   <bean id="letgoalDetailUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="letgoalDetailUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="peiLvDetailUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="peiLvDetailUpdateJobDetail"></property>
+   <bean id="letgoalDetailUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="letgoalDetailUpdateJobDetail"></property>
    		<property name="cronExpression" value="*/30 * * * * ?"></property>  <!-- 30秒 -->
    </bean>
    
@@ -271,7 +271,7 @@
    				<ref bean="UpdateTeamServiceTrigger"/>
    				<ref bean="detailResultUpdatePreDayTrigger"/>
    				<ref bean="updateScheduleMoreTrigger"/>
-   				<ref bean="peiLvDetailUpdateTrigger"/>
+   				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="standardDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
    				<!-- 竞彩篮球 -->

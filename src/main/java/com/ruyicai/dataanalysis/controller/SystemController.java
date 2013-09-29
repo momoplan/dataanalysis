@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
-import com.ruyicai.dataanalysis.service.PeiLvDetailUpdateService;
 import com.ruyicai.dataanalysis.service.UpdateDetailResultService;
 import com.ruyicai.dataanalysis.service.UpdateLetgoalStandardService;
 import com.ruyicai.dataanalysis.service.UpdateQiuTanMatchesService;
@@ -18,6 +17,7 @@ import com.ruyicai.dataanalysis.service.UpdateScheduleService;
 import com.ruyicai.dataanalysis.service.UpdateSclassService;
 import com.ruyicai.dataanalysis.service.UpdateScoreService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
+import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
@@ -52,7 +52,7 @@ public class SystemController {
 	private UpdateScoreService updateScoreService;
 	
 	@Autowired
-	private PeiLvDetailUpdateService peiLvDetailUpdateService;
+	private LetgoalDetailUpdateService peiLvDetailUpdateService;
 	
 	@Autowired
 	private AnalysisService analysisService;

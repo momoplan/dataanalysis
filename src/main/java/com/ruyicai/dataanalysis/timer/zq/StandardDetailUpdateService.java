@@ -19,6 +19,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -196,6 +197,10 @@ public class StandardDetailUpdateService {
 	}
 	
 	private void updateStandardCache(Schedule schedule) {
+		boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
+		if (zqEventEmpty) { //如果event为空,则不需要更新缓存
+			return ;
+		}
 		Integer scheduleId = schedule.getScheduleID();
 		Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
 		infoService.buildStandards(schedule, standards);
