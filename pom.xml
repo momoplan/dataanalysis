@@ -599,6 +599,7 @@
 				<news.database.password>jrtConsole</news.database.password>
 				<!-- <database.partitionCount>1</database.partitionCount> -->
 				<logback.appender>STDOUT</logback.appender>
+				<dataanalysisIp>http://127.0.0.1:8000</dataanalysisIp>
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
@@ -624,6 +625,7 @@
 				<!-- <database.partitionCount>1</database.partitionCount> -->
 				<!-- <log.dir>/home/appusr/logs</log.dir> -->
 				<!-- <url.lottery>http://192.168.0.42:8080/lottery</url.lottery> -->
+				<dataanalysisIp>http://192.168.0.42:80</dataanalysisIp>
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
@@ -648,6 +650,7 @@
 				<logback.appender>dataanalysisLog</logback.appender>
 				<!-- <log.dir>/home/appusr/prizecenter/apache-tomcat-6.0.32/logs</log.dir> -->
 				<!-- <url.lottery>http://192.168.99.6/lottery</url.lottery> -->
+				<dataanalysisIp>http://192.168.99.9:8080,http://192.168.99.17:8081</dataanalysisIp>
 				<memcache.client.ip>192.168.99.16:12000,192.168.99.17:12000</memcache.client.ip>
 				<jms.brokerURL>failover://(tcp://192.168.99.16:61616,tcp://192.168.99.17:61616)?randomize=false</jms.brokerURL>
 				<jms.lottery.brokerURL>failover://(tcp://192.168.99.30:61616,tcp://192.168.99.31:61616)?randomize=false</jms.lottery.brokerURL>

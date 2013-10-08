@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import com.ruyicai.dataanalysis.service.UpdateScoreService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
+import com.ruyicai.dataanalysis.util.HttpUtil;
+import com.ruyicai.dataanalysis.util.PropertiesUtil;
+import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
 import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
 
 @RequestMapping("/system")
@@ -52,7 +56,7 @@ public class SystemController {
 	private UpdateScoreService updateScoreService;
 	
 	@Autowired
-	private LetgoalDetailUpdateService peiLvDetailUpdateService;
+	private LetgoalDetailUpdateService letgoalDetailUpdateService;
 	
 	@Autowired
 	private AnalysisService analysisService;
@@ -62,6 +66,15 @@ public class SystemController {
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
+	
+	@Autowired
+	private FootBallMapUtil footBallMapUtil;
+	
+	@Autowired
+	private PropertiesUtil propertiesUtil;
+	
+	@Autowired
+	private HttpUtil httpUtil;
 	
 	@RequestMapping(value = "/updatesclass", method = RequestMethod.POST)
 	public @ResponseBody
@@ -310,12 +323,44 @@ public class SystemController {
 		return rd;
 	}
 	
-	@RequestMapping(value = "/peiLvDetailUpdate", method = RequestMethod.POST)
+	@RequestMapping(value = "/letgoalDetailUpdate", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData peiLvDetailUpdate() {
 		ResponseData rd = new ResponseData();
 		try {
-			peiLvDetailUpdateService.process();
+			letgoalDetailUpdateService.process();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/flushMap", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData flushMap() {
+		ResponseData rd = new ResponseData();
+		try {
+			String dataanalysisIp = propertiesUtil.getDataanalysisIp();
+			if (StringUtils.isNotBlank(dataanalysisIp)) {
+				String[] lotserverIps = StringUtils.split(dataanalysisIp, ",");
+				for (String ip : lotserverIps) {
+					String url = ip + "/dataanalysis/system/clearMap";
+					String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, "");
+					logger.info("刷新Map返回:{},url:{}", result, url);
+				}
+			}
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/clearMap", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData clearMap() {
+		ResponseData rd = new ResponseData();
+		try {
+			footBallMapUtil.clearMap();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
