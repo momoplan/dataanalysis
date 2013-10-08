@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ruyicai.dataanalysis.consts.ErrorCode;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.service.AnalysisService;
@@ -169,10 +171,12 @@ public class SelectController {
 			long startmillis = System.currentTimeMillis();
 			Page<StandardDetail> page = new Page<StandardDetail>(pageIndex, maxResult);
 			infoService.getStandardDetails(oddsId, page);
+			rd.setErrorCode(ErrorCode.OK.value);
 			rd.setValue(page);
 			long endmillis = System.currentTimeMillis();
 			logger.info("查询欧赔变化,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {
+			rd.setErrorCode(ErrorCode.ERROR.value);
 			logger.error(e.getMessage(), e);
 		}
 		return rd;
@@ -188,10 +192,12 @@ public class SelectController {
 			long startmillis = System.currentTimeMillis();
 			Page<LetGoalDetail> page = new Page<LetGoalDetail>(pageIndex, maxResult);
 			infoService.getLetGoalDetails(oddsId, page);
+			rd.setErrorCode(ErrorCode.OK.value);
 			rd.setValue(page);
 			long endmillis = System.currentTimeMillis();
 			logger.info("查询亚赔变化,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {
+			rd.setErrorCode(ErrorCode.ERROR.value);
 			logger.error(e.getMessage(), e);
 		}
 		return rd;
