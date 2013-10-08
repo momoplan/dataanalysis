@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.ruyicai.dataanalysis.domain.LetGoalDetail;
+import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
+import com.ruyicai.dataanalysis.util.Page;
 
 @RequestMapping("/select")
 @Controller
@@ -158,11 +161,15 @@ public class SelectController {
 	
 	@RequestMapping(value = "/getStandardDetails", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData getStandardDetails(@RequestParam("oddsId") String oddsId) {
+	ResponseData getStandardDetails(@RequestParam("oddsId") String oddsId,
+			@RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+			@RequestParam(value = "maxResult", required = false, defaultValue = "10") int maxResult) {
 		ResponseData rd = new ResponseData();
 		try {
 			long startmillis = System.currentTimeMillis();
-			rd.setValue(infoService.getStandardDetails(oddsId));
+			Page<StandardDetail> page = new Page<StandardDetail>(pageIndex, maxResult);
+			infoService.getStandardDetails(oddsId, page);
+			rd.setValue(page);
 			long endmillis = System.currentTimeMillis();
 			logger.info("查询欧赔变化,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {
@@ -173,11 +180,15 @@ public class SelectController {
 	
 	@RequestMapping(value = "/getLetGoalDetails", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData getLetGoalDetails(@RequestParam("oddsId") String oddsId) {
+	ResponseData getLetGoalDetails(@RequestParam("oddsId") String oddsId,
+			@RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+			@RequestParam(value = "maxResult", required = false, defaultValue = "10") int maxResult) {
 		ResponseData rd = new ResponseData();
 		try {
 			long startmillis = System.currentTimeMillis();
-			rd.setValue(infoService.getLetGoalDetails(oddsId));
+			Page<LetGoalDetail> page = new Page<LetGoalDetail>(pageIndex, maxResult);
+			infoService.getLetGoalDetails(oddsId, page);
+			rd.setValue(page);
 			long endmillis = System.currentTimeMillis();
 			logger.info("查询亚赔变化,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {

@@ -1,18 +1,17 @@
 package com.ruyicai.dataanalysis.domain;
 
 import java.util.Date;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
+import javax.persistence.TypedQuery;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.TableGenerator;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+import com.ruyicai.dataanalysis.util.Page;
 
 /**
  * @author fuqiang
@@ -57,10 +56,18 @@ public class LetGoalDetail {
 		this.goalName = goalName;
 	}
 
-	public static List<LetGoalDetail> findByOddsId(Integer oddsId) {
-		List<LetGoalDetail> letGoalDetail = entityManager().createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime asc", LetGoalDetail.class)
-				.setParameter(1, oddsId).getResultList();
-		return letGoalDetail;
+	public static void findByOddsId(Integer oddsId, Page<LetGoalDetail> page) {
+		TypedQuery<LetGoalDetail> query = entityManager()
+				.createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime asc", LetGoalDetail.class)
+				.setParameter(1, oddsId);
+		query.setFirstResult(page.getPageIndex() * page.getMaxResult())
+		.setMaxResults(page.getMaxResult());
+		page.setList(query.getResultList());
+		
+		TypedQuery<Long> totalQuery = entityManager()
+		.createQuery("select count(o) from LetGoalDetail o where isEarly=0 and oddsID=?", Long.class)
+		.setParameter(1, oddsId);
+		page.setTotalResult(totalQuery.getSingleResult().intValue());
 	}
 	
 }

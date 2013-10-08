@@ -3,7 +3,6 @@ package com.ruyicai.dataanalysis.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import com.ruyicai.dataanalysis.service.dto.InfoDTO;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
+import com.ruyicai.dataanalysis.util.Page;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 import com.ruyicai.dataanalysis.util.zq.CalcUtil;
@@ -434,11 +434,11 @@ public class GlobalInfoService {
 	 * @param oddsId
 	 * @return
 	 */
-	public List<StandardDetail> getStandardDetails(String oddsId) {
+	public void getStandardDetails(String oddsId, Page<StandardDetail> page) {
 		if (StringUtils.isBlank(oddsId)) {
-			return null;
+			return ;
 		}
-		return StandardDetail.findByOddsId(Integer.valueOf(oddsId));
+		StandardDetail.findByOddsId(Integer.valueOf(oddsId), page);
 	}
 	
 	/**
@@ -446,13 +446,12 @@ public class GlobalInfoService {
 	 * @param oddsId
 	 * @return
 	 */
-	public List<LetGoalDetail> getLetGoalDetails(String oddsId) {
+	public void getLetGoalDetails(String oddsId, Page<LetGoalDetail> page) {
 		if (StringUtils.isBlank(oddsId)) {
-			return null;
+			return ;
 		}
-		List<LetGoalDetail> details = LetGoalDetail.findByOddsId(Integer.valueOf(oddsId));
-		buildLetGoalDetails(details);
-		return details;
+		LetGoalDetail.findByOddsId(Integer.valueOf(oddsId), page);
+		buildLetGoalDetails(page.getList());
 	}
 	
 	private void buildLetGoalDetails(List<LetGoalDetail> details) {
