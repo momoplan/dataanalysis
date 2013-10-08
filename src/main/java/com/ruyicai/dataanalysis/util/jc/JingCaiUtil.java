@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
+import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**

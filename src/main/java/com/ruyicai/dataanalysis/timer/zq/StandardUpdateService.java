@@ -21,7 +21,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
-import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
+import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
 
 /**
  * 足球欧赔更新

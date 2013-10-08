@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.bd.SendJmsBdUtil;
-import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
 public class CommonUtil {

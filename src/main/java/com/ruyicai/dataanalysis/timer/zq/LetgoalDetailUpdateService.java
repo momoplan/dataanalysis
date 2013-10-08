@@ -24,8 +24,8 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
-import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
-import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 /**
  * 足球亚赔Detail更新

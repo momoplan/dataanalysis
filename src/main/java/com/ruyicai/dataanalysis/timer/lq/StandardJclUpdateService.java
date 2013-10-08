@@ -9,10 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.ruyicai.dataanalysis.domain.jcl.ScheduleJcl;
+
+import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.jcl.SendJmsJclUtil;
+import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
 
 /**
  * 竞彩篮球-百家欧赔更新

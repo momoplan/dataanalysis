@@ -12,7 +12,7 @@ import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
+import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
 
 @Service
 public class UpdateLetgoalStandardService {

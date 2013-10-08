@@ -22,8 +22,8 @@ import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
-import com.ruyicai.dataanalysis.util.jcz.FootBallMapUtil;
-import com.ruyicai.dataanalysis.util.jcz.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @RequestMapping("/system")
 @Controller
