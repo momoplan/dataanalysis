@@ -48,7 +48,7 @@ public class StandardDetail {
 	
 	public static void findByOddsId(Integer oddsId, Page<StandardDetail> page) {
 		TypedQuery<StandardDetail> query = entityManager()
-				.createQuery("select o from StandardDetail o where isEarly=0 and oddsID=? order by modifyTime asc", StandardDetail.class)
+				.createQuery("select o from StandardDetail o where isEarly=0 and oddsID=? order by modifyTime desc", StandardDetail.class)
 				.setParameter(1, oddsId);
 		query.setFirstResult(page.getPageIndex() * page.getMaxResult())
 		.setMaxResults(page.getMaxResult());

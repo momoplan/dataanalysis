@@ -58,7 +58,7 @@ public class LetGoalDetail {
 
 	public static void findByOddsId(Integer oddsId, Page<LetGoalDetail> page) {
 		TypedQuery<LetGoalDetail> query = entityManager()
-				.createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime asc", LetGoalDetail.class)
+				.createQuery("select o from LetGoalDetail o where isEarly=0 and oddsID=? order by modifyTime desc", LetGoalDetail.class)
 				.setParameter(1, oddsId);
 		query.setFirstResult(page.getPageIndex() * page.getMaxResult())
 		.setMaxResults(page.getMaxResult());
