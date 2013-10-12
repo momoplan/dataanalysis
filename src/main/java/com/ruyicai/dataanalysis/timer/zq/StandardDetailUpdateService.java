@@ -62,7 +62,7 @@ public class StandardDetailUpdateService {
 	
 	public void process() {
 		logger.info("足球欧赔Detail更新开始");
-		long startmillis = System.currentTimeMillis();
+		//long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.getResponse(url+"?min=2", HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtils.isBlank(data)) {
@@ -72,8 +72,8 @@ public class StandardDetailUpdateService {
 			ProcessStandardThread task = new ProcessStandardThread(data);
 			//logger.info("standardUpdateExecutor,size="+standardDetailUpdateExecutor.getQueue().size());
 			standardDetailUpdateExecutor.execute(task);
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔Detail更新结束，共用时 " + (endmillis - startmillis));
+			//long endmillis = System.currentTimeMillis();
+			//logger.info("足球欧赔Detail更新结束，共用时 " + (endmillis - startmillis));
 		} catch (Exception e) {
 			logger.error("足球欧赔Detail更新时发生异常", e);
 		}
@@ -81,6 +81,7 @@ public class StandardDetailUpdateService {
 	
 	@SuppressWarnings("unchecked")
 	private class ProcessStandardThread implements Runnable {
+		
 		private String data;
 		
 		private ProcessStandardThread(String data) {
@@ -110,10 +111,11 @@ public class StandardDetailUpdateService {
 	private void doStandard(Element match) {
 		try {
 			String scheduleId = match.elementTextTrim("id");
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			/*Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			//此处不判断Schedule是否存在,防止错过获取欧赔初盘的变化时间,因为赛事的定时任务5小时一次,欧赔是5秒钟
 			if(schedule==null) {
 				return;
-			}
+			}*/
 			boolean isModify = false; //欧赔是否发生变化
 			List<Element> odds = match.element("odds").elements("o");
 			for(Element odd : odds) {
@@ -123,7 +125,10 @@ public class StandardDetailUpdateService {
 				}
 			}
 			if (isModify) {
-				updateStandardCache(schedule);
+				Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+				if (schedule!=null) {
+					updateStandardCache(schedule);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

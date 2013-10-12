@@ -55,16 +55,17 @@ public class StandardUpdateService {
 		long startmillis = System.currentTimeMillis();
 		try {
 			String data = httpUtil.getResponse(url+"?day=2", HttpUtil.GET, HttpUtil.UTF8, "");
-			if (StringUtil.isEmpty(data)) {
+			if (StringUtils.isBlank(data)) {
 				logger.info("足球欧赔更新时获取数据为空");
 				return;
 			}
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("h");
-			logger.info("足球欧赔,前size="+matches.size());
-			int size = 0;
+			logger.info("足球欧赔,size="+matches.size());
+			//int size = 0;
 			for(Element match : matches) {
-				String scheduleID = match.elementTextTrim("id");
+				//此处不判断Schedule是否存在,防止错过获取欧赔初盘的变化时间,因为赛事的定时任务5小时一次,欧赔是5分钟
+				/*String scheduleID = match.elementTextTrim("id");
 				Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleID);
 				if (sHasExist==null||!sHasExist) {
 					Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
@@ -74,12 +75,12 @@ public class StandardUpdateService {
 				if(!sHasExist) {
 					logger.info("足球欧赔更新时赛事不存在,scheduleID="+scheduleID);
 					continue;
-				}
+				}*/
 				ProcessStandardThread task = new ProcessStandardThread(match);
 				standardUpdateExecutor.execute(task);
-				size++;
+				//size++;
 			}
-			logger.info("足球欧赔,validsize="+size+",size="+matches.size());
+			//logger.info("足球欧赔,validsize="+size+",size="+matches.size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新发生异常", e);
 		}
@@ -111,9 +112,10 @@ public class StandardUpdateService {
 			long startmillis = System.currentTimeMillis();
 			String scheduleID = match.elementTextTrim("id");
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-			if(schedule==null) {
+			//此处不判断Schedule是否存在,防止错过获取欧赔初盘的变化时间,因为赛事的定时任务5小时一次,欧赔是5分钟
+			/*if(schedule==null) {
 				return;
-			}
+			}*/
 			List<Element> odds = match.element("odds").elements("o");
 			Double t_h = 0D;
 			Double t_s = 0D;
@@ -214,7 +216,7 @@ public class StandardUpdateService {
 					}
 				}
 			}
-			if(null != schedule && odds.size() > 0) {
+			if(schedule!=null && odds.size()>0) {
 				BigDecimal b = new BigDecimal(t_h / odds.size());
 				b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
 				schedule.setAvgH(b.doubleValue());
