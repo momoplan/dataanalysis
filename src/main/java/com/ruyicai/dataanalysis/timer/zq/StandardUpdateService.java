@@ -62,25 +62,11 @@ public class StandardUpdateService {
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("h");
 			logger.info("足球欧赔,size="+matches.size());
-			//int size = 0;
 			for(Element match : matches) {
 				//此处不判断Schedule是否存在,防止错过获取欧赔初盘的变化时间,因为赛事的定时任务5小时一次,欧赔是5分钟
-				/*String scheduleID = match.elementTextTrim("id");
-				Boolean sHasExist = footBallMapUtil.scheduleMap.get(scheduleID);
-				if (sHasExist==null||!sHasExist) {
-					Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
-					sHasExist = schedule==null ? false : true;
-					footBallMapUtil.scheduleMap.put(scheduleID, sHasExist);
-				}
-				if(!sHasExist) {
-					logger.info("足球欧赔更新时赛事不存在,scheduleID="+scheduleID);
-					continue;
-				}*/
 				ProcessStandardThread task = new ProcessStandardThread(match);
 				standardUpdateExecutor.execute(task);
-				//size++;
 			}
-			//logger.info("足球欧赔,validsize="+size+",size="+matches.size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新发生异常", e);
 		}
@@ -89,6 +75,7 @@ public class StandardUpdateService {
 	}
 	
 	private class ProcessStandardThread implements Runnable {
+		
 		private Element match;
 		
 		private ProcessStandardThread(Element match) {
@@ -163,20 +150,6 @@ public class StandardUpdateService {
 					continue;
 				}
 				validSize++;
-				/*if (cHasExist==null||!cHasExist) {
-					EuropeCompany company = EuropeCompany.findEuropeCompany(Integer.parseInt(companyID));
-					cHasExist = company==null ? false : true;
-					footBallMapUtil.europeCompanyMap.put(companyID, cHasExist);
-				}
-				if(!cHasExist) {
-					EuropeCompany company = new EuropeCompany();
-					company.setCompanyID(Integer.parseInt(companyID));
-					company.setName_Cn(companyName);
-					company.setName_E(companyName);
-					company.setIsPrimary(0);
-					company.setIsExchange(0);
-					company.persist();
-				}*/
 				String skey = StringUtil.join("_", scheduleID, companyID);
 				Boolean sHasExist = footBallMapUtil.standardMap.get(skey);
 				if (sHasExist==null||!sHasExist) {
@@ -216,23 +189,43 @@ public class StandardUpdateService {
 					}
 				}
 			}
-			if(schedule!=null && odds.size()>0) {
-				BigDecimal b = new BigDecimal(t_h / odds.size());
-				b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
-				schedule.setAvgH(b.doubleValue());
-				b = new BigDecimal(t_s / odds.size());
-				b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
-				schedule.setAvgS(b.doubleValue());
-				b = new BigDecimal(t_g / odds.size());
-				b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
-				schedule.setAvgG(b.doubleValue());
-				schedule.merge();
-			}
+			//更新赛事的平均赔率
+			updateScheduleAvg(schedule, t_h, t_s, t_g, odds.size());
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新-doStandard，共用时 "+(endmillis-startmillis)+",scheduleId="+scheduleID+",size="+odds.size()
 					+"validSize="+validSize+",threadPoolSize="+standardUpdateExecutor.getQueue().size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新Jms的处理-解析数据发生异常", e);
+		}
+	}
+	
+	private void updateScheduleAvg(Schedule schedule, Double t_h, Double t_s, Double t_g, int oddsSize) {
+		if(schedule!=null && oddsSize>0) {
+			boolean isModify = false;
+			BigDecimal b = new BigDecimal(t_h / oddsSize);
+			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
+			Double avgH = schedule.getAvgH();
+			if (avgH==null || avgH!=b.doubleValue()) {
+				isModify = true;
+				schedule.setAvgH(b.doubleValue());
+			}
+			b = new BigDecimal(t_s / oddsSize);
+			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
+			Double avgS = schedule.getAvgS();
+			if (avgS==null || avgS!=b.doubleValue()) {
+				isModify = true;
+				schedule.setAvgS(b.doubleValue());
+			}
+			b = new BigDecimal(t_g / oddsSize);
+			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
+			Double avgG = schedule.getAvgG();
+			if (avgG==null || avgG!=b.doubleValue()) {
+				isModify = true;
+				schedule.setAvgG(b.doubleValue());
+			}
+			if (isModify) {
+				schedule.merge();
+			}
 		}
 	}
 	
