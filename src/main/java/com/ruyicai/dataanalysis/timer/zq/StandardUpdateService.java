@@ -72,6 +72,7 @@ public class StandardUpdateService {
 					footBallMapUtil.scheduleMap.put(scheduleID, sHasExist);
 				}
 				if(!sHasExist) {
+					logger.info("足球欧赔更新时赛事不存在,scheduleID="+scheduleID);
 					continue;
 				}
 				ProcessStandardThread task = new ProcessStandardThread(match);
