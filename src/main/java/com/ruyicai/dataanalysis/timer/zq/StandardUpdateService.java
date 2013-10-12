@@ -79,7 +79,7 @@ public class StandardUpdateService {
 				standardUpdateExecutor.execute(task);
 				size++;
 			}
-			logger.info("足球欧赔,后size="+size);
+			logger.info("足球欧赔,validsize="+size+",size="+matches.size());
 		} catch(Exception e) {
 			logger.error("足球欧赔更新发生异常", e);
 		}
