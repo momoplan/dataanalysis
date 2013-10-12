@@ -19,6 +19,7 @@ import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
+import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
@@ -205,21 +206,21 @@ public class StandardUpdateService {
 			BigDecimal b = new BigDecimal(t_h / oddsSize);
 			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
 			Double avgH = schedule.getAvgH();
-			if (avgH==null || avgH!=b.doubleValue()) {
+			if (!NumberUtil.compare(b.toString(), avgH)) {
 				isModify = true;
 				schedule.setAvgH(b.doubleValue());
 			}
 			b = new BigDecimal(t_s / oddsSize);
 			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
 			Double avgS = schedule.getAvgS();
-			if (avgS==null || avgS!=b.doubleValue()) {
+			if (!NumberUtil.compare(b.toString(), avgS)) {
 				isModify = true;
 				schedule.setAvgS(b.doubleValue());
 			}
 			b = new BigDecimal(t_g / oddsSize);
 			b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
 			Double avgG = schedule.getAvgG();
-			if (avgG==null || avgG!=b.doubleValue()) {
+			if (!NumberUtil.compare(b.toString(), avgG)) {
 				isModify = true;
 				schedule.setAvgG(b.doubleValue());
 			}
