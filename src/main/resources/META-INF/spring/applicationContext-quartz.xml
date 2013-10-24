@@ -145,7 +145,7 @@
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
-   <!--  竞彩篮球 -->
+   <!--  篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="sclassJclUpdateService"></property>
