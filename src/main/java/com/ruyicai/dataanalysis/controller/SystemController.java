@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 import com.ruyicai.dataanalysis.service.UpdateDetailResultService;
-import com.ruyicai.dataanalysis.service.UpdateLetgoalStandardService;
 import com.ruyicai.dataanalysis.service.UpdateQiuTanMatchesService;
 import com.ruyicai.dataanalysis.service.UpdateScheduleService;
 import com.ruyicai.dataanalysis.service.UpdateSclassService;
 import com.ruyicai.dataanalysis.service.UpdateScoreService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.LetgoalUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
@@ -38,7 +39,7 @@ public class SystemController {
 	private UpdateTeamService updateTeamService;
 	
 	@Autowired
-	private UpdateLetgoalStandardService updateLetgoalStandardService;
+	private LetgoalUpdateService letgoalUpdateService;
 	
 	@Autowired
 	private UpdateDetailResultService updateDetailResultService;
@@ -102,12 +103,12 @@ public class SystemController {
 		return rd;
 	}
 	
-	@RequestMapping(value = "/updatepeiluall", method = RequestMethod.POST)
+	@RequestMapping(value = "/letgoalUpdate", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData updateletgoalpeilu() {
+	ResponseData letgoalUpdate() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateLetgoalStandardService.process();
+			letgoalUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

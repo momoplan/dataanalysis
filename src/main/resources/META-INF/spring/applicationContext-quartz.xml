@@ -12,7 +12,7 @@
             http://www.springframework.org/schema/tx  
             http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
    
-   <!-- 竞彩足球 -->
+   <!-- 足球 -->
    <!-- 赛果详情更新 -->
    <bean id="UpdateDetailResultServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="updateDetailResultService"></property>
@@ -25,13 +25,13 @@
    </bean>
    
    <!-- 亚赔更新 -->
-   <bean id="UpdateLetgoalStandardServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateLetgoalStandardService"></property>
+   <bean id="letgoalUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="letgoalUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateLetgoalStandardServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateLetgoalStandardServiceJobDetail"></property>
+   <bean id="letgoalUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="letgoalUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
    </bean>
    
@@ -251,7 +251,6 @@
    			<list>
    				<!-- 竞彩足球 -->
     			<ref bean="UpdateDetailResultServiceTrigger"/>
-    			<ref bean="UpdateLetgoalStandardServiceTrigger"/>
    				<ref bean="UpdateQiuTanMatchesServiceTrigger"/>
    				<ref bean="UpdateScheduleServiceTrigger"/>
    				<ref bean="UpdateSclassServiceTrigger"/>
@@ -260,6 +259,7 @@
    				<ref bean="UpdateTeamServiceTrigger"/>
    				<ref bean="detailResultUpdatePreDayTrigger"/>
    				<ref bean="updateScheduleMoreTrigger"/>
+   				<ref bean="letgoalUpdateTrigger"/>
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
    				<!-- 竞彩篮球 -->

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
@@ -78,7 +77,7 @@ public class StandardUpdateService {
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新结束,用时:"+(endmillis-startmillis));
 		} catch (Exception e) {
-			logger.error("足球欧赔Detail更新时发生异常", e);
+			logger.error("足球欧赔更新时发生异常", e);
 		}
 	}
 	
@@ -111,7 +110,7 @@ public class StandardUpdateService {
 					}
 				}
 				long endmillis = System.currentTimeMillis();
-				logger.info("足球欧赔更新-ProcessStandardThread结束, 共用时 "+(endmillis-startmillis)+",oddsSize="+odds.size()
+				logger.info("足球欧赔更新-ProcessStandardThread结束,用时: "+(endmillis-startmillis)+",oddsSize="+odds.size()
 						+",scheduleId="+scheduleId+",threadPoolSize="+standardlUpdateExecutor.getQueue().size());
 			} catch (Exception e) {
 				e.printStackTrace();
