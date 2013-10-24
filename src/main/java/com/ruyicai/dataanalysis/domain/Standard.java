@@ -208,6 +208,11 @@ public class Standard implements Comparable<Standard> {
 				.setParameter(1, scheduleID).getResultList();
 	}
 	
+	public static List<Standard> getListByScheduleId(Integer scheduleId) {
+		return entityManager().createQuery("select o from Standard o where o.scheduleID=?", Standard.class)
+				.setParameter(1, scheduleId).getResultList();
+	}
+	
 	public static Standard findByScheduleIdCompanyId(Integer scheduleID, Integer companyID) {
 		List<Standard> standards = entityManager().createQuery("select o from Standard o where scheduleID=? and companyID=?", Standard.class)
 				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
