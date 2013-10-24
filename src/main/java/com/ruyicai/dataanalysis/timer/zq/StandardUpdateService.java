@@ -36,7 +36,7 @@ public class StandardUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(StandardUpdateService.class);
 	
-	private ThreadPoolExecutor standardlUpdateExecutor;
+	private ThreadPoolExecutor standardUpdateExecutor;
 	
 	@Value("${baijiaoupei}")
 	private String url;
@@ -52,7 +52,7 @@ public class StandardUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		standardlUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardlUpdate", 50);
+		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 50);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class StandardUpdateService {
 		try {
 			long startmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新开始");
-			String data = httpUtil.getResponse(url+"?min=5", HttpUtil.GET, HttpUtil.UTF8, "");
+			String data = httpUtil.getResponse(url+"?min=3", HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtils.isBlank(data)) {
 				logger.info("足球欧赔更新时获取数据为空");
 				return;
@@ -71,7 +71,7 @@ public class StandardUpdateService {
 			if (matches!=null && matches.size()>0) {
 				for(Element match : matches) {
 					ProcessStandardThread task = new ProcessStandardThread(match);
-					standardlUpdateExecutor.execute(task);
+					standardUpdateExecutor.execute(task);
 				}
 			}
 			long endmillis = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class StandardUpdateService {
 				}
 				long endmillis = System.currentTimeMillis();
 				logger.info("足球欧赔更新-ProcessStandardThread结束,用时: "+(endmillis-startmillis)+",oddsSize="+odds.size()
-						+",scheduleId="+scheduleId+",threadPoolSize="+standardlUpdateExecutor.getQueue().size());
+						+",scheduleId="+scheduleId+",threadPoolSize="+standardUpdateExecutor.getQueue().size());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
