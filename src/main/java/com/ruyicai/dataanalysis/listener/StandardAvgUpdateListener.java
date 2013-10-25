@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
@@ -37,9 +36,12 @@ public class StandardAvgUpdateListener {
 			long startmillis = System.currentTimeMillis();
 			logger.info("足球平均欧赔更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
-				return ;
+				return;
 			}
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			if (schedule==null) {
+				return;
+			}
 			List<Standard> list = Standard.getListByScheduleId(Integer.parseInt(scheduleId));
 			//更新平均欧赔
 			doScheduleAvg(schedule, list);
@@ -54,7 +56,7 @@ public class StandardAvgUpdateListener {
 	
 	private void doScheduleAvg(Schedule schedule, List<Standard> list) {
 		try {
-			if (schedule==null || list==null || list.size()<=0) {
+			if (list==null || list.size()<=0) {
 				return ;
 			}
 			Double t_h = 0D;
