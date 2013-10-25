@@ -36,7 +36,7 @@ public class StandardUpdateListener {
 			Document document = DocumentHelper.parseText(body);
 			String scheduleId = doProcess(document.getRootElement());
 			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔更新的Jms结束,用时:"+(endmillis-startmillis)+"scheduleId="+scheduleId);
+			logger.info("足球欧赔更新的Jms结束,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("足球欧赔更新的Jms发生异常", e);
 		}
