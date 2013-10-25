@@ -29,14 +29,16 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 				public void configure() throws Exception {
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
-					//竞彩足球
+					//足球
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardUpdate?concurrentConsumers=20").to(
+							"bean:standardUpdateListener?method=update").routeId("足球-欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardAvgUpdate?concurrentConsumers=20").to(
 							"bean:standardAvgUpdateListener?method=update").routeId("足球-平均欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=10").to(
 							"bean:rankingJczUpdateListener?method=update").routeId("足球-联赛排名更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.infoUpdate?concurrentConsumers=10").to(
 							"bean:infoJczUpdateListener?method=update").routeId("足球-数据分析更新");
-					//竞彩篮球
+					//篮球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=10").to(
 							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=10").to(

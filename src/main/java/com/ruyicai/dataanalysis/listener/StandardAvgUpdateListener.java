@@ -1,15 +1,23 @@
 package com.ruyicai.dataanalysis.listener;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import org.apache.camel.Body;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
+import com.ruyicai.dataanalysis.service.GlobalInfoService;
+import com.ruyicai.dataanalysis.service.dto.InfoDTO;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
+import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**
  * 足球平均欧赔更新的Jms
@@ -21,6 +29,9 @@ public class StandardAvgUpdateListener {
 
 	private Logger logger = LoggerFactory.getLogger(StandardAvgUpdateListener.class);
 	
+	@Autowired
+	private GlobalInfoService infoService;
+	
 	public void update(@Body String scheduleId) {
 		try {
 			long startmillis = System.currentTimeMillis();
@@ -29,11 +40,21 @@ public class StandardAvgUpdateListener {
 				return ;
 			}
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
-			if (schedule==null) {
-				return ;
-			}
 			List<Standard> list = Standard.getListByScheduleId(Integer.parseInt(scheduleId));
-			if (list==null || list.size()<=0) {
+			//更新平均欧赔
+			doScheduleAvg(schedule, list);
+			//更新欧赔缓存
+			updateStandardCache(schedule, list);
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void doScheduleAvg(Schedule schedule, List<Standard> list) {
+		try {
+			if (schedule==null || list==null || list.size()<=0) {
 				return ;
 			}
 			Double t_h = 0D;
@@ -57,10 +78,8 @@ public class StandardAvgUpdateListener {
 				}
 			}
 			updateScheduleAvg(schedule, t_h, t_s, t_g, list.size());
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis));
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -91,6 +110,45 @@ public class StandardAvgUpdateListener {
 			if (isModify) {
 				schedule.merge();
 			}
+		}
+	}
+	
+	private void updateStandardCache(Schedule schedule, Collection<Standard> standardList) {
+		try {
+			boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
+			if (zqEventEmpty) { //如果event为空,则不需要更新缓存
+				return ;
+			}
+			//更新Standard缓存
+			Integer scheduleId = schedule.getScheduleID();
+			infoService.buildStandards(schedule, standardList);
+			GlobalCache standard = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
+			if (standard==null) {
+				standard = new GlobalCache();
+				standard.setId(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
+				standard.setValue(Standard.toJsonArray(standardList));
+				standard.persist();
+			} else {
+				standard.setValue(Standard.toJsonArray(standardList));
+				standard.merge();
+			}
+			//更新Info缓存
+			GlobalCache globalInfo = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+			if (globalInfo==null) {
+				globalInfo = new GlobalCache();
+				globalInfo.setId(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+				InfoDTO dto = infoService.getUpdateInfoDTO(schedule);
+				globalInfo.setValue(dto.toJson());
+				globalInfo.persist();
+			} else {
+				InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
+				Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
+				dto.setStandards(standards);
+				globalInfo.setValue(dto.toJson());
+				globalInfo.merge();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
