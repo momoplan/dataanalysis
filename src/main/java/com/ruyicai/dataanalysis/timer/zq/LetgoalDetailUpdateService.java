@@ -13,15 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
-import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.service.GlobalInfoService;
-import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
-import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
@@ -45,9 +40,6 @@ public class LetgoalDetailUpdateService {
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
-	
-	@Autowired
-	private GlobalInfoService infoService;
 	
 	@PostConstruct
 	public void init() {
@@ -151,31 +143,11 @@ public class LetgoalDetailUpdateService {
 			letGoal.merge();
 		}
 		if (detailModify) {
-			updateLetGoalCache(Integer.parseInt(scheduleId));
+			sendJmsJczUtil.sendLetgoalCacheUpdateJMS(scheduleId); //亚赔缓存更新
 		}
 		long endmillis = System.currentTimeMillis();
 		logger.info("足球亚赔Detail更新-doLetGoalDetail,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId
 				+",threadPoolSize="+letgoalDetailUpdateExecutor.getQueue().size());
-	}
-	
-	private void updateLetGoalCache(Integer scheduleId) {
-		Schedule schedule = Schedule.findSchedule(scheduleId);
-		if (schedule==null||CommonUtil.isZqEventEmpty(schedule)) { //如果event为空,则不需要更新缓存
-			return ;
-		}
-		List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
-		infoService.buildLetGoals(letGoals);
-		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-		if (letGoal==null) {
-			letGoal = new GlobalCache();
-			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-			letGoal.setValue(LetGoal.toJsonArray(letGoals));
-			letGoal.persist();
-		} else {
-			letGoal.setValue(LetGoal.toJsonArray(letGoals));
-			letGoal.merge();
-		}
-		sendJmsJczUtil.sendInfoUpdateJMS(String.valueOf(scheduleId));
 	}
 	
 }

@@ -146,7 +146,7 @@ public class GlobalInfoService {
 		dto.setSchedule(scheduleDTO);
 		
 		Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
-		buildLetGoals(letGoals);
+		//buildLetGoals(letGoals);
 		dto.setLetGoals(letGoals);
 		
 		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());

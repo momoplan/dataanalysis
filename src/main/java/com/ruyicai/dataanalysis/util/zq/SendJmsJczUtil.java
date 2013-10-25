@@ -33,16 +33,16 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:standardAvgUpdate")
 	private ProducerTemplate standardAvgUpdateTemplate;
 	
-	@Produce(uri = "jms:topic:infoUpdate")
-	private ProducerTemplate infoUpdateTemplate;
+	@Produce(uri = "jms:topic:letgoalCacheUpdate")
+	private ProducerTemplate letgoalCacheUpdateTemplate;
 	
 	/**
-	 * 更新数据分析的JMS
+	 * 亚赔缓存更新的JMS
 	 * @param body
 	 */
-	public void sendInfoUpdateJMS(String body) {
+	public void sendLetgoalCacheUpdateJMS(String body) {
 		try {
-			infoUpdateTemplate.sendBody(body);
+			letgoalCacheUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

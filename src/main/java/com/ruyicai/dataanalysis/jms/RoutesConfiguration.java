@@ -36,8 +36,8 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 							"bean:standardAvgUpdateListener?method=update").routeId("足球-平均欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=10").to(
 							"bean:rankingJczUpdateListener?method=update").routeId("足球-联赛排名更新");
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.infoUpdate?concurrentConsumers=10").to(
-							"bean:infoJczUpdateListener?method=update").routeId("足球-数据分析更新");
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.letgoalCacheUpdate?concurrentConsumers=20").to(
+							"bean:letgoalCacheUpdateListener?method=update").routeId("足球-亚赔缓存更新");
 					//篮球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=10").to(
 							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
