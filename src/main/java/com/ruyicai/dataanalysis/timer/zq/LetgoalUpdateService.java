@@ -39,13 +39,13 @@ public class LetgoalUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		letgoalUpdateExecutor = ThreadPoolUtil.createTaskExecutor("letgoalUpdate", 50);
+		letgoalUpdateExecutor = ThreadPoolUtil.createTaskExecutor("letgoalUpdate", 10);
 	}
 	
 	public void process() {
 		try {
 			logger.info("足球亚赔更新开始");
-			long startmillis = System.currentTimeMillis();
+			//long startmillis = System.currentTimeMillis();
 			String data = httpUtil.downfile(url, HttpUtil.UTF8);
 			if(StringUtils.isBlank(data)) {
 				logger.error("足球亚赔更新获取数据为空");
@@ -56,20 +56,23 @@ public class LetgoalUpdateService {
 			//此处不处理欧赔,因为如果某场赛事没有亚赔,那么欧赔也不会返回,这样就不能更新这场赛事的缓存,
 			//迁移到插入欧赔数据的时候更新缓存
 			//processStandard(datas[3]);
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球亚赔更新结束, 共用时 " + (endmillis - startmillis));
+			//long endmillis = System.currentTimeMillis();
+			//logger.info("足球亚赔更新结束, 共用时 " + (endmillis - startmillis));
 		} catch(Exception e) {
 			logger.error("足球亚赔更新发生异常", e);
 		}
 	}
 
 	private void processLetGoal(String value) {
-		String[] datas = value.split("\\;");
+		ProcessLetGoalThread task = new ProcessLetGoalThread(value);
+		letgoalUpdateExecutor.execute(task);
+		
+		/*String[] datas = value.split("\\;");
 		logger.info("足球亚赔更新,size="+(datas==null ? 0 : datas.length));
 		for(String data : datas) {
 			ProcessLetGoalThread task = new ProcessLetGoalThread(data);
 			letgoalUpdateExecutor.execute(task);
-		}
+		}*/
 	}
 	
 	private final class ProcessLetGoalThread implements Runnable {
@@ -82,15 +85,24 @@ public class LetgoalUpdateService {
 		@Override
 		public void run() {
 			try {
-				doLetGoal(data);
+				long startmillis = System.currentTimeMillis();
+				String[] datas = data.split("\\;");
+				logger.info("足球亚赔更新,size="+(datas==null ? 0 : datas.length));
+				for(String data : datas) {
+					doLetGoal(data);
+				}
+				long endmillis = System.currentTimeMillis();
+				logger.info("足球亚赔更新结束, 共用时 " + (endmillis - startmillis));
+				
+				//doLetGoal(data);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("足球亚赔更新-ProcessLetGoalThread,发生异常", e);
 			}
 		}
 	}
 	
 	private void doLetGoal(String data) {
-		long startmillis = System.currentTimeMillis();
+		//long startmillis = System.currentTimeMillis();
 		String[] values = data.split("\\,");
 		String scheduleID = (values!=null&&values.length>=1) ? values[0] : "";
 		String companyID = (values!=null&&values.length>=2) ? values[1] : "";
@@ -145,9 +157,9 @@ public class LetgoalUpdateService {
 				detail.persist();
 			}
 		}
-		long endmillis = System.currentTimeMillis();
-		logger.info("足球亚赔更新-doLetGoal结束,用时:"+(endmillis-startmillis)+",scheduleID="+scheduleID
-				+",threadPoolSize="+letgoalUpdateExecutor.getQueue().size());
+		//long endmillis = System.currentTimeMillis();
+		//logger.info("足球亚赔更新-doLetGoal结束,用时:"+(endmillis-startmillis)+",scheduleID="+scheduleID
+				//+",threadPoolSize="+letgoalUpdateExecutor.getQueue().size());
 	}
 	
 }

@@ -34,7 +34,7 @@ public class StandardAvgUpdateListener {
 	public void update(@Body String scheduleId) {
 		try {
 			long startmillis = System.currentTimeMillis();
-			logger.info("足球平均欧赔更新的Jms start scheduleId="+scheduleId);
+			//logger.info("足球平均欧赔更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
 			}

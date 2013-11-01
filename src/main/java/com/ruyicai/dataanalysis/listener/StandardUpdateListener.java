@@ -130,7 +130,7 @@ public class StandardUpdateListener {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("足球欧赔更新的Jms-doOdd,发生异常", e);
 		}
 		return false;
 	}
