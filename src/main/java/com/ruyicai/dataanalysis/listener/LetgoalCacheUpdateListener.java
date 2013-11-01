@@ -32,7 +32,7 @@ public class LetgoalCacheUpdateListener {
 	public void update(@Body String scheduleId) {
 		try {
 			long startmillis = System.currentTimeMillis();
-			logger.info("亚赔缓存更新的Jms start scheduleId="+scheduleId);
+			//logger.info("亚赔缓存更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
 				return ;
 			}
