@@ -30,7 +30,8 @@ public class LetGoalDetail {
 			@Parameter(name = TableGenerator.SEGMENT_VALUE_PARAM, value = "LetGoalDetail"),
 			@Parameter(name = TableGenerator.VALUE_COLUMN_PARAM, value = "SEQ"),
 			@Parameter(name = TableGenerator.TABLE_PARAM, value = "TSEQ"),
-			@Parameter(name = TableGenerator.INCREMENT_PARAM, value = "1000")})
+			@Parameter(name = TableGenerator.INCREMENT_PARAM, value = "1000"),
+			@Parameter(name = TableGenerator.OPT_PARAM, value = "pooled-lo")})
 	@Column(name = "ID")
 	private int id;
 	
