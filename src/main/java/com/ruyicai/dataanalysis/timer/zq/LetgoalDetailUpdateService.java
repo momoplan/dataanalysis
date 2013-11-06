@@ -43,7 +43,7 @@ public class LetgoalDetailUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		letgoalDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("letgoalDetailUpdate", 50);
+		letgoalDetailUpdateExecutor = ThreadPoolUtil.createTaskExecutor("letgoalDetailUpdate", 10);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -63,14 +63,18 @@ public class LetgoalDetailUpdateService {
 			List<Element> aList = rootElement.elements("a");
 			if (aList!=null&&aList.size()>0) {
 				Element letGoalElement = aList.get(0); //亚赔（让球盘）变化数据
-				List<Element> detailElements = letGoalElement.elements("h");
+				ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(letGoalElement);
+				letgoalDetailUpdateExecutor.execute(task);
+				
+				
+				/*List<Element> detailElements = letGoalElement.elements("h");
 				logger.info("足球亚赔Detail更新,size="+(detailElements==null ? 0 : detailElements.size()));
 				if (detailElements!=null && detailElements.size()>0) {
 					for (Element detailElement : detailElements) {
 						ProcessLetGoalDetailThread task = new ProcessLetGoalDetailThread(detailElement.getText());
 						letgoalDetailUpdateExecutor.execute(task);
 					}
-				}
+				}*/
 			}
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球亚赔Detail更新结束,用时" + (endmillis-startmillis));
@@ -80,16 +84,24 @@ public class LetgoalDetailUpdateService {
 	}
 	
 	private class ProcessLetGoalDetailThread implements Runnable {
-		private String data;
+		private Element data;
 		
-		private ProcessLetGoalDetailThread(String data) {
+		private ProcessLetGoalDetailThread(Element data) {
 			this.data = data;
 		}
 		
+		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			try {
-				doLetGoalDetail(data);
+				List<Element> detailElements = data.elements("h");
+				logger.info("足球亚赔Detail更新,size="+(detailElements==null ? 0 : detailElements.size()));
+				if (detailElements!=null && detailElements.size()>0) {
+					for (Element detailElement : detailElements) {
+						doLetGoalDetail(detailElement.getText());
+					}
+				}
+				//doLetGoalDetail(data);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
