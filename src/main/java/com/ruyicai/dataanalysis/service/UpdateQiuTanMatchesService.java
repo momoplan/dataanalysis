@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.FileUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -21,6 +22,7 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.bd.BeiDanUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
 public class UpdateQiuTanMatchesService {
@@ -32,6 +34,9 @@ public class UpdateQiuTanMatchesService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	public void processFile(String filename) {
 		logger.info("开始读取文件更新彩票赛事与球探网的关联表, filename:{}", new String[] {filename});
@@ -354,6 +359,11 @@ public class UpdateQiuTanMatchesService {
 		}
 		if (isUpdate) {
 			schedule.merge();
+		}
+		//如果赛事已经有了event
+		if (!CommonUtil.isZqEventEmpty(schedule)) {
+			sendJmsJczUtil.sendStandardAvgUpdateJMS(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
+			sendJmsJczUtil.sendLetgoalCacheUpdateJMS(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
 		}
 	}
 	

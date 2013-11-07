@@ -42,6 +42,9 @@ public class StandardAvgUpdateListener {
 			if (schedule==null) {
 				return;
 			}
+			if (CommonUtil.isZqEventEmpty(schedule)) {
+				return;
+			}
 			List<Standard> list = Standard.getListByScheduleId(Integer.parseInt(scheduleId));
 			//更新平均欧赔
 			doScheduleAvg(schedule, list);

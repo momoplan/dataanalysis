@@ -34,45 +34,53 @@ public class LetgoalCacheUpdateListener {
 			long startmillis = System.currentTimeMillis();
 			//logger.info("亚赔缓存更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
-				return ;
+				return;
 			}
 			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
-			if (schedule==null||CommonUtil.isZqEventEmpty(schedule)) { //如果event为空,则不需要更新缓存
-				return ;
+			if (schedule==null) {
+				return;
+			}
+			if (CommonUtil.isZqEventEmpty(schedule)) { //如果event为空,则不需要更新缓存
+				return;
 			}
 			//更新LetGoal缓存
-			List<LetGoal> letGoalList = LetGoal.findByScheduleID(Integer.parseInt(scheduleId));
-			infoService.buildLetGoals(letGoalList);
-			GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-			if (letGoal==null) {
-				letGoal = new GlobalCache();
-				letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
-				letGoal.setValue(LetGoal.toJsonArray(letGoalList));
-				letGoal.persist();
-			} else {
-				letGoal.setValue(LetGoal.toJsonArray(letGoalList));
-				letGoal.merge();
-			}
-			//更新Info缓存
-			GlobalCache globalInfo = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
-			if (globalInfo==null) {
-				globalInfo = new GlobalCache();
-				globalInfo.setId(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
-				InfoDTO dto = infoService.getUpdateInfoDTO(schedule);
-				globalInfo.setValue(dto.toJson());
-				globalInfo.persist();
-			} else {
-				InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
-				Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
-				//buildLetGoals(letGoals);
-				dto.setLetGoals(letGoals);
-				globalInfo.setValue(dto.toJson());
-				globalInfo.merge();
-			}
+			updateCache(schedule);
 			long endmillis = System.currentTimeMillis();
 			logger.info("亚赔缓存更新的Jms end,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("亚赔缓存更新的Jms发生异常,scheduleId="+scheduleId, e);
+		}
+	}
+	
+	private void updateCache(Schedule schedule) {
+		int scheduleId = schedule.getScheduleID();
+		List<LetGoal> letGoalList = LetGoal.findByScheduleID(scheduleId);
+		infoService.buildLetGoals(letGoalList);
+		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+		if (letGoal==null) {
+			letGoal = new GlobalCache();
+			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId)));
+			letGoal.setValue(LetGoal.toJsonArray(letGoalList));
+			letGoal.persist();
+		} else {
+			letGoal.setValue(LetGoal.toJsonArray(letGoalList));
+			letGoal.merge();
+		}
+		//更新Info缓存
+		GlobalCache globalInfo = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+		if (globalInfo==null) {
+			globalInfo = new GlobalCache();
+			globalInfo.setId(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+			InfoDTO dto = infoService.getUpdateInfoDTO(schedule);
+			globalInfo.setValue(dto.toJson());
+			globalInfo.persist();
+		} else {
+			InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
+			Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
+			//buildLetGoals(letGoals);
+			dto.setLetGoals(letGoals);
+			globalInfo.setValue(dto.toJson());
+			globalInfo.merge();
 		}
 	}
 	
