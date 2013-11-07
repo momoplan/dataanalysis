@@ -200,12 +200,25 @@ public class SystemController {
 		return rd;
 	}
 	
-	@RequestMapping(value = "/updatestandard", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateStandardByMin", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData updatestandard() {
+	ResponseData updateStandardByMin() {
 		ResponseData rd = new ResponseData();
 		try {
 			standardUpdateService.process();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/updateStandardAll", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData updateStandardAll() {
+		ResponseData rd = new ResponseData();
+		try {
+			standardUpdateService.processAll();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
