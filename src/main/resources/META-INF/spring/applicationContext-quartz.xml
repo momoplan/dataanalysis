@@ -87,7 +87,7 @@
    
    <bean id="standardUpdateServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="standardUpdateServiceJobDetail"></property>
-   		<property name="cronExpression" value="0 */2 * * * ?"></property>  <!-- 2分钟 -->
+   		<property name="cronExpression" value="0 */1 * * * ?"></property>  <!-- 1分钟 -->
    </bean>
    
    <!-- 球队更新 -->
