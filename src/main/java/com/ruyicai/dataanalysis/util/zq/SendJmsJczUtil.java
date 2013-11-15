@@ -27,8 +27,8 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:rankingUpdate")
 	private ProducerTemplate rankingUpdateTemplate;
 	
-	@Produce(uri = "jms:topic:standardUpdate")
-	private ProducerTemplate standardUpdateTemplate;
+	/*@Produce(uri = "jms:topic:standardUpdate")
+	private ProducerTemplate standardUpdateTemplate;*/
 	
 	@Produce(uri = "jms:topic:standardAvgUpdate")
 	private ProducerTemplate standardAvgUpdateTemplate;
@@ -52,13 +52,13 @@ public class SendJmsJczUtil {
 	 * 欧赔更新的Jms
 	 * @param body
 	 */
-	public void sendStandardUpdateJms(String body) {
+	/*public void sendStandardUpdateJms(String body) {
 		try {
 			standardUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-	}
+	}*/
 	
 	/**
 	 * 更新平均欧赔的JMS
