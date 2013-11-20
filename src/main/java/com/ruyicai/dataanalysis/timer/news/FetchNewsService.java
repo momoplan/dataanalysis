@@ -68,14 +68,18 @@ public class FetchNewsService {
 		logger.info("抓取新闻结束, 共用时 " + (endmillis - startmillis));
 	}
 	
-	private void doProcess(String url) throws IOException {
-		Document listDocument = Jsoup.connect(url).timeout(5000).get();
-		Elements uls = listDocument.select("div.MainLeftBox > ul");
-		for (Element ul : uls) {
-			Elements lis = ul.select("> li");
-			for (Element li : lis) {
-				parseLiElement(li);
+	private void doProcess(String url) {
+		try {
+			Document listDocument = Jsoup.connect(url).timeout(5000).get();
+			Elements uls = listDocument.select("div.MainLeftBox > ul");
+			for (Element ul : uls) {
+				Elements lis = ul.select("> li");
+				for (Element li : lis) {
+					parseLiElement(li);
+				}
 			}
+		} catch (Exception e) {
+			logger.error("抓取新闻-doProcess发生异常", e);
 		}
 	}
 	
@@ -147,32 +151,40 @@ public class FetchNewsService {
 		return event;
 	}
 	
-	private void doProcessJcZq(String url) throws IOException {
-		Document listDocument = Jsoup.connect(url).timeout(5000).get();
-		Elements left360s = listDocument.select("div.left360");
-		for (Element left360 : left360s) {
-			Elements borders = left360.select("> div.border");
-			for (Element border : borders) {
-				Elements ul03s = border.select("> ul.ul03");
-				for (Element ul03 : ul03s) {
-					Elements lis = ul03.select("> li");
-					for (Element li : lis) {
-						parseLiElement(li);
+	private void doProcessJcZq(String url) {
+		try {
+			Document listDocument = Jsoup.connect(url).timeout(5000).get();
+			Elements left360s = listDocument.select("div.left360");
+			for (Element left360 : left360s) {
+				Elements borders = left360.select("> div.border");
+				for (Element border : borders) {
+					Elements ul03s = border.select("> ul.ul03");
+					for (Element ul03 : ul03s) {
+						Elements lis = ul03.select("> li");
+						for (Element li : lis) {
+							parseLiElement(li);
+						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error("抓取新闻-doProcessJcZq发生异常", e);
 		}
 	}
 	
-	private void parseLiElement(Element li) throws IOException {
-		Element a = li.select("a").first();
-		String href = a.attr("href"); //新闻地址(http://www.sporttery.cn/football/jczj/2013/0417/54063.html)
-		String outId = ""; //外部id
-		if (StringUtils.isNotBlank(href)&&StringUtils.indexOf(href, "/")>-1&&StringUtils.indexOf(href, ".")>-1) {
-			outId = StringUtils.substring(href, StringUtils.lastIndexOf(href, "/")+1, StringUtils.lastIndexOf(href, "."));
+	private void parseLiElement(Element li) {
+		try {
+			Element a = li.select("a").first();
+			String href = a.attr("href"); //新闻地址(http://www.sporttery.cn/football/jczj/2013/0417/54063.html)
+			String outId = ""; //外部id
+			if (StringUtils.isNotBlank(href)&&StringUtils.indexOf(href, "/")>-1&&StringUtils.indexOf(href, ".")>-1) {
+				outId = StringUtils.substring(href, StringUtils.lastIndexOf(href, "/")+1, StringUtils.lastIndexOf(href, "."));
+			}
+			//获取新闻内容
+			fetchNewsContent(href, outId);
+		} catch (IOException e) {
+			logger.error("抓取新闻-parseLiElement发生异常", e);
 		}
-		//获取新闻内容
-		fetchNewsContent(href, outId);
 	}
 	
 	private void fetchNewsContent(String url, String outId) throws IOException {
@@ -181,6 +193,10 @@ public class FetchNewsService {
 		String content = getNewsContent(contentDocument); //新闻内容
 		
 		Element textTitle = contentDocument.select("div.TextTitle").first();
+		if (textTitle==null) {
+			return ;
+		}
+		System.out.println("aa");
 		String title = textTitle.text(); //新闻标题
 		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
 			return ;
