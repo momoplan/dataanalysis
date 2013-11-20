@@ -107,6 +107,16 @@ public class FetchNewsService {
 		return builder.toString();
 	}
 	
+	private String getNewsTitle(Document contentDocument) {
+		//http://www.sporttery.cn/football/jcdj/2013/1112/82872.html
+		Element textTitle = contentDocument.select("div.TextTitle").first();
+		if (textTitle==null) {
+			//http://www.sporttery.cn/football/jcdj/2013/1114/83104.html
+			textTitle = contentDocument.select("div.TextBox > h2").first();
+		}
+		return textTitle==null ? null : textTitle.text();
+	}
+	
 	private boolean containsWeek(String title) {
 		boolean contains = false;
 		if (StringUtils.indexOf(title, "周一")>-1||StringUtils.indexOf(title, "周二")>-1||StringUtils.indexOf(title, "周三")>-1
@@ -191,14 +201,9 @@ public class FetchNewsService {
 		Document contentDocument = Jsoup.parse(new URL(url).openStream(), HttpUtil.GBK, url);
 		Date publishTime = getPublishTime(contentDocument); //发布时间
 		String content = getNewsContent(contentDocument); //新闻内容
-		
-		Element textTitle = contentDocument.select("div.TextTitle").first();
-		if (textTitle==null) {
-			return ;
-		}
-		System.out.println("aa");
-		String title = textTitle.text(); //新闻标题
+		String title = getNewsTitle(contentDocument); //新闻标题
 		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
+			//System.out.println("aa");
 			return ;
 		}
 		//防止重复
