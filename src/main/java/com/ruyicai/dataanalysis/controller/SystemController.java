@@ -18,6 +18,7 @@ import com.ruyicai.dataanalysis.service.UpdateScheduleService;
 import com.ruyicai.dataanalysis.service.UpdateSclassService;
 import com.ruyicai.dataanalysis.service.UpdateScoreService;
 import com.ruyicai.dataanalysis.service.UpdateTeamService;
+import com.ruyicai.dataanalysis.timer.news.FetchNewsService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
@@ -64,6 +65,9 @@ public class SystemController {
 	
 	@Autowired
 	private GlobalInfoService globalInfoService;
+	
+	@Autowired
+	private FetchNewsService fetchNewsService;
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
@@ -375,6 +379,18 @@ public class SystemController {
 		ResponseData rd = new ResponseData();
 		try {
 			footBallMapUtil.clearMap();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/fetchNews", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData fetchNews() {
+		ResponseData rd = new ResponseData();
+		try {
+			fetchNewsService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
