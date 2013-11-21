@@ -28,7 +28,8 @@ public class CalcUtil {
 	public static Double fanhuan(Double probability_H, Double homeWin) {
 		double probability_T = probability_H * homeWin;
 		BigDecimal b = new BigDecimal(probability_T);
-		b = b.setScale(2, BigDecimal.ROUND_DOWN);
+		//b = b.setScale(2, BigDecimal.ROUND_DOWN);
+		b = b.setScale(2, BigDecimal.ROUND_HALF_UP);
 		return b.doubleValue();
 	}
 	
