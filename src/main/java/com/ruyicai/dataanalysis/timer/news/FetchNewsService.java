@@ -129,34 +129,42 @@ public class FetchNewsService {
 	
 	private String getEvent(String title, Date publishTime) {
 		String event = ""; //赛事信息
-		if (containsWeek(title)&&publishTime!=null) {
-			String weekStr = title.substring(title.indexOf("周"), title.indexOf("周")+2);
-			BigDecimal weekIdBig = JingCaiUtil.WEEKID.get(weekStr);
-			int weekIdInt = JingCaiUtil.WEEK.get(weekIdBig.intValue()) ;
-			String teamId = title.substring(title.indexOf("周")+2, title.indexOf("周")+5);
-			if (StringUtils.isNumeric(teamId)) {
-				String type = "";
-				if (Integer.parseInt(teamId)<=300) { //足球
-					type = "1";
-				} else { //篮球
-					type = "0";
+		try {
+			if (containsWeek(title)&&publishTime!=null) {
+				int zhouIndex = title.indexOf("周");
+				String weekStr = title.substring(zhouIndex, zhouIndex+2);
+				BigDecimal weekIdBig = JingCaiUtil.WEEKID.get(weekStr);
+				int weekIdInt = JingCaiUtil.WEEK.get(weekIdBig.intValue()) ;
+				if (title.length()<zhouIndex+5) {
+					return "";
 				}
-				String day = "";
-				Calendar calendar = Calendar.getInstance();
-				for (int i = 0; i < 4; i++) {
-					calendar.setTime(publishTime);
-					calendar.add(Calendar.DATE, i);
-					int weekId = JingCaiUtil.getWeekid(calendar.getTime());
-					if (weekIdInt==weekId) {
-						day = DateUtil.format("yyyyMMdd", calendar.getTime());
-						break;
+				String teamId = title.substring(zhouIndex+2, zhouIndex+5);
+				if (StringUtils.isNumeric(teamId)) {
+					String type = "";
+					if (Integer.parseInt(teamId)<=300) { //足球
+						type = "1";
+					} else { //篮球
+						type = "0";
+					}
+					String day = "";
+					Calendar calendar = Calendar.getInstance();
+					for (int i = 0; i < 4; i++) {
+						calendar.setTime(publishTime);
+						calendar.add(Calendar.DATE, i);
+						int weekId = JingCaiUtil.getWeekid(calendar.getTime());
+						if (weekIdInt==weekId) {
+							day = DateUtil.format("yyyyMMdd", calendar.getTime());
+							break;
+						}
+					}
+					if (StringUtils.isNotBlank(type)&&StringUtils.isNotBlank(day)&&StringUtils.isNotBlank(weekIdBig.toString())
+							&&StringUtils.isNotBlank(teamId)) {
+						event = StringUtil.join("_", type, day, weekIdBig.toString(), teamId);
 					}
 				}
-				if (StringUtils.isNotBlank(type)&&StringUtils.isNotBlank(day)&&StringUtils.isNotBlank(weekIdBig.toString())
-						&&StringUtils.isNotBlank(teamId)) {
-					event = StringUtil.join("_", type, day, weekIdBig.toString(), teamId);
-				}
 			}
+		} catch (Exception e) {
+			logger.error("抓取新闻-getEvent发生异常", e);
 		}
 		return event;
 	}
@@ -212,6 +220,9 @@ public class FetchNewsService {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
+		if (StringUtils.isBlank(event)) {
+			return ;
+		}
 		
 		News news = new News();
 		news.setTitle(title);
