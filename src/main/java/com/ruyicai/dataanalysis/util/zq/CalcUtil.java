@@ -2,6 +2,9 @@ package com.ruyicai.dataanalysis.util.zq;
 
 import java.math.BigDecimal;
 
+import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.util.ArithUtil;
+
 public class CalcUtil {
 
 	public static Double probability_H(Double homeWin, Double standoff, Double guestWin) {
@@ -33,22 +36,40 @@ public class CalcUtil {
 		return b.doubleValue();
 	}
 	
-	public static Double k_h(Double homeWinLu, Double avgh) {
-		BigDecimal k_h = new BigDecimal(homeWinLu * avgh / 100);
-		k_h = k_h.setScale(2, BigDecimal.ROUND_HALF_UP);
-		return k_h.doubleValue();
+	public static Double k_h(Double homeWin, Schedule schedule) {
+		Double avgH = schedule.getAvgH();
+		Double avgS = schedule.getAvgS();
+		Double avgG = schedule.getAvgG();
+		if (avgH==null || avgS==null || avgG==null) {
+			return 0D;
+		}
+		Double probability_H = probability_H(avgH, avgS, avgG);
+		double k_h = ArithUtil.div(ArithUtil.mul(homeWin, probability_H), 100);
+		return k_h;
 	}
 	
-	public static Double k_s(Double standoffLu, Double avgs) {
-		BigDecimal k_s = new BigDecimal(standoffLu* avgs / 100);
-		k_s = k_s.setScale(2, BigDecimal.ROUND_HALF_UP);
-		return k_s.doubleValue();
+	public static Double k_s(Double standoff, Schedule schedule) {
+		Double avgH = schedule.getAvgH();
+		Double avgS = schedule.getAvgS();
+		Double avgG = schedule.getAvgG();
+		if (avgH==null || avgS==null || avgG==null) {
+			return 0D;
+		}
+		Double probability_S = probability_S(avgH, avgS, avgG);
+		double k_s = ArithUtil.div(ArithUtil.mul(standoff, probability_S), 100);
+		return k_s;
 	}
 	
-	public static Double k_g(Double guestWinLu, Double avgg) {
-		BigDecimal k_g = new BigDecimal(guestWinLu * avgg / 100);
-		k_g = k_g.setScale(2, BigDecimal.ROUND_HALF_UP);
-		return k_g.doubleValue();
+	public static Double k_g(Double guestWin, Schedule schedule) {
+		Double avgH = schedule.getAvgH();
+		Double avgS = schedule.getAvgS();
+		Double avgG = schedule.getAvgG();
+		if (avgH==null || avgS==null || avgG==null) {
+			return 0D;
+		}
+		Double probability_G = probability_G(avgH, avgS, avgG);
+		double k_g = ArithUtil.div(ArithUtil.mul(guestWin, probability_G), 100);
+		return k_g;
 	}
 	
 	static String[] goalCn = { "0", "0/0.5", "0.5", "0.5/1", "1", "1/1.5", "1.5", "1.5/2", "2", "2/2.5", "2.5", "2.5/3", "3", "3/3.5", "3.5", "3.5/4", "4", "4/4.5", "4.5", "4.5/5", "5", "5/5.5", "5.5", "5.5/6", "6", "6/6.5", "6.5", "6.5/7", "7", "7/7.5", "7.5", "7.5/8", "8", "8/8.5", "8.5", "8.5/9", "9", "9/9.5", "9.5", "9.5/10", "10", "10/10.5", "10.5", "10.5/11", "11", "11/11.5", "11.5", "11.5/12", "12", "12/12.5", "12.5", "12.5/13", "13", "13/13.5", "13.5", "13.5/14", "14" };

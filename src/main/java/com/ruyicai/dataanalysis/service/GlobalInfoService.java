@@ -179,13 +179,13 @@ public class GlobalInfoService {
 				standard.setGuestWinLu(CalcUtil.probability_G(standard.getHomeWin(), standard.getStandoff(), standard.getGuestWin()));
 				standard.setFanHuanLu(CalcUtil.fanhuan(standard.getHomeWinLu(), standard.getHomeWin()));
 				if(null != schedule.getAvgH()) {
-					standard.setK_h(CalcUtil.k_h(standard.getHomeWinLu(), schedule.getAvgH()));
+					standard.setK_h(CalcUtil.k_h(standard.getHomeWin(), schedule));
 				}
 				if(null != schedule.getAvgS()) {
-					standard.setK_s(CalcUtil.k_s(standard.getStandoffLu(), schedule.getAvgS()));
+					standard.setK_s(CalcUtil.k_s(standard.getStandoff(), schedule));
 				}
 				if(null != schedule.getAvgG()) {
-					standard.setK_g(CalcUtil.k_g(standard.getGuestWinLu(), schedule.getAvgG()));
+					standard.setK_g(CalcUtil.k_g(standard.getGuestWin(), schedule));
 				}
 			}
 		}
