@@ -30,8 +30,6 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					//足球
-					/*from("jms:queue:VirtualTopicConsumers.dataanalysis.standardUpdate?concurrentConsumers=20").to(
-							"bean:standardUpdateListener?method=update").routeId("足球-欧赔更新");*/
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardAvgUpdate?concurrentConsumers=20").to(
 							"bean:standardAvgUpdateListener?method=update").routeId("足球-平均欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingUpdate?concurrentConsumers=10").to(
