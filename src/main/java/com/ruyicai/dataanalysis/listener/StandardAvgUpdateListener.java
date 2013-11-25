@@ -14,6 +14,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 import com.ruyicai.dataanalysis.service.dto.InfoDTO;
+import com.ruyicai.dataanalysis.util.ArithUtil;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -73,13 +74,13 @@ public class StandardAvgUpdateListener {
 				Double standoff = standard.getStandoff(); //和局
 				Double guestWin = standard.getGuestWin(); //客胜
 				if(homeWin!=null && standoff!=null && guestWin!=null) {
-					t_h = t_h + homeWin;
-					t_s = t_s + standoff;
-					t_g = t_g + guestWin;
+					t_h = ArithUtil.add(t_h, homeWin);
+					t_s = ArithUtil.add(t_s, standoff);
+					t_g = ArithUtil.add(t_g, guestWin);
 				} else {
-					t_h = t_h + firstHomeWin;
-					t_s = t_s + firstStandoff;
-					t_g = t_g + firstGuestWin;
+					t_h = ArithUtil.add(t_h, firstHomeWin);
+					t_s = ArithUtil.add(t_s, firstStandoff);
+					t_g = ArithUtil.add(t_g, firstGuestWin);
 				}
 			}
 			updateScheduleAvg(schedule, t_h, t_s, t_g, list.size());
