@@ -20,7 +20,7 @@ public class StandardCache {
 		if (StringUtils.isBlank(value)) {
 			standard = Standard.findByScheduleIdCompanyId(scheduleId, companyId);
 			if (standard!=null) {
-				cacheService.set(key, 24*60*60, standard.toJson());
+				cacheService.set(key, 30*24*60*60, standard.toJson());
 			}
 		} else {
 			standard = Standard.fromJsonToStandard(value);
@@ -30,7 +30,7 @@ public class StandardCache {
 	
 	public void setToMemcache(Standard standard) {
 		String key = StringUtil.join("_", "dadaanalysis", "Standard", String.valueOf(standard.getScheduleID()), String.valueOf(standard.getCompanyID()));
-		cacheService.set(key, 24*60*60, standard.toJson());
+		cacheService.set(key, 30*24*60*60, standard.toJson());
 	}
 	
 }
