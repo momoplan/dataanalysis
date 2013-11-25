@@ -397,4 +397,16 @@ public class SystemController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/standardAvgJms", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData standardAvgJms(@RequestParam("scheduleId") String scheduleId) {
+		ResponseData rd = new ResponseData();
+		try {
+			sendJmsJczUtil.sendStandardAvgUpdateJMS(scheduleId);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
 }
