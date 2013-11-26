@@ -10,13 +10,9 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.TableGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.ruyicai.dataanalysis.cache.StandardCache;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 
@@ -174,35 +170,35 @@ public class Standard implements Comparable<Standard> {
 		this.fanHuanLu = fanHuanLu;
 	}
 
-	@Autowired
-	private transient StandardCache standardCache;
+	/*@Autowired
+	private transient StandardCache standardCache;*/
 	
-	@Transactional
+	/*@Transactional
     public void persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);
         standardCache.setToMemcache(this);
-    }
+    }*/
 	
-	@Transactional
+	/*@Transactional
     public Standard merge() {
         if (this.entityManager == null) this.entityManager = entityManager();
         Standard merged = this.entityManager.merge(this);
         this.entityManager.flush();
         standardCache.setToMemcache(merged);
         return merged;
-    }
+    }*/
 	
-	public static Standard findStandard(Integer scheduleID, Integer companyID) {
+	/*public static Standard findStandard(Integer scheduleID, Integer companyID) {
 		return new Standard().standardCache.getStandard(scheduleID, companyID);
 		
-		/*List<Standard> standards = entityManager().createQuery("select o from Standard o where scheduleID=? and companyID=?", Standard.class)
+		List<Standard> standards = entityManager().createQuery("select o from Standard o where scheduleID=? and companyID=?", Standard.class)
 				.setParameter(1, scheduleID).setParameter(2, companyID).getResultList();
 		if(null == standards || standards.isEmpty()) {
 			return null;
 		}
-		return standards.get(0);*/
-	}
+		return standards.get(0);
+	}*/
 	
 	public static List<Standard> findByScheduleID(Integer scheduleID) {
 		return entityManager().createQuery("select o from Standard o, EuropeCompany c where o.companyID=c.companyID and c.name_Cn is not null and o.scheduleID=? and c.isPrimary=1 order by o.companyID asc", Standard.class)
