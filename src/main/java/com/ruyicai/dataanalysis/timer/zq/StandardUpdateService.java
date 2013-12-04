@@ -76,6 +76,7 @@ public class StandardUpdateService {
 		@Override
 		public void run() {
 			try {
+				long startmillis = System.currentTimeMillis();
 				Document doc = DocumentHelper.parseText(data);
 				List<Element> matches = doc.getRootElement().elements("h");
 				logger.info("足球欧赔更新,size="+(matches==null ? 0 : matches.size()));
@@ -84,6 +85,8 @@ public class StandardUpdateService {
 						doProcess(match);
 					}
 				}
+				long endmillis = System.currentTimeMillis();
+				logger.info("足球欧赔更新-ProcessStandardThread结束,用时:"+(endmillis-startmillis));
 			} catch (Exception e) {
 				logger.error("足球欧赔更新-ProcessStandardThread发生异常", e);
 			}
