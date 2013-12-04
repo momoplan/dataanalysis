@@ -27,6 +27,9 @@ public class SendJmsJclUtil {
 	@Produce(uri = "jms:topic:standardJclUpdate")
 	private ProducerTemplate standardJclUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:scoreModifyJcl")
+	private ProducerTemplate scoreModifyJclTemplate;
+	
 	/**
 	 * 欧赔更新的JMS
 	 * @param body
@@ -64,6 +67,22 @@ public class SendJmsJclUtil {
 			
 			logger.info("scheduleJclFinishTemplate start, event={}", event);
 			scheduleJclFinishTemplate.sendBodyAndHeaders(null, header);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 比分变化的JMS
+	 * @param event
+	 */
+	public void sendScoreModifyJms(String event) {
+		try {
+			Map<String, Object> header = new HashMap<String, Object>();
+			header.put("EVENT", event);
+			
+			logger.info("scoreModifyJclTemplate start, event={}", event);
+			scoreModifyJclTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

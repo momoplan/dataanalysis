@@ -102,6 +102,7 @@ public class TodayScoreJclUpdateService {
 				return;
 			}
 			boolean isModify = false; //是否变化
+			boolean scoreModify = false;
 			
 			String sclassNameJs_old = scheduleJcl.getSclassNameJs();
 			if (!StringUtil.isEmpty(sclassNameJs) && (StringUtil.isEmpty(sclassNameJs_old)||!sclassNameJs.equals(sclassNameJs_old))) {
@@ -154,12 +155,14 @@ public class TodayScoreJclUpdateService {
 			String homeScore_old = scheduleJcl.getHomeScore();
 			if (!StringUtils.equals(homeScore_old, NumberUtil.parseString(homeScore, "0"))) {
 				isModify = true;
+				scoreModify = true;
 				scheduleJcl.setHomeScore(NumberUtil.parseString(homeScore, "0"));
 			}
 			//客队比分
 			String guestScore_old = scheduleJcl.getGuestScore();
 			if (!StringUtils.equals(guestScore_old, NumberUtil.parseString(guestScore, "0"))) {
 				isModify = true;
+				scoreModify = true;
 				scheduleJcl.setGuestScore(NumberUtil.parseString(guestScore, "0"));
 			}
 			//主队第一节比分
@@ -255,16 +258,22 @@ public class TodayScoreJclUpdateService {
 			
 			if (isModify) {
 				scheduleJcl.merge();
-				//之前没有完场，现在已完场
-				if (!StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value())
-						&&StringUtils.equals(scheduleJcl.getMatchState(), MatchStateJcl.wanChang.value())) {
-					//发送完场的Jms
-					String event = scheduleJcl.getEvent();
-					if (StringUtils.isNotBlank(event)) {
-						sendJmsJclUtil.sendScheduleFinishJms(event);
+				if (StringUtils.equals(scheduleJcl.getMatchState(), MatchStateJcl.wanChang.value())) { //已完场
+					if (!StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value())) { //之前的状态不是完场
+						String event = scheduleJcl.getEvent();
+						if (StringUtils.isNotBlank(event)) {
+							sendJmsJclUtil.sendScheduleFinishJms(event); //发送完场的Jms
+						}
+						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId()); //更新排名
 					}
-					//更新联赛排名
-					sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId());
+					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
+					if (StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value()) && scoreModify) {
+						String event = scheduleJcl.getEvent();
+						if (StringUtils.isNotBlank(event)) { 
+							sendJmsJclUtil.sendScoreModifyJms(event); //发送比分变化的Jms
+						}
+						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId()); //更新排名
+					}
 				}
 			}
 		} catch (Exception e) {
