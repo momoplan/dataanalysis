@@ -402,7 +402,7 @@ public class SystemController {
 	ResponseData standardAvgJms(@RequestParam("scheduleId") String scheduleId) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJczUtil.sendStandardAvgUpdateJMS(scheduleId);
+			sendJmsJczUtil.sendStandardAvgUpdateJms(scheduleId);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -362,8 +362,8 @@ public class UpdateQiuTanMatchesService {
 		}
 		//如果赛事已经有了event
 		if (!CommonUtil.isZqEventEmpty(schedule)) {
-			sendJmsJczUtil.sendStandardAvgUpdateJMS(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
-			sendJmsJczUtil.sendLetgoalCacheUpdateJMS(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
+			sendJmsJczUtil.sendStandardAvgUpdateJms(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
+			sendJmsJczUtil.sendLetgoalCacheUpdateJms(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
 		}
 	}
 	

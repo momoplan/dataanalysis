@@ -155,7 +155,7 @@ public class LetgoalDetailUpdateService {
 			letGoal.merge();
 		}
 		if (detailModify) {
-			sendJmsJczUtil.sendLetgoalCacheUpdateJMS(scheduleId); //亚赔缓存更新
+			sendJmsJczUtil.sendLetgoalCacheUpdateJms(scheduleId); //亚赔缓存更新
 		}
 		long endmillis = System.currentTimeMillis();
 		logger.info("足球亚赔Detail更新-doLetGoalDetail,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId

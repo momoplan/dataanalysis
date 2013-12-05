@@ -86,7 +86,7 @@ public class StandardUpdateService {
 					}
 				}
 				long endmillis = System.currentTimeMillis();
-				logger.info("足球欧赔更新-ProcessStandardThread结束,用时:"+(endmillis-startmillis));
+				logger.info("足球欧赔更新-ProcessStandardThread结束,用时:"+(endmillis-startmillis)+",size="+(matches==null ? 0 : matches.size()));
 			} catch (Exception e) {
 				logger.error("足球欧赔更新-ProcessStandardThread发生异常", e);
 			}
@@ -109,7 +109,7 @@ public class StandardUpdateService {
 				}
 			}
 			if (isModify) {
-				sendJmsJczUtil.sendStandardAvgUpdateJMS(scheduleId); //更新平均欧赔
+				sendJmsJczUtil.sendStandardAvgUpdateJms(scheduleId); //更新平均欧赔
 			}
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
@@ -133,8 +133,8 @@ public class StandardUpdateService {
 			String guestWin = values[7]; //客胜
 			String modTime = values[8]; //变化时间
 			
-			//Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
-			Standard standard = Standard.findByScheduleIdCompanyId(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			//Standard standard = Standard.findByScheduleIdCompanyId(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			if (standard==null) {
 				standard = new Standard();
 				standard.setScheduleID(Integer.parseInt(scheduleId));
@@ -154,7 +154,8 @@ public class StandardUpdateService {
 				detail.setStandoff(new Double(firstStandoff));
 				detail.setGuestWin(new Double(firstGuestWin));
 				detail.setModifyTime(standard.getModifyTime());
-				detail.persist();
+				sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+				//detail.persist();
 				if(standard.getHomeWin()!=null) {
 					detail = new StandardDetail();
 					detail.setOddsID(standard.getOddsID());
@@ -163,7 +164,8 @@ public class StandardUpdateService {
 					detail.setStandoff(new Double(standoff));
 					detail.setGuestWin(new Double(guestWin));
 					detail.setModifyTime(standard.getModifyTime());
-					detail.persist();
+					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+					//detail.persist();
 				}
 				return true;
 			} else {
@@ -185,7 +187,8 @@ public class StandardUpdateService {
 					detail.setStandoff(new Double(standoff));
 					detail.setGuestWin(new Double(guestWin));
 					detail.setModifyTime(standard.getModifyTime());
-					detail.persist();
+					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+					//detail.persist();
 					return true;
 				}
 			}

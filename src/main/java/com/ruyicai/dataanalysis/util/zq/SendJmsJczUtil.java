@@ -30,48 +30,63 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:standardAvgUpdate")
 	private ProducerTemplate standardAvgUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:standardDetailSave")
+	private ProducerTemplate standardDetailSaveTemplate;
+	
 	@Produce(uri = "jms:topic:letgoalCacheUpdate")
 	private ProducerTemplate letgoalCacheUpdateTemplate;
 	
 	/**
-	 * 亚赔缓存更新的JMS
+	 * 发送亚赔缓存更新的Jms
 	 * @param body
 	 */
-	public void sendLetgoalCacheUpdateJMS(String body) {
+	public void sendLetgoalCacheUpdateJms(String body) {
 		try {
 			letgoalCacheUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球发送亚赔缓存更新的Jms发生异常", e);
 		}
 	}
 	
 	/**
-	 * 更新平均欧赔的JMS
+	 * 发送更新平均欧赔的Jms
 	 * @param body
 	 */
-	public void sendStandardAvgUpdateJMS(String body) {
+	public void sendStandardAvgUpdateJms(String body) {
 		try {
 			standardAvgUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球发送更新平均欧赔的Jms发生异常", e);
 		}
 	}
 	
 	/**
-	 * 联赛排名更新的Jms
+	 * 发送保存欧赔变化的Jms
 	 * @param body
 	 */
-	public void sendRankingUpdateJMS(Integer body) {
+	public void sendStandardDetailSaveJms(String body) {
+		try {
+			standardDetailSaveTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error("足球发送保存欧赔变化的Jms发生异常", e);
+		}
+	}
+	
+	/**
+	 * 发送联赛排名更新的Jms
+	 * @param body
+	 */
+	public void sendRankingUpdateJms(Integer body) {
 		try {
 			logger.info("rankingUpdateTemplate start, body={}", body);
 			rankingUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球发送联赛排名更新的Jms发生异常", e);
 		}
 	}
 	
 	/**
-	 * 比赛完场的JMS
+	 * 发送比赛完场的Jms
 	 * @param event
 	 */
 	public void sendScheduleFinishJms(String event) {
@@ -82,12 +97,12 @@ public class SendJmsJczUtil {
 			logger.info("scheduleFinishTemplate start, event={}", event);
 			scheduleFinishTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球发送比赛完场的Jms发生异常", e);
 		}
 	}
 	
 	/**
-	 * 比分变化的JMS
+	 * 发送比分变化的Jms
 	 * @param event
 	 */
 	public void sendScoreModifyJms(String event) {
@@ -98,7 +113,7 @@ public class SendJmsJczUtil {
 			logger.info("scoreModifyTemplate start, event={}", event);
 			scoreModifyTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球发送比分变化的Jms发生异常", e);
 		}
 	}
 	

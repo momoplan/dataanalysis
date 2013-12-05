@@ -13,6 +13,9 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 import com.ruyicai.dataanalysis.util.Page;
 
+import flexjson.JSONDeserializer;
+import flexjson.JSONSerializer;
+
 /**
  * @author fuqiang
  * 标准（欧）盘赔率变化表
@@ -60,5 +63,13 @@ public class StandardDetail {
 				.setParameter(1, oddsId);
 		page.setTotalResult(totalQuery.getSingleResult().intValue());
 	}
+	
+	public String toJson() {
+        return new JSONSerializer().exclude("*.class").serialize(this);
+    }
+	
+	public static StandardDetail fromJsonToStandardDetail(String json) {
+        return new JSONDeserializer<StandardDetail>().use(null, StandardDetail.class).deserialize(json);
+    }
 	
 }
