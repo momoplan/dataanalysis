@@ -4,6 +4,8 @@ import org.apache.camel.Body;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 
 /**
@@ -11,6 +13,7 @@ import com.ruyicai.dataanalysis.domain.StandardDetail;
  * @author Administrator
  *
  */
+@Service
 public class StandardDetailSaveListener {
 	
 	private Logger logger = LoggerFactory.getLogger(StandardDetailSaveListener.class);
