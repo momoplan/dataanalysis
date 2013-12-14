@@ -136,17 +136,21 @@ public class StandardUpdateService {
 			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			//Standard standard = Standard.findByScheduleIdCompanyId(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			if (standard==null) {
-				standard = new Standard();
-				standard.setScheduleID(Integer.parseInt(scheduleId));
-				standard.setCompanyID(Integer.parseInt(companyId));
-				standard.setFirstHomeWin(new Double(firstHomeWin));
-				standard.setFirstStandoff(new Double(firstStandoff));
-				standard.setFirstGuestWin(new Double(firstGuestWin));
-				standard.setHomeWin(StringUtil.isEmpty(homeWin) ? null : new Double(homeWin));
-				standard.setStandoff(StringUtil.isEmpty(standoff) ? null : new Double(standoff));
-				standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
-				standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
-				standard.persist();
+				try {
+					standard = new Standard();
+					standard.setScheduleID(Integer.parseInt(scheduleId));
+					standard.setCompanyID(Integer.parseInt(companyId));
+					standard.setFirstHomeWin(new Double(firstHomeWin));
+					standard.setFirstStandoff(new Double(firstStandoff));
+					standard.setFirstGuestWin(new Double(firstGuestWin));
+					standard.setHomeWin(StringUtil.isEmpty(homeWin) ? null : new Double(homeWin));
+					standard.setStandoff(StringUtil.isEmpty(standoff) ? null : new Double(standoff));
+					standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
+					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
+					standard.persist();
+				} catch (Exception e) {
+					logger.error("足球欧赔更新-doOdd-保存standard发生异常", e);
+				}
 				StandardDetail detail = new StandardDetail();
 				detail.setOddsID(standard.getOddsID());
 				detail.setIsEarly(1);
