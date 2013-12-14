@@ -150,6 +150,7 @@ public class StandardUpdateService {
 					standard.persist();
 				} catch (Exception e) {
 					logger.error("足球欧赔更新-doOdd-保存standard发生异常", e);
+					return false;
 				}
 				StandardDetail detail = new StandardDetail();
 				detail.setOddsID(standard.getOddsID());
