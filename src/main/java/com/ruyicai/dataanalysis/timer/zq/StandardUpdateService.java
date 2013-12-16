@@ -51,7 +51,7 @@ public class StandardUpdateService {
 		try {
 			long startmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新开始");
-			String data = httpUtil.getResponse(url+"?min=1", HttpUtil.GET, HttpUtil.UTF8, "");
+			String data = httpUtil.getResponse(url+"?min=2", HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtils.isBlank(data)) {
 				logger.info("足球欧赔更新时获取数据为空");
 				return;
