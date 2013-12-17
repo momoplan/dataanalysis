@@ -44,9 +44,10 @@ public class StandardUpdateService {
 	
 	@PostConstruct
 	public void init() {
-		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 10);
+		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 50);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void process() {
 		try {
 			long startmillis = System.currentTimeMillis();
@@ -56,37 +57,33 @@ public class StandardUpdateService {
 				logger.info("足球欧赔更新时获取数据为空");
 				return;
 			}
-			ProcessStandardThread task = new ProcessStandardThread(data);
-			standardUpdateExecutor.execute(task);
+			Document doc = DocumentHelper.parseText(data);
+			List<Element> matches = doc.getRootElement().elements("h");
+			logger.info("足球欧赔更新,size="+(matches==null ? 0 : matches.size()));
+			if (matches!=null && matches.size()>0) {
+				for(Element match : matches) {
+					ProcessStandardThread task = new ProcessStandardThread(match);
+					standardUpdateExecutor.execute(task);
+				}
+			}
 			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔更新结束,用时:"+(endmillis-startmillis));
+			logger.info("足球欧赔更新结束,用时:"+(endmillis-startmillis)+",size="+(matches==null ? 0 : matches.size()));
 		} catch (Exception e) {
 			logger.error("足球欧赔更新时发生异常", e);
 		}
 	}
 	
 	private final class ProcessStandardThread implements Runnable {
-		private String data;
+		private Element match;
 		
-		public ProcessStandardThread(String data) {
-			this.data = data;
+		public ProcessStandardThread(Element match) {
+			this.match = match;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			try {
-				long startmillis = System.currentTimeMillis();
-				Document doc = DocumentHelper.parseText(data);
-				List<Element> matches = doc.getRootElement().elements("h");
-				logger.info("足球欧赔更新,size="+(matches==null ? 0 : matches.size()));
-				if (matches!=null && matches.size()>0) {
-					for(Element match : matches) {
-						doProcess(match);
-					}
-				}
-				long endmillis = System.currentTimeMillis();
-				logger.info("足球欧赔更新-ProcessStandardThread结束,用时:"+(endmillis-startmillis)+",size="+(matches==null ? 0 : matches.size()));
+				doProcess(match);
 			} catch (Exception e) {
 				logger.error("足球欧赔更新-ProcessStandardThread发生异常", e);
 			}
@@ -203,6 +200,7 @@ public class StandardUpdateService {
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void processAll() {
 		try {
 			long startmillis = System.currentTimeMillis();
@@ -212,10 +210,17 @@ public class StandardUpdateService {
 				logger.info("足球欧赔-processAl更新时获取数据为空");
 				return;
 			}
-			ProcessStandardThread task = new ProcessStandardThread(data);
-			standardUpdateExecutor.execute(task);
+			Document doc = DocumentHelper.parseText(data);
+			List<Element> matches = doc.getRootElement().elements("h");
+			logger.info("足球欧赔更新,size="+(matches==null ? 0 : matches.size()));
+			if (matches!=null && matches.size()>0) {
+				for(Element match : matches) {
+					ProcessStandardThread task = new ProcessStandardThread(match);
+					standardUpdateExecutor.execute(task);
+				}
+			}
 			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔-processAll更新结束,用时:"+(endmillis-startmillis));
+			logger.info("足球欧赔-processAll更新结束,用时:"+(endmillis-startmillis)+",size="+(matches==null ? 0 : matches.size()));
 		} catch (Exception e) {
 			logger.error("足球欧赔-processAl更新时发生异常", e);
 		}
