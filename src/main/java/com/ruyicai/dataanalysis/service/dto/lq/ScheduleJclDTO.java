@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service.dto.lq;
 
+import java.io.Serializable;
 import java.util.Date;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
@@ -7,7 +8,9 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooJson
-public class ScheduleJclDTO {
+public class ScheduleJclDTO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Integer scheduleId;
 	

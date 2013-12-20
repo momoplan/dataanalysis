@@ -449,7 +449,7 @@ public class GlobalInfoService {
 	public Map<String, List<ScheduleDTO>> getSchedulesByDay(String day) {
 		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
 		if (StringUtils.isNotBlank(day)) {
-			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDay", day);
+			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayZq", day);
 			results = cacheService.get(key);
 			if (results==null) {
 				results = getSchedules(day);

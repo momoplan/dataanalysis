@@ -211,7 +211,7 @@ public class SelectController {
 			rd.setErrorCode(ErrorCode.OK.value);
 			rd.setValue(infoService.getSchedulesByDay(day)); 
 			long endmillis = System.currentTimeMillis();
-			logger.info("查询赛事,用时:"+(endmillis - startmillis)+",day="+day);
+			logger.info("查询足球赛事,用时:"+(endmillis - startmillis)+",day="+day);
 		} catch(Exception e) {
 			rd.setErrorCode(ErrorCode.ERROR.value);
 			logger.error(e.getMessage(), e);

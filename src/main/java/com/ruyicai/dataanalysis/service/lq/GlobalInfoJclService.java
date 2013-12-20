@@ -1,14 +1,18 @@
 package com.ruyicai.dataanalysis.service.lq;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.ruyicai.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.lq.CompanyJcl;
 import com.ruyicai.dataanalysis.domain.lq.EuropeCompanyJcl;
 import com.ruyicai.dataanalysis.domain.lq.GlobalCacheJcl;
@@ -21,6 +25,7 @@ import com.ruyicai.dataanalysis.service.dto.lq.InfoJclDTO;
 import com.ruyicai.dataanalysis.service.dto.lq.RankingJclDTO;
 import com.ruyicai.dataanalysis.service.dto.lq.ScheduleJclDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
+import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.lq.CalcJclUtil;
 
@@ -29,8 +34,13 @@ public class GlobalInfoJclService {
 
 	private Logger logger = LoggerFactory.getLogger(GlobalInfoJclService.class);
 	
+	private Calendar calendar = Calendar.getInstance();
+	
 	@Autowired
 	private AnalysisJclService analysisJclService;
+	
+	@Autowired
+	private CacheService cacheService;
 	
 	/**
 	 * 数据分析
@@ -368,6 +378,45 @@ public class GlobalInfoJclService {
 			return null;
 		}
 		return analysisJclService.buildDTO(scheduleJcl);
+	}
+	
+	/**
+	 * 查询赛事
+	 * @return
+	 */
+	public Map<String, List<ScheduleJclDTO>> getSchedulesByDay(String day) {
+		Map<String, List<ScheduleJclDTO>> results = new LinkedHashMap<String, List<ScheduleJclDTO>>();
+		if (StringUtils.isNotBlank(day)) {
+			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayLq", day);
+			results = cacheService.get(key);
+			if (results==null) {
+				results = getSchedules(day);
+				if (results!=null) {
+					cacheService.set(key, results);
+				}
+			}
+		}
+		return results;
+	}
+	
+	private Map<String, List<ScheduleJclDTO>> getSchedules(String day) {
+		Map<String, List<ScheduleJclDTO>> results = new LinkedHashMap<String, List<ScheduleJclDTO>>();
+		Date matchDate = DateUtil.parse("yyyyMMdd", day);
+		calendar.setTime(matchDate);
+		calendar.add(Calendar.DATE, 1);
+		List<ScheduleJcl> list = ScheduleJcl.findByDay(matchDate, calendar.getTime());
+		if (list!=null && list.size()>0) {
+			for (ScheduleJcl scheduleJcl : list) {
+				String sclassId = String.valueOf(scheduleJcl.getSclassId()); //联赛编号
+				List<ScheduleJclDTO> dtoList = results.get(sclassId);
+				if (dtoList==null) {
+					dtoList = new ArrayList<ScheduleJclDTO>();
+				}
+				dtoList.add(analysisJclService.buildDTO(scheduleJcl));
+				results.put(sclassId, dtoList);
+			}
+		}
+		return results;
 	}
 	
 }

@@ -224,6 +224,17 @@ public class ScheduleJcl {
 		return scheduleJcls;
 	}
 	
+	public static List<ScheduleJcl> findByDay(Date startday, Date endday) {
+		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where matchTime>=? and matchTime<?", ScheduleJcl.class)
+				.setParameter(1, startday).setParameter(2, endday).getResultList();
+		if(null != scheduleJcls) {
+			for(ScheduleJcl schedule : scheduleJcls) {
+				buildScheduleJcl(schedule);
+			}
+		}
+		return scheduleJcls;
+	}
+	
 	/**
 	 * 设置球队名称
 	 * @param scheduleJcl

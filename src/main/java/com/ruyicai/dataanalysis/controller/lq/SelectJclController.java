@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ruyicai.dataanalysis.consts.ErrorCode;
 import com.ruyicai.dataanalysis.controller.ResponseData;
 import com.ruyicai.dataanalysis.service.lq.GlobalInfoJclService;
 
@@ -76,6 +78,23 @@ public class SelectJclController {
 		try {
 			rd.setValue(infoJclService.getScheduleDtoByEvent(event));
 		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getSchedules", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getSchedules(@RequestParam("day") String day) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startmillis = System.currentTimeMillis();
+			rd.setErrorCode(ErrorCode.OK.value);
+			rd.setValue(infoJclService.getSchedulesByDay(day)); 
+			long endmillis = System.currentTimeMillis();
+			logger.info("查询篮球赛事,用时:"+(endmillis - startmillis)+",day="+day);
+		} catch(Exception e) {
+			rd.setErrorCode(ErrorCode.ERROR.value);
 			logger.error(e.getMessage(), e);
 		}
 		return rd;
