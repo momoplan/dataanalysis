@@ -299,6 +299,14 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.bdTurn = bdTurn;
     }
     
+    public Integer ScheduleDTO.getBetState() {
+        return this.betState;
+    }
+    
+    public void ScheduleDTO.setBetState(Integer betState) {
+        this.betState = betState;
+    }
+    
     public Collection<DetailResult> ScheduleDTO.getDetailResults() {
         return this.detailResults;
     }

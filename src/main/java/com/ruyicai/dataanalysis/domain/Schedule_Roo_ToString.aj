@@ -16,6 +16,7 @@ privileged aspect Schedule_Roo_ToString {
         sb.append("BbinShow: ").append(getBbinShow()).append(", ");
         sb.append("BdEvent: ").append(getBdEvent()).append(", ");
         sb.append("BdTurn: ").append(getBdTurn()).append(", ");
+        sb.append("BetState: ").append(getBetState()).append(", ");
         sb.append("BfShow: ").append(getBfShow()).append(", ");
         sb.append("Bf_changetime: ").append(getBf_changetime()).append(", ");
         sb.append("EuropeOddsShow: ").append(getEuropeOddsShow()).append(", ");

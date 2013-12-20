@@ -89,6 +89,8 @@ public class ScheduleDTO implements Serializable {
 	
 	private String bdTurn;
 	
+	private Integer betState;
+	
 	private Collection<DetailResult> detailResults;
 	
 	public String toJson() {

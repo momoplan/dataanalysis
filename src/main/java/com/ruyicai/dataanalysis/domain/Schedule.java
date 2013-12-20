@@ -157,6 +157,8 @@ public class Schedule {
 	
 	private String bdTurn;
 	
+	private Integer betState;
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	

@@ -498,4 +498,12 @@ privileged aspect Schedule_Roo_JavaBean {
         this.bdTurn = bdTurn;
     }
     
+    public Integer Schedule.getBetState() {
+        return this.betState;
+    }
+    
+    public void Schedule.setBetState(Integer betState) {
+        this.betState = betState;
+    }
+    
 }
