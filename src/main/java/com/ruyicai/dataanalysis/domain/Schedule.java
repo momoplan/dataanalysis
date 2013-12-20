@@ -390,9 +390,9 @@ public class Schedule {
 		return schedules;
 	}
 	
-	public static List<Schedule> findByDay(Date day) {
-		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where matchTime=?", Schedule.class)
-				.setParameter(1, day).getResultList();
+	public static List<Schedule> findByDay(Date startday, Date endday) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where matchTime>=? and matchTime<?", Schedule.class)
+				.setParameter(1, startday).setParameter(2, endday).getResultList();
 		if(null != schedules) {
 			for(Schedule schedule : schedules) {
 				buildSchedule(schedule);

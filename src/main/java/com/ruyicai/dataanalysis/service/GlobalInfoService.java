@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -35,6 +36,8 @@ import com.ruyicai.dataanalysis.util.zq.CalcUtil;
 public class GlobalInfoService {
 
 	private Logger logger = LoggerFactory.getLogger(GlobalInfoService.class);
+	
+	private Calendar calendar = Calendar.getInstance();
 	
 	@Autowired
 	private AnalysisService analysisService;
@@ -441,7 +444,9 @@ public class GlobalInfoService {
 	public Map<String, List<ScheduleDTO>> getSchedulesByDay(String day) {
 		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
 		Date matchDate = DateUtil.parse("yyyy-MM-dd", day);
-		List<Schedule> list = Schedule.findByDay(matchDate);
+		calendar.setTime(matchDate);
+		calendar.add(Calendar.DATE, 1);
+		List<Schedule> list = Schedule.findByDay(matchDate, calendar.getTime());
 		if (list!=null && list.size()>0) {
 			for (Schedule schedule : list) {
 				String sclassID = String.valueOf(schedule.getSclassID()); //联赛编号
