@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service.dto;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
@@ -12,8 +13,10 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooJson
-public class ScheduleDTO {
+public class ScheduleDTO implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private int scheduleID;
 	
 	private Integer sclassID;
