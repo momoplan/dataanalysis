@@ -307,6 +307,14 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.betState = betState;
     }
     
+    public Date ScheduleDTO.getBetEndTime() {
+        return this.betEndTime;
+    }
+    
+    public void ScheduleDTO.setBetEndTime(Date betEndTime) {
+        this.betEndTime = betEndTime;
+    }
+    
     public Collection<DetailResult> ScheduleDTO.getDetailResults() {
         return this.detailResults;
     }

@@ -66,6 +66,8 @@ public class ScheduleJclDTO implements Serializable {
 	
 	private Integer betState;
 	
+	private Date betEndTime;
+	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class").deepSerialize(this);
     }

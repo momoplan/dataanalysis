@@ -103,6 +103,8 @@ public class ScheduleJcl {
 	
 	private Integer betState;
 	
+	private Date betEndTime;
+	
 	@Autowired
 	private transient ScheduleJclCache scheduleJclCache;
 	

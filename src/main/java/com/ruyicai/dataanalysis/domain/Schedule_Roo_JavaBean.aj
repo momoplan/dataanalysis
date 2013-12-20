@@ -506,4 +506,12 @@ privileged aspect Schedule_Roo_JavaBean {
         this.betState = betState;
     }
     
+    public Date Schedule.getBetEndTime() {
+        return this.betEndTime;
+    }
+    
+    public void Schedule.setBetEndTime(Date betEndTime) {
+        this.betEndTime = betEndTime;
+    }
+    
 }

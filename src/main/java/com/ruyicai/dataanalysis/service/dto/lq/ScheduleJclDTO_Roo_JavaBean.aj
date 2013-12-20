@@ -225,4 +225,12 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
         this.betState = betState;
     }
     
+    public Date ScheduleJclDTO.getBetEndTime() {
+        return this.betEndTime;
+    }
+    
+    public void ScheduleJclDTO.setBetEndTime(Date betEndTime) {
+        this.betEndTime = betEndTime;
+    }
+    
 }

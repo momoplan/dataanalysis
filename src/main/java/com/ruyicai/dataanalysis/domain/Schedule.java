@@ -159,6 +159,8 @@ public class Schedule {
 	
 	private Integer betState;
 	
+	private Date betEndTime;
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	
