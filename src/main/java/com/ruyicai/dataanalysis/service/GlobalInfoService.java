@@ -453,6 +453,9 @@ public class GlobalInfoService {
 			results = cacheService.get(key);
 			if (results==null) {
 				results = getSchedules(day);
+				if (results!=null) {
+					cacheService.set(key, results);
+				}
 			}
 		}
 		return results;
