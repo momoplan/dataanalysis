@@ -36,6 +36,9 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:letgoalCacheUpdate")
 	private ProducerTemplate letgoalCacheUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:schedulesCacheUpdate")
+	private ProducerTemplate schedulesCacheUpdateTemplate;
+	
 	/**
 	 * 发送亚赔缓存更新的Jms
 	 * @param body
@@ -114,6 +117,18 @@ public class SendJmsJczUtil {
 			scoreModifyTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error("足球发送比分变化的Jms发生异常", e);
+		}
+	}
+	
+	/**
+	 * 发送赛事缓存更新的Jms
+	 * @param body
+	 */
+	public void sendSchedulesCacheUpdateJms(Integer body) {
+		try {
+			schedulesCacheUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error("足球发送赛事缓存更新的Jms发生异常", e);
 		}
 	}
 	

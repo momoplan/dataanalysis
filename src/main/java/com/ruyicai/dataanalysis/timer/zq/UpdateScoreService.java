@@ -178,6 +178,8 @@ public class UpdateScoreService {
 						sendJmsJczUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 				}
+				//发送赛事缓存更新的Jms
+				sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
 			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

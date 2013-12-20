@@ -20,6 +20,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
 public class UpdateScheduleService {
@@ -37,6 +38,9 @@ public class UpdateScheduleService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取足球所有联赛下所有赛事");
@@ -285,6 +289,8 @@ public class UpdateScheduleService {
 							updateRanking(schedule.getScheduleID(), updateRanking); //更新排名
 						}
 					}
+					//发送赛事缓存更新的Jms
+					sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
 				}
 			}
 		} catch(Exception e) {
