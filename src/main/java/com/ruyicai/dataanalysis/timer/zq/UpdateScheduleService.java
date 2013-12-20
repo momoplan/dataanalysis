@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.service;
+package com.ruyicai.dataanalysis.timer.zq;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
+import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
