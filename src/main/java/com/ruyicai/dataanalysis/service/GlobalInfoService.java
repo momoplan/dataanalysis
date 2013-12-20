@@ -463,7 +463,7 @@ public class GlobalInfoService {
 	
 	private Map<String, List<ScheduleDTO>> getSchedules(String day) {
 		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
-		Date matchDate = DateUtil.parse("yyyy-MM-dd", day);
+		Date matchDate = DateUtil.parse("yyyyMMdd", day);
 		calendar.setTime(matchDate);
 		calendar.add(Calendar.DATE, 1);
 		List<Schedule> list = Schedule.findByDay(matchDate, calendar.getTime());
