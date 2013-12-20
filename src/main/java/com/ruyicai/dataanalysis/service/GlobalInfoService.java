@@ -2,7 +2,10 @@ package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,7 @@ import com.ruyicai.dataanalysis.service.dto.InfoDTO;
 import com.ruyicai.dataanalysis.service.dto.RankingDTO;
 import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
+import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.Page;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
@@ -428,6 +432,28 @@ public class GlobalInfoService {
 				letGoalDetail.setGoalName(CalcUtil.handicap(letGoalDetail.getGoal()));
 			}
 		}
+	}
+	
+	/**
+	 * 查询赛事
+	 * @return
+	 */
+	public Map<String, List<ScheduleDTO>> getSchedulesByDay(String day) {
+		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
+		Date matchDate = DateUtil.parse(day, "yyyy-MM-dd");
+		List<Schedule> list = Schedule.findByDay(matchDate);
+		if (list!=null && list.size()>0) {
+			for (Schedule schedule : list) {
+				String sclassID = String.valueOf(schedule.getSclassID()); //联赛编号
+				List<ScheduleDTO> dtoList = results.get(sclassID);
+				if (dtoList==null) {
+					dtoList = new ArrayList<ScheduleDTO>();
+				}
+				dtoList.add(analysisService.buildDTO(schedule));
+				results.put(sclassID, dtoList);
+			}
+		}
+		return results;
 	}
 	
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.ruyicai.dataanalysis.consts.ErrorCode;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
@@ -196,6 +195,23 @@ public class SelectController {
 			rd.setValue(page);
 			long endmillis = System.currentTimeMillis();
 			logger.info("查询亚赔变化,用时:"+(endmillis - startmillis));
+		} catch(Exception e) {
+			rd.setErrorCode(ErrorCode.ERROR.value);
+			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getSchedules", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getSchedules(@RequestParam("day") String day) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startmillis = System.currentTimeMillis();
+			rd.setErrorCode(ErrorCode.OK.value);
+			rd.setValue(infoService.getSchedulesByDay(day)); 
+			long endmillis = System.currentTimeMillis();
+			logger.info("查询赛事,用时:"+(endmillis - startmillis));
 		} catch(Exception e) {
 			rd.setErrorCode(ErrorCode.ERROR.value);
 			logger.error(e.getMessage(), e);

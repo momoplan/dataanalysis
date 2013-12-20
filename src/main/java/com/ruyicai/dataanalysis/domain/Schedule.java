@@ -390,6 +390,17 @@ public class Schedule {
 		return schedules;
 	}
 	
+	public static List<Schedule> findByDay(Date day) {
+		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where matchTime=?", Schedule.class)
+				.setParameter(1, day).getResultList();
+		if(null != schedules) {
+			for(Schedule schedule : schedules) {
+				buildSchedule(schedule);
+			}
+		}
+		return schedules;
+	}
+	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class", "scheduleCache").serialize(this);
     }
