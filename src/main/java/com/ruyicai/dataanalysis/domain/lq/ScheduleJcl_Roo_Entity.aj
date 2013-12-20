@@ -4,7 +4,6 @@
 package com.ruyicai.dataanalysis.domain.lq;
 
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
-
 import java.lang.Integer;
 import java.util.List;
 import javax.persistence.Entity;

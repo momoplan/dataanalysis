@@ -290,14 +290,6 @@ privileged aspect ScheduleJcl_Roo_JavaBean {
         this.avgG = avgG;
     }
     
-    public String ScheduleJcl.getTurn() {
-        return this.turn;
-    }
-    
-    public void ScheduleJcl.setTurn(String turn) {
-        this.turn = turn;
-    }
-    
     public String ScheduleJcl.getLetScore() {
         return this.letScore;
     }
@@ -312,6 +304,22 @@ privileged aspect ScheduleJcl_Roo_JavaBean {
     
     public void ScheduleJcl.setTotalScore(String totalScore) {
         this.totalScore = totalScore;
+    }
+    
+    public String ScheduleJcl.getTurn() {
+        return this.turn;
+    }
+    
+    public void ScheduleJcl.setTurn(String turn) {
+        this.turn = turn;
+    }
+    
+    public Integer ScheduleJcl.getBetState() {
+        return this.betState;
+    }
+    
+    public void ScheduleJcl.setBetState(Integer betState) {
+        this.betState = betState;
     }
     
 }

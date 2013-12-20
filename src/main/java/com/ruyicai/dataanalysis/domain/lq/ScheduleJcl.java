@@ -10,19 +10,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.ruyicai.dataanalysis.cache.lq.ScheduleJclCache;
-import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
 import flexjson.JSON;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 
-/**
- * 竞彩篮球赛程赛果
- * @author Administrator
- *
- */
 @RooJavaBean
 @RooToString
 @RooJson
@@ -107,6 +101,7 @@ public class ScheduleJcl {
 	
 	private String turn;
 	
+	private Integer betState;
 	
 	@Autowired
 	private transient ScheduleJclCache scheduleJclCache;

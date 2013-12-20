@@ -12,6 +12,7 @@ privileged aspect ScheduleJcl_Roo_ToString {
         sb.append("AddTime: ").append(getAddTime()).append(", ");
         sb.append("AvgG: ").append(getAvgG()).append(", ");
         sb.append("AvgH: ").append(getAvgH()).append(", ");
+        sb.append("BetState: ").append(getBetState()).append(", ");
         sb.append("Event: ").append(getEvent()).append(", ");
         sb.append("GuestAddTime1: ").append(getGuestAddTime1()).append(", ");
         sb.append("GuestAddTime2: ").append(getGuestAddTime2()).append(", ");

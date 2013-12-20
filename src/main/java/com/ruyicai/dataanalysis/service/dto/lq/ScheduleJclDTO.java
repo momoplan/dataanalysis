@@ -61,6 +61,8 @@ public class ScheduleJclDTO {
 	
 	private String turn;
 	
+	private Integer betState;
+	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class").deepSerialize(this);
     }

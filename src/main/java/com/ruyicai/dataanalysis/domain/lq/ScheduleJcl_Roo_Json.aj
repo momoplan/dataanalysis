@@ -4,7 +4,6 @@
 package com.ruyicai.dataanalysis.domain.lq;
 
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
-
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import java.lang.String;

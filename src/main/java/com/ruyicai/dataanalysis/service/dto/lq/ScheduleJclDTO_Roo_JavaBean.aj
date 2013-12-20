@@ -217,4 +217,12 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
         this.turn = turn;
     }
     
+    public Integer ScheduleJclDTO.getBetState() {
+        return this.betState;
+    }
+    
+    public void ScheduleJclDTO.setBetState(Integer betState) {
+        this.betState = betState;
+    }
+    
 }
