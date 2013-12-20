@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ruyicai.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.Company;
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.EuropeCompany;
@@ -41,6 +43,9 @@ public class GlobalInfoService {
 	
 	@Autowired
 	private AnalysisService analysisService;
+	
+	@Autowired
+	private CacheService cacheService;
 	
 	/**
 	 * 竞彩足球数据分析
@@ -442,6 +447,18 @@ public class GlobalInfoService {
 	 * @return
 	 */
 	public Map<String, List<ScheduleDTO>> getSchedulesByDay(String day) {
+		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
+		if (StringUtils.isNotBlank(day)) {
+			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDay", day);
+			results = cacheService.get(key);
+			if (results==null) {
+				results = getSchedules(day);
+			}
+		}
+		return results;
+	}
+	
+	private Map<String, List<ScheduleDTO>> getSchedules(String day) {
 		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
 		Date matchDate = DateUtil.parse("yyyy-MM-dd", day);
 		calendar.setTime(matchDate);
