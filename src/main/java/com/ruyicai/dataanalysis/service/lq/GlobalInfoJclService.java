@@ -399,7 +399,7 @@ public class GlobalInfoJclService {
 		return results;
 	}
 	
-	private Map<String, List<ScheduleJclDTO>> getSchedules(String day) {
+	public Map<String, List<ScheduleJclDTO>> getSchedules(String day) {
 		Map<String, List<ScheduleJclDTO>> results = new LinkedHashMap<String, List<ScheduleJclDTO>>();
 		Date matchDate = DateUtil.parse("yyyyMMdd", day);
 		calendar.setTime(matchDate);

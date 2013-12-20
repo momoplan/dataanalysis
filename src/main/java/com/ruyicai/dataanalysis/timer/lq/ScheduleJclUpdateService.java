@@ -379,6 +379,8 @@ public class ScheduleJclUpdateService {
 							updateRanking(scheduleJcl.getScheduleId(), updateRanking); //更新排名
 						}
 					}
+					//发送赛事缓存更新的Jms
+					sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
 				}
 			}
 		} catch(Exception e) {

@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.listener;
+package com.ruyicai.dataanalysis.listener.lq;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,23 +11,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.cache.CacheService;
-import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.service.GlobalInfoService;
-import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
+import com.ruyicai.dataanalysis.service.dto.lq.ScheduleJclDTO;
+import com.ruyicai.dataanalysis.service.lq.GlobalInfoJclService;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 /**
- * 足球赛事缓存更新的Jms监听
+ * 篮球赛事缓存更新的Jms监听
  * @author Administrator
  *
  */
 @Service
-public class SchedulesCacheUpdateListener {
+public class SchedulesJclCacheUpdateListener {
 
-	private Logger logger = LoggerFactory.getLogger(SchedulesCacheUpdateListener.class);
+	private Logger logger = LoggerFactory.getLogger(SchedulesJclCacheUpdateListener.class);
 	
 	@Autowired
-	private GlobalInfoService infoService;
+	private GlobalInfoJclService infoService;
 	
 	@Autowired
 	private CacheService cacheService;
@@ -38,17 +38,17 @@ public class SchedulesCacheUpdateListener {
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
 			}
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
-			if (schedule==null) {
+			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJcl(Integer.parseInt(scheduleId));
+			if (scheduleJcl==null) {
 				return;
 			}
-			Date matchTime = schedule.getMatchTime();
+			Date matchTime = scheduleJcl.getMatchTime();
 			if (matchTime==null) {
 				return;
 			}
 			String day = new SimpleDateFormat("yyyyMMdd").format(matchTime);
-			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayZq", day);
-			Map<String, List<ScheduleDTO>> value = cacheService.get(key);
+			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayLq", day);
+			Map<String, List<ScheduleJclDTO>> value = cacheService.get(key);
 			if (value==null) {
 				return;
 			}
@@ -57,9 +57,9 @@ public class SchedulesCacheUpdateListener {
 				cacheService.set(key, value);
 			}
 			long endmillis = System.currentTimeMillis();
-			logger.info("足球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId+",day="+day);
+			logger.info("篮球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId+",day="+day);
 		} catch (Exception e) {
-			logger.error("足球赛事缓存更新的Jms监听发生异常,scheduleId="+scheduleId, e);
+			logger.error("篮球赛事缓存更新的Jms监听发生异常,scheduleId="+scheduleId, e);
 		}
 	}
 	

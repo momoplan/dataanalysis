@@ -42,11 +42,13 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 							"bean:schedulesCacheUpdateListener?method=process").routeId("足球-赛事缓存更新");
 					//篮球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=10").to(
-							"bean:standarJclUpdateListener?method=update").routeId("竞彩篮球-百家欧赔更新");
+							"bean:standarJclUpdateListener?method=update").routeId("篮球-百家欧赔更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=10").to(
-							"bean:rankingJclUpdateListener?method=update").routeId("竞彩篮球-联赛排名更新");
+							"bean:rankingJclUpdateListener?method=update").routeId("篮球-联赛排名更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=10").to(
-							"bean:scheduleJclFinishListener?method=update").routeId("竞彩篮球-完场的监听");
+							"bean:scheduleJclFinishListener?method=update").routeId("篮球-完场的监听");
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.schedulesJclCacheUpdate?concurrentConsumers=10").to(
+							"bean:schedulesJclCacheUpdateListener?method=process").routeId("篮球-赛事缓存更新");
 				}
 			});
 		} catch (Exception e) {

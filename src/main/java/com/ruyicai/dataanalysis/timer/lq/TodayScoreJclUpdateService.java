@@ -275,6 +275,8 @@ public class TodayScoreJclUpdateService {
 						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId()); //更新排名
 					}
 				}
+				//发送赛事缓存更新的Jms
+				sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
 			}
 		} catch (Exception e) {
 			logger.error("解析竞彩篮球-今日比分异常", e);

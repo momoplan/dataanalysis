@@ -30,6 +30,9 @@ public class SendJmsJclUtil {
 	@Produce(uri = "jms:topic:scoreModifyJcl")
 	private ProducerTemplate scoreModifyJclTemplate;
 	
+	@Produce(uri = "jms:topic:schedulesJclCacheUpdate")
+	private ProducerTemplate schedulesJclCacheUpdateTemplate;
+	
 	/**
 	 * 欧赔更新的JMS
 	 * @param body
@@ -85,6 +88,18 @@ public class SendJmsJclUtil {
 			scoreModifyJclTemplate.sendBodyAndHeaders(null, header);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 发送赛事缓存更新的Jms
+	 * @param body
+	 */
+	public void sendSchedulesCacheUpdateJms(Integer body) {
+		try {
+			schedulesJclCacheUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error("篮球发送赛事缓存更新的Jms发生异常", e);
 		}
 	}
 	
