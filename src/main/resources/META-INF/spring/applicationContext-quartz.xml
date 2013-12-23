@@ -242,7 +242,7 @@
    
    <bean id="fetchNewsTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="fetchNewsJobDetail"></property>
-   		<property name="cronExpression" value="0 */10 * * * ?"></property>  <!-- 10分钟 -->
+   		<property name="cronExpression" value="0 */20 * * * ?"></property>  <!-- 20分钟 -->
    </bean>
    
    <!-- 总管理器 -->
