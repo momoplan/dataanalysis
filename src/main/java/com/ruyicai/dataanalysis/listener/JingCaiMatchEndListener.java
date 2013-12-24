@@ -4,9 +4,12 @@ import org.apache.camel.Header;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
+import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
+import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 /**
  *  竞彩赛事停售监听
@@ -17,6 +20,12 @@ import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 public class JingCaiMatchEndListener {
 
 	private Logger logger = LoggerFactory.getLogger(JingCaiMatchEndListener.class);
+	
+	@Autowired
+	private SendJmsJclUtil sendJmsJclUtil;
+	
+	@Autowired
+	private SendJmsJczUtil sendJmsJczUtil;
 	
 	public void process(@Header("EVENT") String event) {
 		try {
@@ -43,6 +52,8 @@ public class JingCaiMatchEndListener {
 		}
 		scheduleJcl.setBetState(0); //停售
 		scheduleJcl.merge();
+		//发送赛事缓存更新的Jms
+		sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
 	}
 	
 	private void processZq(String event) {
@@ -52,6 +63,8 @@ public class JingCaiMatchEndListener {
 		}
 		schedule.setBetState(0); //停售
 		schedule.merge();
+		//发送赛事缓存更新的Jms
+		sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
 	}
 	
 }
