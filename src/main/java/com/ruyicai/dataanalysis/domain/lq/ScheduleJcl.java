@@ -149,14 +149,16 @@ public class ScheduleJcl {
         return scheduleJcl;
     }
 	
-	public static ScheduleJcl findByEvent(String event) {
+	public static ScheduleJcl findByEvent(String event, boolean buildSchedule) {
 		List<ScheduleJcl> scheduleJcls = entityManager().createQuery("select o from ScheduleJcl o where event=?", ScheduleJcl.class)
 				.setParameter(1, event).getResultList();
 		if(null == scheduleJcls || scheduleJcls.isEmpty()) {
 			return null;
 		}
 		ScheduleJcl scheduleJcl = scheduleJcls.get(0);
-		buildScheduleJcl(scheduleJcl);
+		if (buildSchedule) {
+			buildScheduleJcl(scheduleJcl);
+		}
         return scheduleJcl;
 	}
 	

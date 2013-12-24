@@ -53,7 +53,7 @@ public class GlobalInfoService {
 	 * @return
 	 */
 	public InfoDTO getInfo(String event) {
-		Schedule schedule = Schedule.findByEvent(event);
+		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
 			return null;
 		}
@@ -319,7 +319,7 @@ public class GlobalInfoService {
 	
 	public ScheduleDTO getImmediateScore(String event) {
 		logger.info("开始获取即时比分数据, event:{}", new String[] {event});
-		Schedule schedule = Schedule.findByEvent(event);
+		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
 			return null;
 		}
@@ -349,7 +349,7 @@ public class GlobalInfoService {
 	
 	public void updateImmediateScore(String event) {
 		logger.info("开始更新即时比分数据, event:{}", new String[] {event});
-		Schedule schedule = Schedule.findByEvent(event);
+		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
 			return;
 		}
@@ -402,7 +402,7 @@ public class GlobalInfoService {
 		if (StringUtils.isBlank(event)) {
 			return null;
 		}
-		Schedule schedule = Schedule.findByEvent(event);
+		Schedule schedule = Schedule.findByEvent(event, true);
 		if(schedule==null) {
 			return null;
 		}

@@ -218,14 +218,16 @@ public class Schedule {
         return schedule;
     }
 	
-	public static Schedule findByEvent(String event) {
+	public static Schedule findByEvent(String event, boolean buildSchedule) {
 		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where event=?", Schedule.class)
 				.setParameter(1, event).getResultList();
 		if(null == schedules || schedules.isEmpty()) {
 			return null;
 		}
 		Schedule schedule = schedules.get(0);
-		buildSchedule(schedule);
+		if (buildSchedule) {
+			buildSchedule(schedule);
+		}
         return schedule;
 	}
 	

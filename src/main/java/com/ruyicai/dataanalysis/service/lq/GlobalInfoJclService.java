@@ -48,7 +48,7 @@ public class GlobalInfoJclService {
 	 * @return
 	 */
 	public InfoJclDTO getInfo(String event) {
-		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event);
+		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, true);
 		if(null == scheduleJcl) {
 			return null;
 		}
@@ -171,7 +171,7 @@ public class GlobalInfoJclService {
 	 * @return
 	 */
 	public ScheduleJclDTO getImmediateScore(String event) {
-		ScheduleJcl schedule = ScheduleJcl.findByEvent(event);
+		ScheduleJcl schedule = ScheduleJcl.findByEvent(event, true);
 		if(null == schedule) {
 			return null;
 		}
@@ -373,7 +373,7 @@ public class GlobalInfoJclService {
 		if (StringUtils.isBlank(event)) {
 			return null;
 		}
-		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event);
+		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, true);
 		if(scheduleJcl==null) {
 			return null;
 		}

@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.listener;
+package com.ruyicai.dataanalysis.listener.zq;
 
 import org.apache.camel.Body;
 import org.slf4j.Logger;

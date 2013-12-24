@@ -26,7 +26,7 @@ public class ScheduleJclFinishListener {
 			if (StringUtils.isBlank(event)||!StringUtils.startsWith(event, "0")) { //不是篮球
 				return ;
 			}
-			ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event);
+			ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
 			if (scheduleJcl==null) {
 				return ;
 			}

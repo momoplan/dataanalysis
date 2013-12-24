@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.listener;
+package com.ruyicai.dataanalysis.listener.zq;
 
 import java.math.BigDecimal;
 import java.util.Collection;

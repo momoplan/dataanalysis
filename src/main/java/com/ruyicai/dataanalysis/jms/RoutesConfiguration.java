@@ -65,6 +65,10 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					.redeliveryDelay(3000);
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=10").to(
 							"bean:scheduleJclFinishListener?method=update").routeId("竞彩赛果更新通知");
+					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaistartsell-topic?concurrentConsumers=10").to(
+							"bean:jingCaiMatchStartListener?method=process").routeId("竞彩赛事开售通知");
+					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaiendsell-topic?concurrentConsumers=10").to(
+							"bean:jingCaiMatchEndListener?method=process").routeId("竞彩赛事停售通知");
 				}
 			});
 		} catch (Exception e) {
