@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
-import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
@@ -55,7 +54,7 @@ public class JingCaiMatchStartListener {
 		Integer betState = scheduleJcl.getBetState();
 		Date betEndTime = scheduleJcl.getBetEndTime();
 		
-		Date endDate = DateUtil.parse("yyyy-MM-dd HH:mm:ss", endTime);
+		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
 		//投注状态
 		if (betState==null || betState!=1) {
@@ -82,7 +81,7 @@ public class JingCaiMatchStartListener {
 		Integer betState = schedule.getBetState();
 		Date betEndTime = schedule.getBetEndTime();
 		
-		Date endDate = DateUtil.parse("yyyy-MM-dd HH:mm:ss", endTime);
+		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
 		//投注状态
 		if (betState==null || betState!=1) {
