@@ -35,7 +35,7 @@ public class SelectController {
 			long startMills = System.currentTimeMillis();
 			rd.setValue(infoService.getInfo(event));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getInfo,用时:"+(endMills-startMills));
+			logger.info("竞足getInfo,用时:"+(endMills-startMills)+",event="+event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

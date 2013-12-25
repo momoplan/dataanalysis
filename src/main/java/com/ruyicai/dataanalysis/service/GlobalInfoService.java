@@ -53,7 +53,10 @@ public class GlobalInfoService {
 	 * @return
 	 */
 	public InfoDTO getInfo(String event) {
+		long startMills = System.currentTimeMillis();
 		Schedule schedule = Schedule.findByEvent(event, true);
+		long endMills = System.currentTimeMillis();
+		logger.info("竞足getInfo-schedule,用时:"+(endMills-startMills)+",event="+event);
 		if(null == schedule) {
 			return null;
 		}
