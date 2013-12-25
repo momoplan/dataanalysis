@@ -51,8 +51,8 @@ public class JingCaiMatchEndListener {
 			return;
 		}
 		Integer betState = scheduleJcl.getBetState();
-		if (betState==null || betState!=0) {
-			scheduleJcl.setBetState(0); //停售
+		if (betState==null || betState!=2) {
+			scheduleJcl.setBetState(2); //截止
 			scheduleJcl.merge();
 			//发送赛事缓存更新的Jms
 			sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
@@ -65,8 +65,8 @@ public class JingCaiMatchEndListener {
 			return;
 		}
 		Integer betState = schedule.getBetState();
-		if (betState==null || betState!=0) {
-			schedule.setBetState(0); //停售
+		if (betState==null || betState!=2) {
+			schedule.setBetState(2); //截止
 			schedule.merge();
 			//发送赛事缓存更新的Jms
 			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());

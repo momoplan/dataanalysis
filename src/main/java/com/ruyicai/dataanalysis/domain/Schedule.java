@@ -157,7 +157,7 @@ public class Schedule {
 	
 	private String bdTurn;
 	
-	private Integer betState;
+	private Integer betState; //0:不能投注;1:在售;2:已截止
 	
 	private Date betEndTime;
 	
