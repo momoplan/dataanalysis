@@ -32,7 +32,10 @@ public class SelectController {
 	ResponseData getInfo(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
+			long startMills = System.currentTimeMillis();
 			rd.setValue(infoService.getInfo(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getInfo,用时:"+(endMills-startMills));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
