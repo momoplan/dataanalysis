@@ -50,10 +50,13 @@ public class JingCaiMatchEndListener {
 		if (scheduleJcl==null) {
 			return;
 		}
-		scheduleJcl.setBetState(0); //停售
-		scheduleJcl.merge();
-		//发送赛事缓存更新的Jms
-		sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
+		Integer betState = scheduleJcl.getBetState();
+		if (betState==null || betState!=0) {
+			scheduleJcl.setBetState(0); //停售
+			scheduleJcl.merge();
+			//发送赛事缓存更新的Jms
+			sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
+		}
 	}
 	
 	private void processZq(String event) {
@@ -61,10 +64,13 @@ public class JingCaiMatchEndListener {
 		if (schedule==null) {
 			return;
 		}
-		schedule.setBetState(0); //停售
-		schedule.merge();
-		//发送赛事缓存更新的Jms
-		sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+		Integer betState = schedule.getBetState();
+		if (betState==null || betState!=0) {
+			schedule.setBetState(0); //停售
+			schedule.merge();
+			//发送赛事缓存更新的Jms
+			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+		}
 	}
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
+import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
@@ -28,10 +29,10 @@ public class JingCaiMatchStartListener {
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
 	
-	public void process(@Header("EVENT") String event, @Header("ENDTIME") Date endTime) {
+	public void process(@Header("EVENT") String event, @Header("ENDTIME") String endTime) {
 		try {
 			logger.info("竞彩赛事开售监听 start event="+event+",endTime="+endTime);
-			if (StringUtils.isBlank(event)||endTime==null) {
+			if (StringUtils.isBlank(event)||StringUtils.isBlank(endTime)) {
 				return;
 			}
 			String[] events = StringUtils.split(event, "_");
@@ -46,28 +47,58 @@ public class JingCaiMatchStartListener {
 		}
 	}
 	
-	private void processLq(String event, Date endTime) {
+	private void processLq(String event, String endTime) {
 		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
 		if (scheduleJcl==null) {
 			return;
 		}
-		scheduleJcl.setBetState(1); //开售
-		scheduleJcl.setBetEndTime(endTime);
-		scheduleJcl.merge();
-		//发送赛事缓存更新的Jms
-		sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
+		Integer betState = scheduleJcl.getBetState();
+		Date betEndTime = scheduleJcl.getBetEndTime();
+		
+		Date endDate = DateUtil.parse("yyyy-MM-dd HH:mm:ss", endTime);
+		boolean modify = false;
+		//投注状态
+		if (betState==null || betState!=1) {
+			scheduleJcl.setBetState(1); //开售
+			modify = true;
+		}
+		//投注截止时间
+		if (endDate!=null && (betEndTime==null || betEndTime.getTime()!=endDate.getTime())) {
+			scheduleJcl.setBetEndTime(endDate);
+			modify = true;
+		}
+		if (modify) {
+			scheduleJcl.merge();
+			//发送赛事缓存更新的Jms
+			sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
+		}
 	}
 	
-	private void processZq(String event, Date endTime) {
+	private void processZq(String event, String endTime) {
 		Schedule schedule = Schedule.findByEvent(event, false);
 		if (schedule==null) {
 			return;
 		}
-		schedule.setBetState(1); //开售
-		schedule.setBetEndTime(endTime);
-		schedule.merge();
-		//发送赛事缓存更新的Jms
-		sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+		Integer betState = schedule.getBetState();
+		Date betEndTime = schedule.getBetEndTime();
+		
+		Date endDate = DateUtil.parse("yyyy-MM-dd HH:mm:ss", endTime);
+		boolean modify = false;
+		//投注状态
+		if (betState==null || betState!=1) {
+			schedule.setBetState(1); //开售
+			modify = true;
+		}
+		//投注截止时间
+		if (endDate!=null && (betEndTime==null || betEndTime.getTime()!=endDate.getTime())) {
+			schedule.setBetEndTime(endDate);
+			modify = true;
+		}
+		if (modify) {
+			schedule.merge();
+			//发送赛事缓存更新的Jms
+			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+		}
 	}
 	
 }
