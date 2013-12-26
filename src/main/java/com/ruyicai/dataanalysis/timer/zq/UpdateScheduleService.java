@@ -334,25 +334,33 @@ public class UpdateScheduleService {
 	}
 	
 	public void deleteWeiKaiSchedule(Date date) {
-		calendar.setTime(date);
-		calendar.add(Calendar.DATE, 1);
-		List<Schedule> list = Schedule.findByDay(date, calendar.getTime());
-		boolean isDel = false;
-		if (list!=null && list.size()>0) {
-			for (Schedule schedule : list) {
-				Integer matchState = schedule.getMatchState();
-				if (matchState!=null && matchState==0) { //未开赛
-					schedule.remove();
-					logger.info("删除schedule,id="+schedule.getScheduleID());
-					if (!isDel) {
-						isDel = true;
+		try {
+			logger.info("删除未开赛赛事 开始");
+			long startMills = System.currentTimeMillis();
+			calendar.setTime(date);
+			calendar.add(Calendar.DATE, 1);
+			List<Schedule> list = Schedule.findByDay(date, calendar.getTime());
+			boolean isDel = false;
+			if (list!=null && list.size()>0) {
+				for (Schedule schedule : list) {
+					Integer matchState = schedule.getMatchState();
+					if (matchState!=null && matchState==0) { //未开赛
+						schedule.remove();
+						logger.info("删除schedule,id="+schedule.getScheduleID());
+						if (!isDel) {
+							isDel = true;
+						}
 					}
 				}
 			}
-		}
-		if (isDel) {
-			processDateAndSclassID(date, null, false); //重新获取赛事
-			schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+			if (isDel) {
+				processDateAndSclassID(date, null, false); //重新获取赛事
+				schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+			}
+			long endMills = System.currentTimeMillis();
+			logger.info("删除未开赛赛事 结束,用时:"+(endMills-startMills));
+		} catch (Exception e) {
+			logger.error("删除未开赛赛事发生异常", e);
 		}
 	}
 	

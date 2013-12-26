@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.controller;
 
+import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.service.GlobalInfoService;
 import com.ruyicai.dataanalysis.timer.news.FetchNewsService;
@@ -22,6 +22,7 @@ import com.ruyicai.dataanalysis.timer.zq.UpdateScheduleService;
 import com.ruyicai.dataanalysis.timer.zq.UpdateSclassService;
 import com.ruyicai.dataanalysis.timer.zq.UpdateScoreService;
 import com.ruyicai.dataanalysis.timer.zq.UpdateTeamService;
+import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
 import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
@@ -405,6 +406,20 @@ public class SystemController {
 			sendJmsJczUtil.sendStandardAvgUpdateJms(scheduleId);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/deleteWeiKaiSchedule", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData deleteWeiKaiSchedule(@RequestParam("date") String date) {
+		ResponseData rd = new ResponseData();
+		try {
+			Date d = DateUtil.parse("yyyy-MM-dd", date);
+			updateScheduleService.deleteWeiKaiSchedule(d);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
 		}
 		return rd;
 	}
