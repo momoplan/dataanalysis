@@ -133,7 +133,7 @@ public class SystemJclController {
 	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJclUtil.sendScheduleFinishJms(event);
+			sendJmsJclUtil.sendScheduleFinishJms(event, null);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
+
 /**
  * 竞彩篮球-发送JMS公共类
  * @author Administrator
@@ -63,13 +65,17 @@ public class SendJmsJclUtil {
 	 * 赛果更新的JMS
 	 * @param event
 	 */
-	public void sendScheduleFinishJms(String event) {
+	public void sendScheduleFinishJms(String event, ScheduleJcl scheduleJcl) {
 		try {
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
 			
 			logger.info("scheduleJclFinishTemplate start, event={}", event);
 			scheduleJclFinishTemplate.sendBodyAndHeaders(null, header);
+			if (scheduleJcl!=null) {
+				logger.info("scheduleJclFinishTemplate,event="+event+",homeScore="+scheduleJcl.getHomeScore()+
+						",guestScore="+scheduleJcl.getGuestScore());
+			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -79,13 +85,17 @@ public class SendJmsJclUtil {
 	 * 比分变化的JMS
 	 * @param event
 	 */
-	public void sendScoreModifyJms(String event) {
+	public void sendScoreModifyJms(String event, ScheduleJcl scheduleJcl) {
 		try {
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
 			
 			logger.info("scoreModifyJclTemplate start, event={}", event);
 			scoreModifyJclTemplate.sendBodyAndHeaders(null, header);
+			if (scheduleJcl!=null) {
+				logger.info("scoreModifyJclTemplate,event="+event+",homeScore="+scheduleJcl.getHomeScore()+
+						",guestScore="+scheduleJcl.getGuestScore());
+			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

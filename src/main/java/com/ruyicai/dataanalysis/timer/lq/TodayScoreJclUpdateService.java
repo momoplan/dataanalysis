@@ -262,7 +262,7 @@ public class TodayScoreJclUpdateService {
 					if (!StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value())) { //之前的状态不是完场
 						String event = scheduleJcl.getEvent();
 						if (StringUtils.isNotBlank(event)) {
-							sendJmsJclUtil.sendScheduleFinishJms(event); //发送完场的Jms
+							sendJmsJclUtil.sendScheduleFinishJms(event, scheduleJcl); //发送完场的Jms
 						}
 						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId()); //更新排名
 					}
@@ -270,7 +270,7 @@ public class TodayScoreJclUpdateService {
 					if (StringUtils.equals(matchState_old, MatchStateJcl.wanChang.value()) && scoreModify) {
 						String event = scheduleJcl.getEvent();
 						if (StringUtils.isNotBlank(event)) { 
-							sendJmsJclUtil.sendScoreModifyJms(event); //发送比分变化的Jms
+							sendJmsJclUtil.sendScoreModifyJms(event, scheduleJcl); //发送比分变化的Jms
 						}
 						sendJmsJclUtil.sendRankingUpdateJms(scheduleJcl.getScheduleId()); //更新排名
 					}
