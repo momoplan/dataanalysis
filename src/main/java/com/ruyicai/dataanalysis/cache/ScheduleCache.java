@@ -2,7 +2,6 @@ package com.ruyicai.dataanalysis.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -28,6 +27,11 @@ public class ScheduleCache {
 	}
 	
 	public void setToMemcache(Schedule schedule) {
-			cacheService.set(StringUtil.join("_", "dadaanalysis", "Schedule", String.valueOf(schedule.getScheduleID())), 0, schedule.toJson());
+		cacheService.set(StringUtil.join("_", "dadaanalysis", "Schedule", String.valueOf(schedule.getScheduleID())), 0, schedule.toJson());
 	}
+	
+	public void deleteFromMemcache(Schedule schedule) {
+		cacheService.delete(StringUtil.join("_", "dadaanalysis", "Schedule", String.valueOf(schedule.getScheduleID())));
+	}
+	
 }

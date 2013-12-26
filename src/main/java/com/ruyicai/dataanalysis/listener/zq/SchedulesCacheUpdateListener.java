@@ -43,23 +43,27 @@ public class SchedulesCacheUpdateListener {
 				return;
 			}
 			Date matchTime = schedule.getMatchTime();
-			if (matchTime==null) {
-				return;
-			}
-			String day = new SimpleDateFormat("yyyyMMdd").format(matchTime);
-			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayZq", day);
-			Map<String, List<ScheduleDTO>> value = cacheService.get(key);
-			if (value==null) {
-				return;
-			}
-			value = infoService.getSchedules(day);
-			if (value!=null) {
-				cacheService.set(key, value);
-			}
+			updateCacheByDate(matchTime);
 			long endmillis = System.currentTimeMillis();
-			logger.info("足球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId+",day="+day);
+			logger.info("足球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("足球赛事缓存更新的Jms监听发生异常,scheduleId="+scheduleId, e);
+		}
+	}
+	
+	public void updateCacheByDate(Date matchTime) {
+		if (matchTime==null) {
+			return;
+		}
+		String day = new SimpleDateFormat("yyyyMMdd").format(matchTime);
+		String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayZq", day);
+		Map<String, List<ScheduleDTO>> value = cacheService.get(key);
+		if (value==null) {
+			return;
+		}
+		value = infoService.getSchedules(day);
+		if (value!=null) {
+			cacheService.set(key, value);
 		}
 	}
 	

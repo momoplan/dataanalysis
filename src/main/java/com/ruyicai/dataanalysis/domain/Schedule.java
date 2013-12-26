@@ -189,6 +189,13 @@ public class Schedule {
         return merged;
     }
 	
+	@Transactional
+    public void remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.remove(this);
+        scheduleCache.deleteFromMemcache(this);
+    }
+	
 	public static Schedule findScheduleWOBuild(int scheduleID) {
 		return new Schedule().getScheduleCache().getSchedule(scheduleID);
     }

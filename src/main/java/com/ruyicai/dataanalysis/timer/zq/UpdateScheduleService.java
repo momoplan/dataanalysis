@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.timer.zq;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
+import com.ruyicai.dataanalysis.listener.zq.SchedulesCacheUpdateListener;
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
@@ -26,6 +28,8 @@ import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 public class UpdateScheduleService {
 	
 	private Logger logger = LoggerFactory.getLogger(UpdateScheduleService.class);
+	
+	private Calendar calendar = Calendar.getInstance();
 
 	@Value("${saichensaiguo}")
 	private String url;
@@ -41,6 +45,9 @@ public class UpdateScheduleService {
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
+	
+	@Autowired
+	private SchedulesCacheUpdateListener schedulesCacheUpdateListener;
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取足球所有联赛下所有赛事");
@@ -324,6 +331,29 @@ public class UpdateScheduleService {
 		logger.info("获取之后30天的足球赛事开始");
 		processCount(30, 0);
 		logger.info("获取之后30天的足球赛事结束");
+	}
+	
+	public void deleteWeiKaiSchedule(Date date) {
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, 1);
+		List<Schedule> list = Schedule.findByDay(date, calendar.getTime());
+		boolean isDel = false;
+		if (list!=null && list.size()>0) {
+			for (Schedule schedule : list) {
+				Integer matchState = schedule.getMatchState();
+				if (matchState!=null && matchState==0) { //未开赛
+					schedule.remove();
+					logger.info("删除schedule,id="+schedule.getScheduleID());
+					if (!isDel) {
+						isDel = true;
+					}
+				}
+			}
+		}
+		if (isDel) {
+			processDateAndSclassID(date, null, false); //重新获取赛事
+			schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+		}
 	}
 	
 }
