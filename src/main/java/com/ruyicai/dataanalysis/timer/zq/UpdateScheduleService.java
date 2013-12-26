@@ -333,6 +333,16 @@ public class UpdateScheduleService {
 		logger.info("获取之后30天的足球赛事结束");
 	}
 	
+	public void processDelWeiKai() {
+		try {
+			calendar.setTime(new Date());
+			calendar.add(Calendar.DATE, -1);
+			deleteWeiKaiSchedule(calendar.getTime());
+		} catch (Exception e) {
+			logger.error("processDelWeiKai发生异常", e);
+		}
+	}
+	
 	public void deleteWeiKaiSchedule(Date date) {
 		try {
 			logger.info("删除未开赛赛事 开始");

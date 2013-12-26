@@ -145,6 +145,17 @@
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
+   <!-- 删除前一天未开的赛事 -->
+   <bean id="delWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="updateScheduleService"></property>
+   		<property name="targetMethod" value="processDelWeiKai"></property>
+   </bean>
+   
+   <bean id="delWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="delWeiKaiJobDetail"></property>
+   		<property name="cronExpression" value="0 0 1 * * ?"></property>  <!-- 每天1点执行 -->
+   </bean>
+   
    <!--  篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -262,6 +273,7 @@
    				<ref bean="letgoalUpdateTrigger"/>
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
+   				<ref bean="delWeiKaiTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
