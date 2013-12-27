@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.timer.zq;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -333,6 +334,19 @@ public class ScheduleUpdateService {
 		logger.info("获取之后30天的足球赛事结束");
 	}
 	
+	public void delWeiKaiCount(int count, int mode) {
+		if(mode == 0) {
+			for(int i = 0; i <= count; i ++) {
+				deleteWeiKaiSchedule(DateUtil.getAfterDate(i));
+			}
+		}
+		if(mode == 1) {
+			for(int i = 0; i <= count; i ++) {
+				deleteWeiKaiSchedule(DateUtil.getPreDate(i));
+			}
+		}
+	}
+	
 	public void processDelWeiKai() {
 		try {
 			calendar.setTime(new Date());
@@ -345,7 +359,8 @@ public class ScheduleUpdateService {
 	
 	public void deleteWeiKaiSchedule(Date date) {
 		try {
-			logger.info("删除未开赛赛事 开始");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			logger.info("删除未开赛赛事 开始,date="+sdf.format(date));
 			long startMills = System.currentTimeMillis();
 			calendar.setTime(date);
 			calendar.add(Calendar.DATE, 1);
@@ -373,7 +388,7 @@ public class ScheduleUpdateService {
 				schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
 			}
 			long endMills = System.currentTimeMillis();
-			logger.info("删除未开赛赛事 结束,用时:"+(endMills-startMills));
+			logger.info("删除未开赛赛事 结束,用时:"+(endMills-startMills)+",date="+sdf.format(date));
 		} catch (Exception e) {
 			logger.error("删除未开赛赛事发生异常", e);
 		}

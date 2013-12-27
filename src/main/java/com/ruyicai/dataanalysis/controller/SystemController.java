@@ -35,28 +35,28 @@ public class SystemController {
 	private Logger logger = LoggerFactory.getLogger(SystemController.class);
 	
 	@Autowired
-	private SclassUpdateService updateSclassService;
+	private SclassUpdateService sclassUpdateService;
 	
 	@Autowired
-	private TeamUpdateService updateTeamService;
+	private TeamUpdateService teamUpdateService;
 	
 	@Autowired
 	private LetgoalUpdateService letgoalUpdateService;
 	
 	@Autowired
-	private DetailResultUpdateService updateDetailResultService;
+	private DetailResultUpdateService detailResultUpdateService;
 	
 	@Autowired
-	private QiuTanMatchesUpdateService updateQiuTanMatchesService;
+	private QiuTanMatchesUpdateService qiuTanMatchesUpdateService;
 
 	@Autowired
-	private ScheduleUpdateService updateScheduleService;
+	private ScheduleUpdateService scheduleUpdateService;
 	
 	@Autowired
 	private StandardUpdateService standardUpdateService;
 	
 	@Autowired
-	private TodayScoreUpdateService updateScoreService;
+	private TodayScoreUpdateService todayScoreUpdateService;
 	
 	@Autowired
 	private LetgoalDetailUpdateService letgoalDetailUpdateService;
@@ -87,7 +87,7 @@ public class SystemController {
 	ResponseData updatesclass() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateSclassService.process();
+			sclassUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -100,7 +100,7 @@ public class SystemController {
 	ResponseData updateteam() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateTeamService.process();
+			teamUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -126,7 +126,7 @@ public class SystemController {
 	ResponseData updatedetailresult() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateDetailResultService.process();
+			detailResultUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -139,7 +139,7 @@ public class SystemController {
 	ResponseData updateDetailResultByDate(@RequestParam("date") String date) {
 		ResponseData rd = new ResponseData();
 		try {
-			updateDetailResultService.processByDate(date);
+			detailResultUpdateService.processByDate(date);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -152,7 +152,7 @@ public class SystemController {
 	ResponseData updateqiutanmatches() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateQiuTanMatchesService.process();
+			qiuTanMatchesUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -165,7 +165,7 @@ public class SystemController {
 	ResponseData updateschedule() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateScheduleService.process();
+			scheduleUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -179,7 +179,7 @@ public class SystemController {
 			@RequestParam("mode") int mode) {
 		ResponseData rd = new ResponseData();
 		try {
-			updateScheduleService.processCount(count, mode);
+			scheduleUpdateService.processCount(count, mode);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -197,7 +197,7 @@ public class SystemController {
 	ResponseData updateScheduleByDate(@RequestParam("date") String date) {
 		ResponseData rd = new ResponseData();
 		try {
-			updateScheduleService.updateScheduleByDate(date);
+			scheduleUpdateService.updateScheduleByDate(date);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -236,7 +236,7 @@ public class SystemController {
 	ResponseData updatescore() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateScoreService.process();
+			todayScoreUpdateService.process();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -249,7 +249,7 @@ public class SystemController {
 	ResponseData getAllScheduleBySclass() {
 		ResponseData rd = new ResponseData();
 		try {
-			updateScheduleService.getAllScheduleBySclass();
+			scheduleUpdateService.getAllScheduleBySclass();
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -288,7 +288,7 @@ public class SystemController {
 	ResponseData processFile(@RequestParam("filename") String filename) {
 		ResponseData rd = new ResponseData();
 		try {
-			updateQiuTanMatchesService.processFile(filename);
+			qiuTanMatchesUpdateService.processFile(filename);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -416,7 +416,20 @@ public class SystemController {
 		ResponseData rd = new ResponseData();
 		try {
 			Date d = DateUtil.parse("yyyy-MM-dd", date);
-			updateScheduleService.deleteWeiKaiSchedule(d);
+			scheduleUpdateService.deleteWeiKaiSchedule(d);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/deleteWeiKaiScheduleMore", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData deleteWeiKaiScheduleMore(@RequestParam("count") int count, @RequestParam("mode") int mode) {
+		ResponseData rd = new ResponseData();
+		try {
+			scheduleUpdateService.delWeiKaiCount(count, mode);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
