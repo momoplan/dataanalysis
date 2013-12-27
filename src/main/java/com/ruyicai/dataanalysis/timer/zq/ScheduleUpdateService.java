@@ -355,10 +355,15 @@ public class ScheduleUpdateService {
 				for (Schedule schedule : list) {
 					Integer matchState = schedule.getMatchState();
 					if (matchState!=null && matchState==0) { //未开赛
-						schedule.remove();
-						logger.info("删除schedule,id="+schedule.getScheduleID());
-						if (!isDel) {
-							isDel = true;
+						try {
+							schedule.remove();
+							logger.info("删除schedule,id="+schedule.getScheduleID());
+							if (!isDel) {
+								isDel = true;
+							}
+						} catch (Exception e) {
+							logger.error("删除schedule发生异常,id="+schedule.getScheduleID(), e);
+							continue;
 						}
 					}
 				}
