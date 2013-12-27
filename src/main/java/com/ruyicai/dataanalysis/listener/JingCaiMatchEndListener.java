@@ -48,10 +48,15 @@ public class JingCaiMatchEndListener {
 	private void processLq(String event) {
 		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
 		if (scheduleJcl==null) {
+			logger.info("竞彩赛事停售监听-赛事不存在,event="+event);
 			return;
 		}
+		Integer scheduleId = scheduleJcl.getScheduleId();
 		Integer betState = scheduleJcl.getBetState();
+		logger.info("竞彩赛事停售监听,event="+event+",scheduleId="+scheduleId+",betState="+betState);
+		
 		if (betState==null || betState!=2) {
+			logger.info("竞彩赛事停售监听-更新状态,event="+event);
 			scheduleJcl.setBetState(2); //截止
 			scheduleJcl.merge();
 			//发送赛事缓存更新的Jms
@@ -62,10 +67,15 @@ public class JingCaiMatchEndListener {
 	private void processZq(String event) {
 		Schedule schedule = Schedule.findByEvent(event, false);
 		if (schedule==null) {
+			logger.info("竞彩赛事停售监听-赛事不存在,event="+event);
 			return;
 		}
+		int scheduleId = schedule.getScheduleID();
 		Integer betState = schedule.getBetState();
+		logger.info("竞彩赛事停售监听,event="+event+",scheduleId="+scheduleId+",betState="+betState);
+		
 		if (betState==null || betState!=2) {
+			logger.info("竞彩赛事停售监听-更新状态,event="+event);
 			schedule.setBetState(2); //截止
 			schedule.merge();
 			//发送赛事缓存更新的Jms

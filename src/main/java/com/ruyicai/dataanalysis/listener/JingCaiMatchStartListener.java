@@ -49,10 +49,13 @@ public class JingCaiMatchStartListener {
 	private void processLq(String event, String endTime) {
 		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
 		if (scheduleJcl==null) {
+			logger.info("竞彩赛事开售监听-赛事不存在,event="+event);
 			return;
 		}
+		Integer scheduleId = scheduleJcl.getScheduleId();
 		Integer betState = scheduleJcl.getBetState();
 		Date betEndTime = scheduleJcl.getBetEndTime();
+		logger.info("竞彩赛事开售监听,event="+event+",scheduleId="+scheduleId+",betState="+betState+",betEndTime="+betEndTime);
 		
 		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
@@ -67,6 +70,7 @@ public class JingCaiMatchStartListener {
 			modify = true;
 		}
 		if (modify) {
+			logger.info("竞彩赛事开售监听-更新状态,event="+event);
 			scheduleJcl.merge();
 			//发送赛事缓存更新的Jms
 			sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
@@ -76,10 +80,13 @@ public class JingCaiMatchStartListener {
 	private void processZq(String event, String endTime) {
 		Schedule schedule = Schedule.findByEvent(event, false);
 		if (schedule==null) {
+			logger.info("竞彩赛事开售监听-赛事不存在,event="+event);
 			return;
 		}
+		int scheduleId = schedule.getScheduleID();
 		Integer betState = schedule.getBetState();
 		Date betEndTime = schedule.getBetEndTime();
+		logger.info("竞彩赛事开售监听,event="+event+",scheduleId="+scheduleId+",betState="+betState+",betEndTime="+betEndTime);
 		
 		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
@@ -94,6 +101,7 @@ public class JingCaiMatchStartListener {
 			modify = true;
 		}
 		if (modify) {
+			logger.info("竞彩赛事开售监听-更新状态,event="+event);
 			schedule.merge();
 			//发送赛事缓存更新的Jms
 			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
