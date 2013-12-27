@@ -19,9 +19,9 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
-public class UpdateScoreService {
+public class TodayScoreUpdateService {
 
-	private Logger logger = LoggerFactory.getLogger(UpdateScoreService.class);
+	private Logger logger = LoggerFactory.getLogger(TodayScoreUpdateService.class);
 	
 	@Value("${todaybifeng}")
 	private String url;

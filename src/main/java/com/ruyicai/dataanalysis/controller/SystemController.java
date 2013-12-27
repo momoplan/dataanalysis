@@ -16,12 +16,12 @@ import com.ruyicai.dataanalysis.timer.news.FetchNewsService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalDetailUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.LetgoalUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.StandardUpdateService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateDetailResultService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateQiuTanMatchesService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateScheduleService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateSclassService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateScoreService;
-import com.ruyicai.dataanalysis.timer.zq.UpdateTeamService;
+import com.ruyicai.dataanalysis.timer.zq.DetailResultUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.QiuTanMatchesUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.ScheduleUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.SclassUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.TodayScoreUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.TeamUpdateService;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
@@ -35,28 +35,28 @@ public class SystemController {
 	private Logger logger = LoggerFactory.getLogger(SystemController.class);
 	
 	@Autowired
-	private UpdateSclassService updateSclassService;
+	private SclassUpdateService updateSclassService;
 	
 	@Autowired
-	private UpdateTeamService updateTeamService;
+	private TeamUpdateService updateTeamService;
 	
 	@Autowired
 	private LetgoalUpdateService letgoalUpdateService;
 	
 	@Autowired
-	private UpdateDetailResultService updateDetailResultService;
+	private DetailResultUpdateService updateDetailResultService;
 	
 	@Autowired
-	private UpdateQiuTanMatchesService updateQiuTanMatchesService;
+	private QiuTanMatchesUpdateService updateQiuTanMatchesService;
 
 	@Autowired
-	private UpdateScheduleService updateScheduleService;
+	private ScheduleUpdateService updateScheduleService;
 	
 	@Autowired
 	private StandardUpdateService standardUpdateService;
 	
 	@Autowired
-	private UpdateScoreService updateScoreService;
+	private TodayScoreUpdateService updateScoreService;
 	
 	@Autowired
 	private LetgoalDetailUpdateService letgoalDetailUpdateService;

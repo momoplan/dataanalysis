@@ -25,9 +25,9 @@ import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
-public class UpdateScheduleService {
+public class ScheduleUpdateService {
 	
-	private Logger logger = LoggerFactory.getLogger(UpdateScheduleService.class);
+	private Logger logger = LoggerFactory.getLogger(ScheduleUpdateService.class);
 	
 	private Calendar calendar = Calendar.getInstance();
 

@@ -16,9 +16,9 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
-public class UpdateTeamService {
+public class TeamUpdateService {
 	
-	private Logger logger = LoggerFactory.getLogger(UpdateTeamService.class);
+	private Logger logger = LoggerFactory.getLogger(TeamUpdateService.class);
 
 	@Value("${qiuduiziliao}")
 	private String url;

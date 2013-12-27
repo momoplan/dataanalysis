@@ -21,9 +21,9 @@ import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
-public class UpdateDetailResultService {
+public class DetailResultUpdateService {
 	
-	private Logger logger = LoggerFactory.getLogger(UpdateDetailResultService.class);
+	private Logger logger = LoggerFactory.getLogger(DetailResultUpdateService.class);
 
 	@Value("${detailresult}")
 	private String url;

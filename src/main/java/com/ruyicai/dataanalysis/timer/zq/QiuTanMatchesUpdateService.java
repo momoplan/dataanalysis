@@ -25,9 +25,9 @@ import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
 @Service
-public class UpdateQiuTanMatchesService {
+public class QiuTanMatchesUpdateService {
 	
-	private Logger logger = LoggerFactory.getLogger(UpdateQiuTanMatchesService.class);
+	private Logger logger = LoggerFactory.getLogger(QiuTanMatchesUpdateService.class);
 
 	@Value("${qiutanmatches}")
 	private String url;

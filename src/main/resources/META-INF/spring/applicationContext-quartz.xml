@@ -14,13 +14,13 @@
    
    <!-- 足球 -->
    <!-- 赛果详情更新 -->
-   <bean id="UpdateDetailResultServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateDetailResultService"></property>
+   <bean id="detailResultUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="detailResultUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateDetailResultServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateDetailResultServiceJobDetail"></property>
+   <bean id="detailResultUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="detailResultUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 */1 * * * ?"></property>  <!-- 1分钟 -->
    </bean>
    
@@ -36,46 +36,46 @@
    </bean>
    
    <!-- 彩票赛事与球探网的关联更新 -->
-   <bean id="UpdateQiuTanMatchesServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateQiuTanMatchesService"></property>
+   <bean id="qiuTanMatchesUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="qiuTanMatchesUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateQiuTanMatchesServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateQiuTanMatchesServiceJobDetail"></property>
+   <bean id="qiuTanMatchesUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="qiuTanMatchesUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
    </bean>
    
    <!-- 赛事更新 -->
-   <bean id="UpdateScheduleServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateScheduleService"></property>
+   <bean id="scheduleUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateScheduleServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateScheduleServiceJobDetail"></property>
+   <bean id="scheduleUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="scheduleUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 5小时 -->
    </bean>
    
    <!-- 联赛更新 -->
-   <bean id="UpdateSclassServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateSclassService"></property>
+   <bean id="sclassUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="sclassUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateSclassServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateSclassServiceJobDetail"></property>
+   <bean id="sclassUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="sclassUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 0 */23 * * ?"></property>  <!-- 1天 -->
    </bean>
    
    <!-- 比分更新 -->
-   <bean id="UpdateScoreServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateScoreService"></property>
+   <bean id="todayScoreUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="todayScoreUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateScoreServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateScoreServiceJobDetail"></property>
+   <bean id="todayScoreUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="todayScoreUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 */1 * * * ?"></property>  <!-- 1分钟 -->
    </bean>
    
@@ -91,19 +91,19 @@
    </bean>
    
    <!-- 球队更新 -->
-   <bean id="UpdateTeamServiceJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateTeamService"></property>
+   <bean id="teamUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="teamUpdateService"></property>
    		<property name="targetMethod" value="process"></property>
    </bean>
    
-   <bean id="UpdateTeamServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="UpdateTeamServiceJobDetail"></property>
+   <bean id="teamUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="teamUpdateJobDetail"></property>
    		<property name="cronExpression" value="0 0 */23 * * ?"></property>  <!-- 1天 -->
    </bean>
    
    <!-- 前一天比赛详情更新 -->
    <bean id="detailResultUpdatePreDayJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateDetailResultService"></property>
+   		<property name="targetObject" ref="detailResultUpdateService"></property>
    		<property name="targetMethod" value="processPreDay"></property>
    </bean>
    
@@ -114,7 +114,7 @@
    
    <!-- 更新之后30天的足球赛事 -->
    <bean id="updateScheduleMoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateScheduleService"></property>
+   		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="processMore"></property>
    </bean>
    
@@ -147,7 +147,7 @@
    
    <!-- 删除前一天未开的赛事 -->
    <bean id="delWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="updateScheduleService"></property>
+   		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="processDelWeiKai"></property>
    </bean>
    
@@ -261,13 +261,13 @@
    		<property name="triggers">
    			<list>
    				<!-- 竞彩足球 -->
-    			<ref bean="UpdateDetailResultServiceTrigger"/>
-   				<ref bean="UpdateQiuTanMatchesServiceTrigger"/>
-   				<ref bean="UpdateScheduleServiceTrigger"/>
-   				<ref bean="UpdateSclassServiceTrigger"/>
-    			<ref bean="UpdateScoreServiceTrigger"/>
+    			<ref bean="detailResultUpdateTrigger"/>
+   				<ref bean="qiuTanMatchesUpdateTrigger"/>
+   				<ref bean="scheduleUpdateTrigger"/>
+   				<ref bean="sclassUpdateTrigger"/>
+    			<ref bean="todayScoreUpdateTrigger"/>
    				<ref bean="standardUpdateServiceTrigger"/>
-   				<ref bean="UpdateTeamServiceTrigger"/>
+   				<ref bean="teamUpdateTrigger"/>
    				<ref bean="detailResultUpdatePreDayTrigger"/>
    				<ref bean="updateScheduleMoreTrigger"/>
    				<ref bean="letgoalUpdateTrigger"/>

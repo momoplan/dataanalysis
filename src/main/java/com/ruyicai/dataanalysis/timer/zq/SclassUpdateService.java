@@ -18,9 +18,9 @@ import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
-public class UpdateSclassService {
+public class SclassUpdateService {
 	
-	private Logger logger = LoggerFactory.getLogger(UpdateSclassService.class);
+	private Logger logger = LoggerFactory.getLogger(SclassUpdateService.class);
 
 	@Value("${liansaibeisai}")
 	private String url;
