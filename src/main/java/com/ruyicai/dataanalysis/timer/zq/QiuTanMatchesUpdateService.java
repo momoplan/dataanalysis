@@ -296,6 +296,7 @@ public class QiuTanMatchesUpdateService {
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = schedule.getEvent();
 		if(!StringUtil.isEmpty(eventQ)&&(StringUtil.isEmpty(eventS)||!eventQ.equals(eventS))) {
+			logger.info("赛事添加event,event="+eventQ+",scheduleId="+schedule.getScheduleID());
 			schedule.setEvent(eventQ);
 			isUpdate = true;
 		}

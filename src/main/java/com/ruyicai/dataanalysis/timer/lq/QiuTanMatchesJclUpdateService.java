@@ -191,6 +191,7 @@ public class QiuTanMatchesJclUpdateService {
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = scheduleJcl.getEvent();
 		if(!StringUtil.isEmpty(eventQ)&&(StringUtil.isEmpty(eventS)||!eventQ.equals(eventS))) {
+			logger.info("赛事添加event,event="+eventQ+",scheduleId="+scheduleJcl.getScheduleId());
 			isUpdate = true;
 			scheduleJcl.setEvent(eventQ);
 		}
