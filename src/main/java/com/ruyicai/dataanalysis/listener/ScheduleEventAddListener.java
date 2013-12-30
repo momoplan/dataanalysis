@@ -81,7 +81,7 @@ public class ScheduleEventAddListener {
 		if (StringUtils.equals(matchesString, "null")) {
 			return;
 		}
-		JSONObject matchesObject = fromObject.getJSONObject("matches");
+		JSONObject matchesObject = valueObject.getJSONObject("matches");
 		
 		boolean isModify = false;
 		String state = matchesObject.getString("state");
@@ -134,7 +134,7 @@ public class ScheduleEventAddListener {
 		if (StringUtils.equals(matchesString, "null")) {
 			return;
 		}
-		JSONObject matchesObject = fromObject.getJSONObject("matches");
+		JSONObject matchesObject = valueObject.getJSONObject("matches");
 		
 		boolean isModify = false;
 		String state = matchesObject.getString("state");
