@@ -368,8 +368,9 @@ public class ScheduleUpdateService {
 			boolean isDel = false;
 			if (list!=null && list.size()>0) {
 				for (Schedule schedule : list) {
+					boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
 					Integer matchState = schedule.getMatchState();
-					if (matchState!=null && matchState==0) { //未开赛
+					if (matchState!=null && matchState==0 && zqEventEmpty) { //未开赛并且event为空
 						try {
 							schedule.remove();
 							logger.info("删除schedule,id="+schedule.getScheduleID());
@@ -384,7 +385,7 @@ public class ScheduleUpdateService {
 				}
 			}
 			if (isDel) {
-				processDateAndSclassID(date, null, false); //重新获取赛事
+				//processDateAndSclassID(date, null, false); //重新获取赛事
 				schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
 			}
 			long endMills = System.currentTimeMillis();
