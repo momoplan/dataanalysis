@@ -60,7 +60,7 @@ public class JingCaiMatchStartListener {
 		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
 		//投注状态
-		if (betState==null || betState!=1) {
+		if (betState==null || betState==0) {
 			scheduleJcl.setBetState(1); //开售
 			modify = true;
 		}
@@ -91,7 +91,7 @@ public class JingCaiMatchStartListener {
 		Date endDate = new Date(Long.parseLong(endTime));
 		boolean modify = false;
 		//投注状态
-		if (betState==null || betState!=1) {
+		if (betState==null || betState==0) {
 			schedule.setBetState(1); //开售
 			modify = true;
 		}
