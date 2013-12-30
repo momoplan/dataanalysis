@@ -12,4 +12,10 @@ public class PropertiesUtil {
 		return dataanalysisIp;
 	}
 	
+	@Value("${lotteryUrl}")
+	private String lotteryUrl;
+	public String getLotteryUrl() {
+		return lotteryUrl;
+	}
+	
 }

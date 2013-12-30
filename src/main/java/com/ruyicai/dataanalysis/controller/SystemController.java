@@ -25,6 +25,7 @@ import com.ruyicai.dataanalysis.timer.zq.TeamUpdateService;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
+import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
 import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
@@ -78,6 +79,9 @@ public class SystemController {
 	
 	@Autowired
 	private PropertiesUtil propertiesUtil;
+	
+	@Autowired
+	private JmsSendUtil jmsSendUtil;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -430,6 +434,19 @@ public class SystemController {
 		ResponseData rd = new ResponseData();
 		try {
 			scheduleUpdateService.delWeiKaiCount(count, mode);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/scheduleEventAddJms", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData scheduleEventAddJms(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			jmsSendUtil.scheduleEventAdd(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

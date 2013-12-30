@@ -426,6 +426,12 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf</groupId>
+			<artifactId>json</artifactId>
+			<version>2.3</version>
+			<classifier>jdk15</classifier>
+		</dependency>
 	</dependencies>
     <build>
     	<finalName>dataanalysis</finalName>
@@ -601,6 +607,8 @@
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
+				<!-- 后台url -->
+				<lotteryUrl>http://192.168.0.42:8080/lottery/</lotteryUrl>
 			</properties>
 		</profile>
 		
@@ -623,6 +631,8 @@
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
 				<jms.brokerURL>tcp://192.168.0.42:61616</jms.brokerURL>
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
+				<!-- 后台url -->
+				<lotteryUrl>http://192.168.0.42:8080/lottery/</lotteryUrl>
 			</properties>
 		</profile>
 
@@ -645,6 +655,8 @@
 				<memcache.client.ip>192.168.99.16:12000,192.168.99.17:12000</memcache.client.ip>
 				<jms.brokerURL>failover://(tcp://192.168.99.16:61616,tcp://192.168.99.17:61616)?randomize=false</jms.brokerURL>
 				<jms.lottery.brokerURL>failover://(tcp://192.168.99.30:61616,tcp://192.168.99.31:61616)?randomize=false</jms.lottery.brokerURL>
+				<!-- 后台url -->
+				<lotteryUrl>http://192.168.99.6/lottery/</lotteryUrl>
 			</properties>
 		</profile>
 	</profiles>

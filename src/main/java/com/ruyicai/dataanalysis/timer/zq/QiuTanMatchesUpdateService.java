@@ -21,6 +21,7 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.bd.BeiDanUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
+import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
 import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
 
@@ -34,6 +35,9 @@ public class QiuTanMatchesUpdateService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private JmsSendUtil jmsSendUtil;
 	
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
@@ -292,6 +296,7 @@ public class QiuTanMatchesUpdateService {
 	 */
 	private void updateScheduleEvent(QiuTanMatches qiuTanMatches, Schedule schedule) {
 		boolean isUpdate = false;
+		boolean eventModify = false;
 		//竞彩足球
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = schedule.getEvent();
@@ -299,6 +304,7 @@ public class QiuTanMatchesUpdateService {
 			logger.info("赛事添加event,event="+eventQ+",scheduleId="+schedule.getScheduleID());
 			schedule.setEvent(eventQ);
 			isUpdate = true;
+			eventModify = true;
 		}
 		String turnQ = qiuTanMatches.getTurn();
 		String turnS = schedule.getTurn();
@@ -365,6 +371,10 @@ public class QiuTanMatchesUpdateService {
 		if (!CommonUtil.isZqEventEmpty(schedule)) {
 			sendJmsJczUtil.sendStandardAvgUpdateJms(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
 			sendJmsJczUtil.sendLetgoalCacheUpdateJms(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
+		}
+		//发送event增加的Jms
+		if (eventModify && StringUtils.isNotBlank(schedule.getEvent())) {
+			jmsSendUtil.scheduleEventAdd(schedule.getEvent());
 		}
 	}
 	

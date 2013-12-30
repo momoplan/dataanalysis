@@ -17,6 +17,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
+import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
 
 /**
  * 竞彩篮球-彩票赛事与球探网的关联更新
@@ -33,6 +34,9 @@ public class QiuTanMatchesJclUpdateService {
 	
 	@Autowired
 	private HttpUtil httpUtil;
+	
+	@Autowired
+	private JmsSendUtil jmsSendUtil;
 	
 	@SuppressWarnings("unchecked")
 	public void process() {
@@ -188,12 +192,14 @@ public class QiuTanMatchesJclUpdateService {
 	 */
 	private void updateScheduleEvent(QiuTanMatches qiuTanMatches, ScheduleJcl scheduleJcl) {
 		boolean isUpdate = false;
+		boolean eventModify = false;
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = scheduleJcl.getEvent();
 		if(!StringUtil.isEmpty(eventQ)&&(StringUtil.isEmpty(eventS)||!eventQ.equals(eventS))) {
 			logger.info("赛事添加event,event="+eventQ+",scheduleId="+scheduleJcl.getScheduleId());
 			isUpdate = true;
 			scheduleJcl.setEvent(eventQ);
+			eventModify = true;
 		}
 		String turnQ = qiuTanMatches.getTurn();
 		String turnS = scheduleJcl.getTurn();
@@ -203,6 +209,10 @@ public class QiuTanMatchesJclUpdateService {
 		}
 		if (isUpdate) {
 			scheduleJcl.merge();
+		}
+		//发送event增加的Jms
+		if (eventModify && StringUtils.isNotBlank(scheduleJcl.getEvent())) {
+			jmsSendUtil.scheduleEventAdd(scheduleJcl.getEvent());
 		}
 	}
 	
