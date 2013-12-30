@@ -54,7 +54,7 @@ public class ScheduleEventAddListener {
 		logger.info("event增加的Jms监听,event="+event+",scheduleId="+scheduleId+",betState="+betState+",betEndTime="+betEndTime);
 		
 		String[] events = StringUtils.split(event, "_");
-		String result = lotteryService.getJingcaimatches("J00001", events[1], events[2], events[3]);
+		String result = lotteryService.getJingcaimatches("J00005", events[1], events[2], events[3]);
 		if (StringUtils.isBlank(result)) {
 			return;
 		}
