@@ -469,7 +469,7 @@ public class GlobalInfoService {
 		Date matchDate = DateUtil.parse("yyyyMMdd", day);
 		calendar.setTime(matchDate);
 		calendar.add(Calendar.DATE, 1);
-		List<Schedule> list = Schedule.findByDay(matchDate, calendar.getTime());
+		List<Schedule> list = Schedule.findByDay(matchDate, calendar.getTime(), true);
 		if (list!=null && list.size()>0) {
 			for (Schedule schedule : list) {
 				String sclassID = String.valueOf(schedule.getSclassID()); //联赛编号

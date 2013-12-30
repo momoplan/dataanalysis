@@ -364,7 +364,7 @@ public class ScheduleUpdateService {
 			long startMills = System.currentTimeMillis();
 			calendar.setTime(date);
 			calendar.add(Calendar.DATE, 1);
-			List<Schedule> list = Schedule.findByDay(date, calendar.getTime());
+			List<Schedule> list = Schedule.findByDay(date, calendar.getTime(), false);
 			boolean isDel = false;
 			if (list!=null && list.size()>0) {
 				for (Schedule schedule : list) {

@@ -403,10 +403,10 @@ public class Schedule {
 		return schedules;
 	}
 	
-	public static List<Schedule> findByDay(Date startday, Date endday) {
+	public static List<Schedule> findByDay(Date startday, Date endday, boolean build) {
 		List<Schedule> schedules = entityManager().createQuery("select o from Schedule o where matchTime>=? and matchTime<?", Schedule.class)
 				.setParameter(1, startday).setParameter(2, endday).getResultList();
-		if(null != schedules) {
+		if (schedules!=null && build) {
 			for(Schedule schedule : schedules) {
 				buildSchedule(schedule);
 			}
