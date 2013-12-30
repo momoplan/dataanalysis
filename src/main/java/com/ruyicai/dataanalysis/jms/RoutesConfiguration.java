@@ -29,6 +29,9 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 				public void configure() throws Exception {
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
+					//竞彩
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleEventAdd?concurrentConsumers=20").to(
+							"bean:scheduleEventAddListener?method=process").routeId("竞彩-event增加");
 					//足球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardAvgUpdate?concurrentConsumers=20").to(
 							"bean:standardAvgUpdateListener?method=update").routeId("足球-平均欧赔更新");
