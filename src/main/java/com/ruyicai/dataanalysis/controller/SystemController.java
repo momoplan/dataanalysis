@@ -181,7 +181,7 @@ public class SystemController {
 			@RequestParam("mode") int mode) {
 		ResponseData rd = new ResponseData();
 		try {
-			scheduleUpdateService.processCount(count, mode);
+			scheduleUpdateService.processCount(count, mode, true);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

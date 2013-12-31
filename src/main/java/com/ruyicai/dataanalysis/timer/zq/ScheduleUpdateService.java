@@ -59,14 +59,20 @@ public class ScheduleUpdateService {
 		logger.info("获取足球所有联赛下所有赛事结束, 共用时 " + (endmillis - startmillis));
 	}
 	
-	public void processCount(int count, int mode) {
+	public void processCount(int count, int mode, boolean includeZero) {
 		if(mode == 0) {
 			for(int i = 0; i <= count; i ++) {
+				if (i==0 && !includeZero) {
+					continue;
+				}
 				processDateAndSclassID(DateUtil.getAfterDate(i), null, false);
 			}
 		}
 		if(mode == 1) {
 			for(int i = 0; i <= count; i ++) {
+				if (i==0 && !includeZero) {
+					continue;
+				}
 				processDateAndSclassID(DateUtil.getPreDate(i), null, false);
 			}
 		}
@@ -327,8 +333,11 @@ public class ScheduleUpdateService {
 	 */
 	public void processMore() {
 		logger.info("获取之后30天的足球赛事开始");
-		processCount(30, 0);
+		processCount(30, 0, true);
 		logger.info("获取之后30天的足球赛事结束");
+		logger.info("获取之前30天的足球赛事开始");
+		processCount(30, 1, false);
+		logger.info("获取之前30天的足球赛事结束");
 	}
 	
 	/*public void delWeiKaiCount(int count, int mode) {
