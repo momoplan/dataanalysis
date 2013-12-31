@@ -1,7 +1,5 @@
 package com.ruyicai.dataanalysis.timer.zq;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
-import com.ruyicai.dataanalysis.listener.zq.SchedulesCacheUpdateListener;
 import com.ruyicai.dataanalysis.service.AnalysisService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
@@ -30,7 +27,7 @@ public class ScheduleUpdateService {
 	
 	private Logger logger = LoggerFactory.getLogger(ScheduleUpdateService.class);
 	
-	private Calendar calendar = Calendar.getInstance();
+	//private Calendar calendar = Calendar.getInstance();
 
 	@Value("${saichensaiguo}")
 	private String url;
@@ -47,8 +44,8 @@ public class ScheduleUpdateService {
 	@Autowired
 	private SendJmsJczUtil sendJmsJczUtil;
 	
-	@Autowired
-	private SchedulesCacheUpdateListener schedulesCacheUpdateListener;
+	/*@Autowired
+	private SchedulesCacheUpdateListener schedulesCacheUpdateListener;*/
 	
 	public void getAllScheduleBySclass() {
 		logger.info("开始获取足球所有联赛下所有赛事");
@@ -334,7 +331,7 @@ public class ScheduleUpdateService {
 		logger.info("获取之后30天的足球赛事结束");
 	}
 	
-	public void delWeiKaiCount(int count, int mode) {
+	/*public void delWeiKaiCount(int count, int mode) {
 		if(mode == 0) {
 			for(int i = 0; i <= count; i ++) {
 				deleteWeiKaiSchedule(DateUtil.getAfterDate(i));
@@ -345,9 +342,9 @@ public class ScheduleUpdateService {
 				deleteWeiKaiSchedule(DateUtil.getPreDate(i));
 			}
 		}
-	}
+	}*/
 	
-	public void processDelWeiKai() {
+	/*public void processDelWeiKai() {
 		try {
 			calendar.setTime(new Date());
 			calendar.add(Calendar.DATE, -1);
@@ -355,9 +352,9 @@ public class ScheduleUpdateService {
 		} catch (Exception e) {
 			logger.error("processDelWeiKai发生异常", e);
 		}
-	}
+	}*/
 	
-	public void deleteWeiKaiSchedule(Date date) {
+	/*public void deleteWeiKaiSchedule(Date date) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			logger.info("删除未开赛赛事 开始,date="+sdf.format(date));
@@ -393,6 +390,6 @@ public class ScheduleUpdateService {
 		} catch (Exception e) {
 			logger.error("删除未开赛赛事发生异常", e);
 		}
-	}
+	}*/
 	
 }

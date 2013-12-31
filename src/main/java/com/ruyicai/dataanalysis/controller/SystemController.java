@@ -1,6 +1,5 @@
 package com.ruyicai.dataanalysis.controller;
 
-import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import com.ruyicai.dataanalysis.timer.zq.ScheduleUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.SclassUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.TodayScoreUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.TeamUpdateService;
-import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
 import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
@@ -414,7 +412,7 @@ public class SystemController {
 		return rd;
 	}
 	
-	@RequestMapping(value = "/deleteWeiKaiSchedule", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/deleteWeiKaiSchedule", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData deleteWeiKaiSchedule(@RequestParam("date") String date) {
 		ResponseData rd = new ResponseData();
@@ -426,9 +424,9 @@ public class SystemController {
 			rd.setValue(e.getMessage());
 		}
 		return rd;
-	}
+	}*/
 	
-	@RequestMapping(value = "/deleteWeiKaiScheduleMore", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/deleteWeiKaiScheduleMore", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData deleteWeiKaiScheduleMore(@RequestParam("count") int count, @RequestParam("mode") int mode) {
 		ResponseData rd = new ResponseData();
@@ -439,7 +437,7 @@ public class SystemController {
 			rd.setValue(e.getMessage());
 		}
 		return rd;
-	}
+	}*/
 	
 	@RequestMapping(value = "/scheduleEventAddJms", method = RequestMethod.POST)
 	public @ResponseBody
