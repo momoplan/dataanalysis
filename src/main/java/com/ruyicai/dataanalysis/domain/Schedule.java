@@ -219,9 +219,11 @@ public class Schedule {
         }
 	}
 	
-	public static Schedule findById(int scheduleID) {
+	public static Schedule findById(int scheduleID, boolean build) {
         Schedule schedule = entityManager().find(Schedule.class, scheduleID);
-        buildSchedule(schedule);
+        if (build) {
+        	buildSchedule(schedule);
+        }
         return schedule;
     }
 	

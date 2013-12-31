@@ -327,7 +327,12 @@ public class ScheduleUpdateService {
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("match");
 			if (matches==null || matches.size()==0) {
-				//删除
+				//删除赛事
+				Schedule schedule = Schedule.findById(Integer.parseInt(scheduleId), false);
+				if (schedule!=null) {
+					schedule.remove();
+					logger.info("赛事删除,id="+scheduleId);
+				}
 			} else if (matches.size()==1) {
 				doProcess(matches.get(0), true);
 			}
