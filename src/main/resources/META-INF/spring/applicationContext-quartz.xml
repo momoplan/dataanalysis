@@ -120,7 +120,7 @@
    
    <bean id="updateScheduleMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="updateScheduleMoreJobDetail"></property>
-   		<property name="cronExpression" value="0 5 0 * * ?"></property>  <!-- 每天0点5分 -->
+   		<property name="cronExpression" value="0 30 0 * * ?"></property>  <!-- 每天0点30分 -->
    </bean>
    
    <!-- 亚赔Detail更新 -->
@@ -145,16 +145,16 @@
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
-   <!-- 删除前一天未开的赛事 -->
-   <!-- <bean id="delWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   <!-- 更新前一天未开的赛事 -->
+   <bean id="updateWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="scheduleUpdateService"></property>
-   		<property name="targetMethod" value="processDelWeiKai"></property>
+   		<property name="targetMethod" value="processWeiKaiPreDay"></property>
    </bean>
    
-   <bean id="delWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="delWeiKaiJobDetail"></property>
-   		<property name="cronExpression" value="0 0 1 * * ?"></property>  每天1点执行
-   </bean> -->
+   <bean id="updateWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="updateWeiKaiJobDetail"></property>
+   		<property name="cronExpression" value="0 5 0 * * ?"></property>  <!-- 每天0点5分执行 -->
+   </bean>
    
    <!--  篮球 -->
    <!-- 联赛更新 -->
@@ -273,7 +273,7 @@
    				<ref bean="letgoalUpdateTrigger"/>
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
-   				<!-- <ref bean="delWeiKaiTrigger"/> -->
+   				<ref bean="updateWeiKaiTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
