@@ -192,7 +192,8 @@ public class Schedule {
 	@Transactional
     public void remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.remove(this);
+        //this.entityManager.remove(this);
+        this.entityManager.remove(this.entityManager.merge(this));
         scheduleCache.deleteFromMemcache(this);
     }
 	
