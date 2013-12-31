@@ -207,6 +207,19 @@ public class SystemController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/updateScheduleById", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData updateScheduleById(@RequestParam("id") String id) {
+		ResponseData rd = new ResponseData();
+		try {
+			scheduleUpdateService.updateScheduleById(id);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
 	@RequestMapping(value = "/updateStandardByMin", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData updateStandardByMin() {

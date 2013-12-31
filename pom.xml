@@ -18,6 +18,7 @@
 		<qiuduiziliao>http://dxbf.bet007.com/Team_XML.aspx</qiuduiziliao>
 		<qiutanmatches>http://www.310win.com/handle/MatchidInterface.aspx</qiutanmatches>
 		<saichensaiguo>http://dxbf.bet007.com/BF_XML.aspx</saichensaiguo>
+		<scheduleById>http://dxbf.bet007.com/BF_XMLByID.aspx</scheduleById>
 		<detailresult>http://dxbf.bet007.com/vbsxml/detail.js</detailresult>
 		<baijiaoupei>http://data.nowgoal.com/1x2/datacn.aspx</baijiaoupei>
 		<peiluall>http://vip.bet007.com/xmlvbs/odds.txt</peiluall>

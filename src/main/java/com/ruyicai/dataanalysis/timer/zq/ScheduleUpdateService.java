@@ -32,6 +32,9 @@ public class ScheduleUpdateService {
 	@Value("${saichensaiguo}")
 	private String url;
 	
+	@Value("${scheduleById}")
+	private String scheduleByIdUrl;
+	
 	@Autowired
 	private HttpUtil httpUtil; 
 	
@@ -306,6 +309,22 @@ public class ScheduleUpdateService {
 			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	public void updateScheduleById(String scheduleId) {
+		try {
+			logger.info("根据id更新赛事,id="+scheduleId);
+			if (StringUtils.isBlank(scheduleId)) {
+				return;
+			}
+			String param = "id="+scheduleId;
+			String data = httpUtil.getResponse(scheduleByIdUrl, HttpUtil.GET, HttpUtil.UTF8, param);
+			if (StringUtils.isBlank(data)) {
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

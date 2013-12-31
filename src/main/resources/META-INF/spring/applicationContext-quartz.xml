@@ -112,7 +112,7 @@
    		<property name="cronExpression" value="0 */20 * * * ?"></property>  <!-- 20分钟 -->
    </bean>
    
-   <!-- 更新之后30天的足球赛事 -->
+   <!-- 更新前后30天的足球赛事 -->
    <bean id="updateScheduleMoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="processMore"></property>
@@ -120,7 +120,7 @@
    
    <bean id="updateScheduleMoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="updateScheduleMoreJobDetail"></property>
-   		<property name="cronExpression" value="0 0 23 * * ?"></property>  <!-- 每天23点 -->
+   		<property name="cronExpression" value="0 5 0 * * ?"></property>  <!-- 每天0点5分 -->
    </bean>
    
    <!-- 亚赔Detail更新 -->
