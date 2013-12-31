@@ -312,6 +312,7 @@ public class ScheduleUpdateService {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void updateScheduleById(String scheduleId) {
 		try {
 			logger.info("根据id更新赛事,id="+scheduleId);
@@ -321,10 +322,17 @@ public class ScheduleUpdateService {
 			String param = "id="+scheduleId;
 			String data = httpUtil.getResponse(scheduleByIdUrl, HttpUtil.GET, HttpUtil.UTF8, param);
 			if (StringUtils.isBlank(data)) {
-				
+				logger.info("根据id更新赛事,获取数据为空,id="+scheduleId);
+			}
+			Document doc = DocumentHelper.parseText(data);
+			List<Element> matches = doc.getRootElement().elements("match");
+			if (matches==null || matches.size()==0) {
+				//删除
+			} else if (matches.size()==1) {
+				doProcess(matches.get(0), true);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("根据id更新赛事发生异常,id="+scheduleId, e);
 		}
 	}
 
