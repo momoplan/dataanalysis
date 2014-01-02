@@ -147,7 +147,7 @@
    
    <!-- 处理未开的赛事 -->
    <bean id="processWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="processWeiKaiJobDetail"></property>
+   		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="processWeiKai"></property>
    </bean>
    
