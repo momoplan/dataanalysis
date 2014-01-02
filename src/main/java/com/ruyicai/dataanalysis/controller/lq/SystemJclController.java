@@ -1,7 +1,6 @@
 package com.ruyicai.dataanalysis.controller.lq;
 
 import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,6 +257,22 @@ public class SystemJclController {
 		ResponseData rd = new ResponseData();
 		try {
 			teamJclUpdateService.process();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/processWeiKaiSchedule", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData updateWeiKaiSchedule(@RequestParam("startdate") String startdate, 
+			@RequestParam("enddate") String enddate) {
+		ResponseData rd = new ResponseData();
+		try {
+			Date startD = DateUtil.parse("yyyy-MM-dd", startdate);
+			Date endD = DateUtil.parse("yyyy-MM-dd", enddate);
+			scheduleJclUpdateService.processWeiKaiByMatchtime(startD, endD);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

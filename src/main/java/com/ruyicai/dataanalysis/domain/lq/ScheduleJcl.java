@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -133,6 +134,13 @@ public class ScheduleJcl {
         return merged;
     }
 	
+	@Transactional
+    public void remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.remove(this.entityManager.merge(this));
+        scheduleJclCache.deleteFromMemcache(this);
+    }
+	
 	public static ScheduleJcl findScheduleJclNotBuild(int scheduleId) {
 		return new ScheduleJcl().getScheduleJclCache().getScheduleJcl(scheduleId);
     }
@@ -236,6 +244,13 @@ public class ScheduleJcl {
 				buildScheduleJcl(schedule);
 			}
 		}
+		return scheduleJcls;
+	}
+	
+	public static List<ScheduleJcl> findWeiKai(Date startday, Date endday) {
+		TypedQuery<ScheduleJcl> query = entityManager().createQuery("select o from Schedule o where matchTime>=? and matchTime<? and matchState=?", ScheduleJcl.class);
+		query.setParameter(1, startday).setParameter(2, endday).setParameter(3, MatchStateJcl.weiKai.value);
+		List<ScheduleJcl> scheduleJcls = query.getResultList();
 		return scheduleJcls;
 	}
 	

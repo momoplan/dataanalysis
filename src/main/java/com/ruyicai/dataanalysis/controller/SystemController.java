@@ -444,7 +444,7 @@ public class SystemController {
 		return rd;
 	}
 	
-	@RequestMapping(value = "/updateWeiKaiSchedule", method = RequestMethod.POST)
+	@RequestMapping(value = "/processWeiKaiSchedule", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData updateWeiKaiSchedule(@RequestParam("startdate") String startdate, 
 			@RequestParam("enddate") String enddate) {
@@ -452,7 +452,7 @@ public class SystemController {
 		try {
 			Date startD = DateUtil.parse("yyyy-MM-dd", startdate);
 			Date endD = DateUtil.parse("yyyy-MM-dd", enddate);
-			scheduleUpdateService.updateWeiKaiByMatchtime(startD, endD);
+			scheduleUpdateService.processWeiKaiByMatchtime(startD, endD);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

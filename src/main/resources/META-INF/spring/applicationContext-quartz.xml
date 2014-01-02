@@ -145,14 +145,14 @@
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
-   <!-- 更新未开的赛事 -->
-   <bean id="updateWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-   		<property name="targetObject" ref="scheduleUpdateService"></property>
+   <!-- 处理未开的赛事 -->
+   <bean id="processWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="processWeiKaiJobDetail"></property>
    		<property name="targetMethod" value="processWeiKai"></property>
    </bean>
    
-   <bean id="updateWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		<property name="jobDetail" ref="updateWeiKaiJobDetail"></property>
+   <bean id="processWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="processWeiKaiJobDetail"></property>
    		<property name="cronExpression" value="0 30 0 * * ?"></property>  <!-- 每天0点30分执行 -->
    </bean>
    
@@ -245,6 +245,17 @@
    		<property name="cronExpression" value="0 30 23 * * ?"></property>  <!-- 每天23点30分 -->
    </bean>
    
+   <!-- 处理未开的赛事 -->
+   <bean id="processWeiKaiLqJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="scheduleJclUpdateService"></property>
+   		<property name="targetMethod" value="processWeiKai"></property>
+   </bean>
+   
+   <bean id="processWeiKaiLqTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="processWeiKaiLqJobDetail"></property>
+   		<property name="cronExpression" value="0 30 0 * * ?"></property>  <!-- 每天0点30分执行 -->
+   </bean>
+   
    <!-- 新闻推荐 -->
    <bean id="fetchNewsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="fetchNewsService"></property>
@@ -273,7 +284,7 @@
    				<ref bean="letgoalUpdateTrigger"/>
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
-   				<ref bean="updateWeiKaiTrigger"/>
+   				<ref bean="processWeiKaiTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
@@ -283,6 +294,7 @@
    				<ref bean="peiLvJclUpdateTrigger"/>
    				<ref bean="teamJclUpdateTrigger"/>
    				<ref bean="updateScheduleJclMoreTrigger"/>
+   				<ref bean="processWeiKaiLqTrigger"/>
    				<!-- 新闻推荐 -->
    				<ref bean="fetchNewsTrigger"/>
    			</list>

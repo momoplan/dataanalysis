@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -341,7 +340,7 @@ public class ScheduleUpdateService {
 				boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
 				if (schedule!=null && zqEventEmpty) {
 					schedule.remove();
-					logger.info("赛事删除,id="+scheduleId);
+					logger.info("足球赛事删除,id="+scheduleId);
 					if (matchTime!=null) {
 						set.add(sdf.format(matchTime));
 					}
@@ -394,24 +393,21 @@ public class ScheduleUpdateService {
 			calendar.add(Calendar.DATE, -30);
 			Date startDate = calendar.getTime();
 			Date endDate = new Date();
-			updateWeiKaiByMatchtime(startDate, endDate);
+			processWeiKaiByMatchtime(startDate, endDate);
 		} catch (Exception e) {
-			logger.error("processWeiKaiPreDay发生异常", e);
+			logger.error("足球processWeiKai发生异常", e);
 		}
 	}
 	
-	public void updateWeiKaiByMatchtime(Date startDate, Date endDate) {
+	public void processWeiKaiByMatchtime(Date startDate, Date endDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			logger.info("根据matchtime更新未开赛事 start,startDate="+sdf.format(startDate)+",endDate="+sdf.format(endDate));
+			logger.info("足球根据matchtime更新未开赛事 start,startDate="+sdf.format(startDate)+",endDate="+sdf.format(endDate));
 			List<Schedule> list = Schedule.findWeiKai(startDate, endDate);
 			if (list!=null && list.size()>0) {
 				Set<String> set = new HashSet<String>();
 				for (Schedule schedule : list) {
-					Integer matchState = schedule.getMatchState();
-					if (matchState!=null && matchState==0) { //未开赛
-						updateScheduleById(String.valueOf(schedule.getScheduleID()), set);
-					}
+					updateScheduleById(String.valueOf(schedule.getScheduleID()), set);
 				}
 				if (set!=null && set.size()>0) {
 					for (String dateString : set) {
@@ -421,7 +417,7 @@ public class ScheduleUpdateService {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("根据matchtime更新未开赛事发生异常", e);
+			logger.error("足球根据matchtime更新未开赛事发生异常", e);
 		}
 	}
 	

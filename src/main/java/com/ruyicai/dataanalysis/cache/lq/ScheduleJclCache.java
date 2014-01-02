@@ -31,4 +31,10 @@ public class ScheduleJclCache {
 		String id = StringUtil.join("_", "dadaanalysis", "ScheduleJcl", String.valueOf(scheduleJcl.getScheduleId()));
 		cacheService.set(id, 0, scheduleJcl.toJson());
 	}
+	
+	public void deleteFromMemcache(ScheduleJcl scheduleJcl) {
+		String id = StringUtil.join("_", "dadaanalysis", "ScheduleJcl", String.valueOf(scheduleJcl.getScheduleId()));
+		cacheService.delete(id);
+	}
+	
 }

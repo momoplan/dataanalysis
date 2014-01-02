@@ -1,7 +1,11 @@
 package com.ruyicai.dataanalysis.timer.lq;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
+import com.ruyicai.dataanalysis.listener.lq.SchedulesJclCacheUpdateListener;
 import com.ruyicai.dataanalysis.service.lq.AnalysisJclService;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -30,6 +35,8 @@ public class ScheduleJclUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(ScheduleJclUpdateService.class);
 	
+	private Calendar calendar = Calendar.getInstance();
+	
 	@Value("${matchResultJclUrl}")
 	private String matchResultJclUrl;
 	
@@ -41,6 +48,9 @@ public class ScheduleJclUpdateService {
 	
 	@Autowired
 	private SendJmsJclUtil sendJmsJclUtil;
+	
+	@Autowired
+	private SchedulesJclCacheUpdateListener schedulesJclCacheUpdateListener;
 	
 	public void process() {
 		logger.info("竞彩篮球-赛程赛果更新开始");
@@ -426,6 +436,48 @@ public class ScheduleJclUpdateService {
 		logger.info("获取之后30天的篮球赛事开始");
 		updateScheduleByDays(30, 0);
 		logger.info("获取之后30天的篮球赛事结束");
+	}
+	
+	public void processWeiKai() {
+		try {
+			calendar.setTime(new Date());
+			calendar.add(Calendar.DATE, -30);
+			Date startDate = calendar.getTime();
+			Date endDate = new Date();
+			processWeiKaiByMatchtime(startDate, endDate);
+		} catch (Exception e) {
+			logger.error("篮球processWeiKai发生异常", e);
+		}
+	}
+	
+	public void processWeiKaiByMatchtime(Date startDate, Date endDate) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			logger.info("篮球根据matchtime处理未开赛事 start,startDate="+sdf.format(startDate)+",endDate="+sdf.format(endDate));
+			List<ScheduleJcl> list = ScheduleJcl.findWeiKai(startDate, endDate);
+			if (list!=null && list.size()>0) {
+				Set<String> set = new HashSet<String>();
+				for (ScheduleJcl scheduleJcl : list) {
+					String event = scheduleJcl.getEvent();
+					Date matchTime = scheduleJcl.getMatchTime(); //比赛时间
+					if (StringUtils.isBlank(event)) {
+						scheduleJcl.remove();
+						logger.info("篮球赛事删除,id="+scheduleJcl.getScheduleId());
+						if (matchTime!=null) {
+							set.add(sdf.format(matchTime));
+						}
+					}
+				}
+				if (set!=null && set.size()>0) {
+					for (String dateString : set) {
+						Date date = DateUtil.parse("yyyy-MM-dd", dateString);
+						schedulesJclCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("篮球根据matchtime处理未开赛事发生异常", e);
+		}
 	}
 	
 }

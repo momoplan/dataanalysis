@@ -22,17 +22,6 @@ privileged aspect ScheduleJcl_Roo_Entity {
     transient EntityManager ScheduleJcl.entityManager;
     
     @Transactional("transactionManager")
-    public void ScheduleJcl.remove() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        if (this.entityManager.contains(this)) {
-            this.entityManager.remove(this);
-        } else {
-            ScheduleJcl attached = ScheduleJcl.findScheduleJcl(this.scheduleId);
-            this.entityManager.remove(attached);
-        }
-    }
-    
-    @Transactional("transactionManager")
     public void ScheduleJcl.flush() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.flush();
