@@ -1,5 +1,7 @@
 package com.ruyicai.dataanalysis.controller.lq;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import com.ruyicai.dataanalysis.timer.lq.SclassJclUpdateService;
 import com.ruyicai.dataanalysis.timer.lq.StandardJclUpdateService;
 import com.ruyicai.dataanalysis.timer.lq.TeamJclUpdateService;
 import com.ruyicai.dataanalysis.timer.lq.TodayScoreJclUpdateService;
+import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
 
 @RequestMapping("/systemJcl")
@@ -115,7 +118,8 @@ public class SystemJclController {
 	ResponseData updateScheduleByDate(@RequestParam("date") String date) {
 		ResponseData rd = new ResponseData();
 		try {
-			scheduleJclUpdateService.updateScheduleByDate(date);
+			Date d = DateUtil.parse("yyyy-MM-dd", date);
+			scheduleJclUpdateService.processDateAndSclassID(d, false);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

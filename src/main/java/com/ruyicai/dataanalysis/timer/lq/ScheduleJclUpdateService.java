@@ -420,15 +420,6 @@ public class ScheduleJclUpdateService {
 	}
 	
 	/**
-	 * 根据日期更新赛事
-	 * @param dateString
-	 */
-	public void updateScheduleByDate(String dateString) {
-		Date date = DateUtil.parse("yyyy-MM-dd", dateString);
-		processDateAndSclassID(date, false);
-	}
-	
-	/**
 	 * 查询之后30天的赛事
 	 */
 	public void processMore() {
