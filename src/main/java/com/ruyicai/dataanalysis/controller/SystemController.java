@@ -203,7 +203,8 @@ public class SystemController {
 	ResponseData updateScheduleByDate(@RequestParam("date") String date) {
 		ResponseData rd = new ResponseData();
 		try {
-			scheduleUpdateService.updateScheduleByDate(date);
+			Date d = DateUtil.parse("yyyy-MM-dd", date);
+			scheduleUpdateService.processDateAndSclassID(d, null, false);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
