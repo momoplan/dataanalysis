@@ -248,7 +248,7 @@ public class ScheduleJcl {
 	}
 	
 	public static List<ScheduleJcl> findWeiKai(Date startday, Date endday) {
-		TypedQuery<ScheduleJcl> query = entityManager().createQuery("select o from Schedule o where matchTime>=? and matchTime<? and matchState=?", ScheduleJcl.class);
+		TypedQuery<ScheduleJcl> query = entityManager().createQuery("select o from ScheduleJcl o where matchTime>=? and matchTime<? and matchState=?", ScheduleJcl.class);
 		query.setParameter(1, startday).setParameter(2, endday).setParameter(3, MatchStateJcl.weiKai.value);
 		List<ScheduleJcl> scheduleJcls = query.getResultList();
 		return scheduleJcls;
