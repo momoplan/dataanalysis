@@ -112,7 +112,7 @@
    		<property name="cronExpression" value="0 */20 * * * ?"></property>  <!-- 20分钟 -->
    </bean>
    
-   <!-- 更新前后30天的足球赛事 -->
+   <!-- 更新后30天的足球赛事 -->
    <bean id="updateScheduleMoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="scheduleUpdateService"></property>
    		<property name="targetMethod" value="processMore"></property>
@@ -145,10 +145,10 @@
    		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 每5小时 -->
    </bean>
    
-   <!-- 更新前一天未开的赛事 -->
+   <!-- 更新未开的赛事 -->
    <bean id="updateWeiKaiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
    		<property name="targetObject" ref="scheduleUpdateService"></property>
-   		<property name="targetMethod" value="processWeiKaiPreDay"></property>
+   		<property name="targetMethod" value="processWeiKai"></property>
    </bean>
    
    <bean id="updateWeiKaiTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">

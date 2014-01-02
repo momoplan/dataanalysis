@@ -3,7 +3,10 @@ package com.ruyicai.dataanalysis.timer.zq;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -316,36 +319,51 @@ public class ScheduleUpdateService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean updateScheduleById(String scheduleId) {
+	public Set<String> updateScheduleById(String scheduleId, Set<String> set) {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			logger.info("根据id更新赛事,id="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
-				return false;
+				return set;
 			}
 			String param = "id="+scheduleId;
 			String data = httpUtil.getResponse(scheduleByIdUrl, HttpUtil.GET, HttpUtil.UTF8, param);
 			if (StringUtils.isBlank(data)) {
 				logger.info("根据id更新赛事,获取数据为空,id="+scheduleId);
+				return set;
 			}
 			Document doc = DocumentHelper.parseText(data);
 			List<Element> matches = doc.getRootElement().elements("match");
-			if (matches==null || matches.size()==0) {
-				//删除赛事
-				Schedule schedule = Schedule.findById(Integer.parseInt(scheduleId), false);
+			
+			Schedule schedule = Schedule.findById(Integer.parseInt(scheduleId), false);
+			Date matchTime = schedule.getMatchTime(); //比赛时间
+			if (matches==null || matches.size()==0) { //删除赛事
 				boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
 				if (schedule!=null && zqEventEmpty) {
 					schedule.remove();
 					logger.info("赛事删除,id="+scheduleId);
-					return true;
+					if (matchTime!=null) {
+						set.add(sdf.format(matchTime));
+					}
+					return set;
 				}
-			} else if (matches.size()==1) {
-				doProcess(matches.get(0), true);
-				return true;
+			} else if (matches.size()==1) { //更新赛事
+				Element match = matches.get(0);
+				doProcess(match, true);
+				if (matchTime!=null) { //之前的比赛时间
+					set.add(sdf.format(matchTime));
+				}
+				String d = match.elementTextTrim("d"); //现在的比赛时间
+				Date time = DateUtil.parse("yyyy/MM/dd HH:mm:ss", d);
+				if (time!=null) {
+					set.add(sdf.format(time));
+				}
+				return set;
 			}
 		} catch (Exception e) {
 			logger.error("根据id更新赛事发生异常,id="+scheduleId, e);
 		}
-		return false;
+		return set;
 	}
 
 	private void updateRanking(int scheduleID, boolean updateRanking) {
@@ -374,46 +392,61 @@ public class ScheduleUpdateService {
 		logger.info("获取之后30天的足球赛事开始");
 		processCount(30, 0, true);
 		logger.info("获取之后30天的足球赛事结束");
-		logger.info("获取之前30天的足球赛事开始");
+		/*logger.info("获取之前30天的足球赛事开始");
 		processCount(30, 1, false);
-		logger.info("获取之前30天的足球赛事结束");
+		logger.info("获取之前30天的足球赛事结束");*/
 	}
 	
-	public void processWeiKaiPreDay() {
+	public void processWeiKai() {
 		try {
 			calendar.setTime(new Date());
-			calendar.add(Calendar.DATE, -1);
-			updateWeiKaiByMatchtime(calendar.getTime());
+			calendar.add(Calendar.DATE, -30);
+			Date startDate = calendar.getTime();
+			Date endDate = new Date();
+			updateWeiKaiByMatchtime(startDate, endDate);
 		} catch (Exception e) {
 			logger.error("processWeiKaiPreDay发生异常", e);
 		}
 	}
 	
-	public void updateWeiKaiByMatchtime(Date matchtime) {
+	public void updateWeiKaiByMatchtime(Date startDate, Date endDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			logger.info("根据matchtime更新未开赛事 start,matchtime="+sdf.format(matchtime));
-			calendar.setTime(matchtime);
-			calendar.add(Calendar.DATE, 1);
-			List<Schedule> list = Schedule.findByDay(matchtime, calendar.getTime(), false);
+			logger.info("根据matchtime更新未开赛事 start,startDate="+sdf.format(startDate)+",endDate="+sdf.format(endDate));
+			List<Schedule> list = Schedule.findWeiKai(startDate, endDate);
 			if (list!=null && list.size()>0) {
-				boolean modify = false;
+				Set<String> set = new HashSet<String>();
 				for (Schedule schedule : list) {
 					Integer matchState = schedule.getMatchState();
 					if (matchState!=null && matchState==0) { //未开赛
-						boolean update = updateScheduleById(String.valueOf(schedule.getScheduleID()));
-						if (!modify && update) {
-							modify = update;
-						}
+						updateScheduleById(String.valueOf(schedule.getScheduleID()), set);
 					}
 				}
-				if (modify) {
-					schedulesCacheUpdateListener.updateCacheByDate(matchtime); //更新赛事缓存
+				if (set!=null && set.size()>0) {
+					for (String dateString : set) {
+						Date date = DateUtil.parse("yyyy-MM-dd", dateString);
+						schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+					}
 				}
 			}
 		} catch (Exception e) {
 			logger.error("根据matchtime更新未开赛事发生异常", e);
 		}
 	}
+	
+	/*public static void main(String[] args) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Set<Date> set=new HashSet<Date>();
+		set.add(new Date());
+		set.add(new Date());
+		set.add(new Date());
+		//System.out.println(new Date().getTime());
+		Date parse = DateUtil.parse("yyyy-MM-dd", "2014-01-02");
+		//System.out.println(parse.getTime());
+		set.add(parse);
+		for (Date str : set) {
+			System.out.println(sdf.format(str));
+		}
+	}*/
 	
 }

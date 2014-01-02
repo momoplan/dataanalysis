@@ -1,7 +1,8 @@
 package com.ruyicai.dataanalysis.controller;
 
 import java.util.Date;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,7 +216,8 @@ public class SystemController {
 	ResponseData updateScheduleById(@RequestParam("id") String id) {
 		ResponseData rd = new ResponseData();
 		try {
-			scheduleUpdateService.updateScheduleById(id);
+			Set<String> set = new HashSet<String>();
+			scheduleUpdateService.updateScheduleById(id, set);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
@@ -443,11 +445,13 @@ public class SystemController {
 	
 	@RequestMapping(value = "/updateWeiKaiSchedule", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData updateWeiKaiSchedule(@RequestParam("matchtime") String matchtime) {
+	ResponseData updateWeiKaiSchedule(@RequestParam("startdate") String startdate, 
+			@RequestParam("enddate") String enddate) {
 		ResponseData rd = new ResponseData();
 		try {
-			Date date = DateUtil.parse("yyyy-MM-dd", matchtime);
-			scheduleUpdateService.updateWeiKaiByMatchtime(date);
+			Date startD = DateUtil.parse("yyyy-MM-dd", startdate);
+			Date endD = DateUtil.parse("yyyy-MM-dd", enddate);
+			scheduleUpdateService.updateWeiKaiByMatchtime(startD, endD);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());

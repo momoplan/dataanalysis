@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
@@ -414,6 +415,13 @@ public class Schedule {
 				buildSchedule(schedule);
 			}
 		}
+		return schedules;
+	}
+	
+	public static List<Schedule> findWeiKai(Date startday, Date endday) {
+		TypedQuery<Schedule> query = entityManager().createQuery("select o from Schedule o where matchTime>=? and matchTime<? and matchState=?", Schedule.class);
+		query.setParameter(1, startday).setParameter(2, endday).setParameter(3, MatchState.WEIKAI.value);
+		List<Schedule> schedules = query.getResultList();
 		return schedules;
 	}
 	
