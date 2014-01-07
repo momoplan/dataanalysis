@@ -103,7 +103,7 @@
 		<property name="connectionTestStatement" value="select 1 from dual" />
 	</bean> -->
 	
-	<bean id="newsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
+	<!-- <bean id="newsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
 	    <property name="driverClassName" value="${news.database.driverClassName}" />  
 	    <property name="url" value="${news.database.url}" />  
 	    <property name="username" value="${news.database.username}" /> 
@@ -115,7 +115,7 @@
         <property name="minIdle" value="10" />  
         <property name="removeAbandoned" value="true" />  
         <property name="removeAbandonedTimeout" value="180" />  
-        <property name="testWhileIdle" value="true" /><!-- 打开检查,用异步线程evict进行检查 -->  
+        <property name="testWhileIdle" value="true" />打开检查,用异步线程evict进行检查  
 	    <property name="testOnBorrow" value="true" />  
 	    <property name="testOnReturn" value="false" />  
 	    <property name="validationQuery" value="select 1" />  
@@ -132,6 +132,6 @@
 	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="newsEntityManagerFactory">
 		<property name="persistenceUnitName" value="newsPersistenceUnit" />
 		<property name="dataSource" ref="newsDataSource" />
-	</bean>
+	</bean> -->
 	
 </beans>

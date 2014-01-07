@@ -49,7 +49,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.rankingJclUpdate?concurrentConsumers=10").to(
 							"bean:rankingJclUpdateListener?method=update").routeId("篮球-联赛排名更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=10").to(
-							"bean:scheduleJclFinishListener?method=update").routeId("篮球-完场的监听");
+							"bean:scheduleJclFinishListener?method=process").routeId("篮球-完场的监听");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.schedulesJclCacheUpdate?concurrentConsumers=10").to(
 							"bean:schedulesJclCacheUpdateListener?method=process").routeId("篮球-赛事缓存更新");
 				}
@@ -67,7 +67,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jmsLottery:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=10").to(
-							"bean:scheduleJclFinishListener?method=update").routeId("竞彩赛果更新通知");
+							"bean:scheduleJclFinishListener?method=process").routeId("竞彩赛果更新通知");
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaistartsell-topic?concurrentConsumers=10").to(
 							"bean:jingCaiMatchStartListener?method=process").routeId("竞彩赛事开售通知");
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaiendsell-topic?concurrentConsumers=10").to(
