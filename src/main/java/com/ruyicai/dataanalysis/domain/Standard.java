@@ -16,7 +16,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ruyicai.dataanalysis.cache.StandardCache;
+import com.ruyicai.dataanalysis.domain.cache.StandardCache;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;

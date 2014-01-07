@@ -1,8 +1,8 @@
-package com.ruyicai.dataanalysis.cache.lq;
+package com.ruyicai.dataanalysis.domain.cache.lq;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruyicai.cache.CacheService;
+import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.lq.EuropeCompanyJcl;
 import com.ruyicai.dataanalysis.util.StringUtil;
 

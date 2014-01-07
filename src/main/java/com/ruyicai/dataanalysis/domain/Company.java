@@ -10,7 +10,7 @@ import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ruyicai.dataanalysis.cache.CompanyCache;
+import com.ruyicai.dataanalysis.domain.cache.CompanyCache;
 
 import flexjson.JSON;
 

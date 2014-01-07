@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruyicai.cache.CacheService;
+import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.lq.CompanyJcl;
 import com.ruyicai.dataanalysis.domain.lq.EuropeCompanyJcl;
 import com.ruyicai.dataanalysis.domain.lq.GlobalCacheJcl;

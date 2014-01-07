@@ -11,9 +11,10 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
-import com.ruyicai.dataanalysis.cache.lq.ScheduleJclCache;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
+import com.ruyicai.dataanalysis.domain.cache.lq.ScheduleJclCache;
+
 import flexjson.JSON;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
