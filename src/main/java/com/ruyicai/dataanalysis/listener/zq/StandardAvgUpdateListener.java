@@ -50,7 +50,7 @@ public class StandardAvgUpdateListener {
 			//更新平均欧赔
 			doScheduleAvg(schedule, list);
 			//更新欧赔缓存
-			updateStandardCache(schedule, list);
+			updateStandardCache(schedule);
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
@@ -119,7 +119,7 @@ public class StandardAvgUpdateListener {
 		}
 	}
 	
-	private void updateStandardCache(Schedule schedule, Collection<Standard> standardList) {
+	private void updateStandardCache(Schedule schedule) {
 		try {
 			boolean zqEventEmpty = CommonUtil.isZqEventEmpty(schedule);
 			if (zqEventEmpty) { //如果event为空,则不需要更新缓存
@@ -127,6 +127,7 @@ public class StandardAvgUpdateListener {
 			}
 			//更新Standard缓存
 			Integer scheduleId = schedule.getScheduleID();
+			List<Standard> standardList = Standard.findByScheduleID(scheduleId);
 			infoService.buildStandards(schedule, standardList);
 			GlobalCache standard = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId)));
 			if (standard==null) {
