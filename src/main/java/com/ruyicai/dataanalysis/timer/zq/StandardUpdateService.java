@@ -64,6 +64,7 @@ public class StandardUpdateService {
 			//查询需要返回给客户端的公司编号
 			try {
 				returnCompanyIds = EuropeCompany.getPrimaryCompanyIds();
+				logger.info("returnCompanyIds size:"+(returnCompanyIds==null ? 0 : returnCompanyIds.size()));
 			} catch (Exception e) {
 				logger.error("足球欧赔更新-returnCompanyIds发生异常", e);
 			}
@@ -130,6 +131,9 @@ public class StandardUpdateService {
 			}
 			if (updateCache) { //更新欧赔缓存
 				sendJmsJczUtil.standardCacheUpdate(scheduleId);
+			}
+			if (updateAvg&&!updateCache) {
+				logger.info("只更新平均欧赔,不更新缓存");
 			}
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
