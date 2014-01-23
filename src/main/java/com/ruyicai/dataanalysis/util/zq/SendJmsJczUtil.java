@@ -30,6 +30,9 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:standardAvgUpdate")
 	private ProducerTemplate standardAvgUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:standardCacheUpdate")
+	private ProducerTemplate standardCacheUpdateTemplate;
+	
 	@Produce(uri = "jms:topic:standardDetailSave")
 	private ProducerTemplate standardDetailSaveTemplate;
 	
@@ -55,11 +58,23 @@ public class SendJmsJczUtil {
 	 * 发送更新平均欧赔的Jms
 	 * @param body
 	 */
-	public void sendStandardAvgUpdateJms(String body) {
+	public void standardAvgUpdate(String body) {
 		try {
 			standardAvgUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error("足球发送更新平均欧赔的Jms发生异常", e);
+		}
+	}
+	
+	/**
+	 * 发送更新欧赔缓存的Jms
+	 * @param body
+	 */
+	public void standardCacheUpdate(String body) {
+		try {
+			standardCacheUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error("足球发送更新欧赔缓存的Jms发生异常", e);
 		}
 	}
 	

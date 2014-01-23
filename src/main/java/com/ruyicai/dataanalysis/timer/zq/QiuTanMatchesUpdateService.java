@@ -366,11 +366,12 @@ public class QiuTanMatchesUpdateService {
 		}
 		if (isUpdate) {
 			schedule.merge();
-		}
-		//如果赛事已经有了event
-		if (!CommonUtil.isZqEventEmpty(schedule)) {
-			sendJmsJczUtil.sendStandardAvgUpdateJms(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
-			sendJmsJczUtil.sendLetgoalCacheUpdateJms(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
+			//如果赛事已经有了event
+			if (!CommonUtil.isZqEventEmpty(schedule)) {
+				sendJmsJczUtil.standardAvgUpdate(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
+				sendJmsJczUtil.standardCacheUpdate(String.valueOf(schedule.getScheduleID())); //更新欧赔缓存
+				sendJmsJczUtil.sendLetgoalCacheUpdateJms(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
+			}
 		}
 		//发送event增加的Jms
 		if (eventModify && StringUtils.isNotBlank(schedule.getEvent())) {

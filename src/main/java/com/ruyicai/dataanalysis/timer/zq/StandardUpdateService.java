@@ -1,6 +1,8 @@
 package com.ruyicai.dataanalysis.timer.zq;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +36,7 @@ public class StandardUpdateService {
 	
 	private ThreadPoolExecutor standardUpdateExecutor;
 	
-	private List<Integer> returnCompanyId;
+	private List<Integer> returnCompanyIds; //需要返回给客户端的欧赔公司编号
 	
 	@Value("${baijiaoupei}")
 	private String url;
@@ -48,7 +50,6 @@ public class StandardUpdateService {
 	@PostConstruct
 	public void init() {
 		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 30);
-		returnCompanyId = EuropeCompany.getPrimaryCompanyIds();
 	}
 	
 	public void process() {
@@ -59,6 +60,12 @@ public class StandardUpdateService {
 			if (StringUtils.isBlank(data)) {
 				logger.info("足球欧赔更新时获取数据为空");
 				return;
+			}
+			//查询需要返回给客户端的公司编号
+			try {
+				returnCompanyIds = EuropeCompany.getPrimaryCompanyIds();
+			} catch (Exception e) {
+				logger.error("足球欧赔更新-returnCompanyIds发生异常", e);
 			}
 			ProcessStandardThread task = new ProcessStandardThread(data);
 			standardUpdateExecutor.execute(task);
@@ -105,15 +112,24 @@ public class StandardUpdateService {
 			String scheduleId = match.elementTextTrim("id");
 			List<Element> odds = match.element("odds").elements("o");
 			//logger.info("足球欧赔更新,scheduleId="+scheduleId+",oddsSize="+odds.size());
-			boolean isModify = false; //欧赔是否发生变化
+			boolean updateAvg = false; //更新平均欧赔
+			boolean updateCache = false; //更新欧赔缓存
 			for(Element odd : odds) {
-				boolean modify = doOdd(scheduleId, odd);
-				if (!isModify&&modify) {
-					isModify = true;
+				Map<String, Boolean> map = doOdd(scheduleId, odd);
+				Boolean updateAvgM = map.get("updateAvg");
+				Boolean updateCacheM = map.get("updateCache");
+				if (!updateAvg&&updateAvgM) {
+					updateAvg = true;
+				}
+				if (!updateCache&&updateCacheM) {
+					updateCache = true;
 				}
 			}
-			if (isModify) {
-				sendJmsJczUtil.sendStandardAvgUpdateJms(scheduleId); //更新平均欧赔
+			if (updateAvg) { //更新平均欧赔
+				sendJmsJczUtil.standardAvgUpdate(scheduleId); 
+			}
+			if (updateCache) { //更新欧赔缓存
+				sendJmsJczUtil.standardCacheUpdate(scheduleId);
 			}
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
@@ -123,7 +139,10 @@ public class StandardUpdateService {
 		}
 	}
 	
-	private boolean doOdd(String scheduleId, Element odd) {
+	private Map<String, Boolean> doOdd(String scheduleId, Element odd) {
+		Map<String, Boolean> resultMap = new HashMap<String, Boolean>();
+		resultMap.put("updateAvg", false);
+		resultMap.put("updateCache", false);
 		try {
 			String o = odd.getTextTrim();
 			String[] values = o.split("\\,");
@@ -154,7 +173,7 @@ public class StandardUpdateService {
 					standard.persist();
 				} catch (Exception e) {
 					logger.error("足球欧赔更新-doOdd-保存standard发生异常", e);
-					return false;
+					return resultMap;
 				}
 				StandardDetail detail = new StandardDetail();
 				detail.setOddsID(standard.getOddsID());
@@ -176,7 +195,12 @@ public class StandardUpdateService {
 					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
 					//detail.persist();
 				}
-				return true;
+				resultMap.put("updateAvg", true);
+				boolean isReturn = isReturnCompanyId(companyId);
+				if (isReturn) {
+					resultMap.put("updateCache", true);
+				}
+				return resultMap;
 			} else {
 				if ((StringUtils.isNotBlank(homeWin) && !NumberUtil.compare(homeWin, standard.getHomeWin()))
 						||(StringUtils.isNotBlank(standoff) && !NumberUtil.compare(standoff, standard.getStandoff()))
@@ -198,11 +222,32 @@ public class StandardUpdateService {
 					detail.setModifyTime(standard.getModifyTime());
 					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
 					//detail.persist();
-					return true;
+					resultMap.put("updateAvg", true);
+					boolean isReturn = isReturnCompanyId(companyId);
+					if (isReturn) {
+						resultMap.put("updateCache", true);
+					}
+					return resultMap;
 				}
 			}
 		} catch (Exception e) {
 			logger.error("足球欧赔更新-doOdd,发生异常", e);
+		}
+		return resultMap;
+	}
+	
+	private boolean isReturnCompanyId(String companyId) {
+		try {
+			if (returnCompanyIds!=null&&returnCompanyIds.size()>0) {
+				if (StringUtils.isNotBlank(companyId)) {
+					int parseInt = Integer.parseInt(companyId);
+					if (returnCompanyIds.contains(parseInt)) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("isReturnCompanyId发生异常", e);
 		}
 		return false;
 	}

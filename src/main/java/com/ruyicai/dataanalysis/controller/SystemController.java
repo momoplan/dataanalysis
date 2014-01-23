@@ -424,7 +424,7 @@ public class SystemController {
 	ResponseData standardAvgJms(@RequestParam("scheduleId") String scheduleId) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJczUtil.sendStandardAvgUpdateJms(scheduleId);
+			sendJmsJczUtil.standardAvgUpdate(scheduleId);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
