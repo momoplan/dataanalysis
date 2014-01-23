@@ -1,5 +1,7 @@
 package com.ruyicai.dataanalysis.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 
@@ -65,5 +67,15 @@ public class EuropeCompany {
         	e.printStackTrace();
         }
     }
+	
+	public static List<Integer> getPrimaryCompanyIds() {
+		return new EuropeCompany().getEuropeCompanyCache().getPrimaryCompanyIds();
+	}
+	
+	public static List<EuropeCompany> findByPrimary() {
+		return entityManager().createQuery(
+				"select o from EuropeCompany o where o.name_Cn is not null and o.isPrimary=1", EuropeCompany.class)
+				.getResultList();
+	}
 	
 }

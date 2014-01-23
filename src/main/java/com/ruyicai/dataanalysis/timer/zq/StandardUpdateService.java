@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.util.DateUtil;
@@ -33,6 +34,8 @@ public class StandardUpdateService {
 	
 	private ThreadPoolExecutor standardUpdateExecutor;
 	
+	private List<Integer> returnCompanyId;
+	
 	@Value("${baijiaoupei}")
 	private String url;
 	
@@ -45,6 +48,7 @@ public class StandardUpdateService {
 	@PostConstruct
 	public void init() {
 		standardUpdateExecutor = ThreadPoolUtil.createTaskExecutor("standardUpdate", 30);
+		returnCompanyId = EuropeCompany.getPrimaryCompanyIds();
 	}
 	
 	public void process() {
