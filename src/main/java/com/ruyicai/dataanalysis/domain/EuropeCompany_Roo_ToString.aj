@@ -14,7 +14,8 @@ privileged aspect EuropeCompany_Roo_ToString {
         sb.append("IsExchange: ").append(getIsExchange()).append(", ");
         sb.append("IsPrimary: ").append(getIsPrimary()).append(", ");
         sb.append("Name_Cn: ").append(getName_Cn()).append(", ");
-        sb.append("Name_E: ").append(getName_E());
+        sb.append("Name_E: ").append(getName_E()).append(", ");
+        sb.append("PrimaryCompanyIds: ").append(getPrimaryCompanyIds() == null ? "null" : getPrimaryCompanyIds().size());
         return sb.toString();
     }
     
