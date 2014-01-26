@@ -473,6 +473,7 @@ public class GlobalInfoService {
 		long endmillis = System.currentTimeMillis();
 		logger.info("Schedule.findByDay,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		if (list!=null && list.size()>0) {
+			long startmillis2 = System.currentTimeMillis();
 			for (Schedule schedule : list) {
 				String sclassID = String.valueOf(schedule.getSclassID()); //联赛编号
 				List<ScheduleDTO> dtoList = results.get(sclassID);
@@ -482,6 +483,8 @@ public class GlobalInfoService {
 				dtoList.add(analysisService.buildDTO(schedule));
 				results.put(sclassID, dtoList);
 			}
+			long endmillis2 = System.currentTimeMillis();
+			logger.info("getSchedules-buildDTO,用时:"+(endmillis2-startmillis2)+",size="+list.size());
 		}
 		return results;
 	}
