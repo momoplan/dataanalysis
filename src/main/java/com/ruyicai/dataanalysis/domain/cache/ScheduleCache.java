@@ -16,7 +16,7 @@ public class ScheduleCache {
 		String value = cacheService.get(StringUtil.join("_", "dadaanalysis", "Schedule", String.valueOf(scheduleID)));
 		Schedule schedule = null;
 		if(StringUtil.isEmpty(value)) {
-			schedule = Schedule.findById(scheduleID, true);
+			schedule = Schedule.findById(scheduleID, false);
 			if(null != schedule) {
 				cacheService.set(StringUtil.join("_", "dadaanalysis", "Schedule", String.valueOf(scheduleID)), 0, schedule.toJson());
 			}
