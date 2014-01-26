@@ -30,7 +30,7 @@ public class StandardAvgUpdateListener {
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
 			}
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId), true);
 			if (schedule==null) {
 				return;
 			}

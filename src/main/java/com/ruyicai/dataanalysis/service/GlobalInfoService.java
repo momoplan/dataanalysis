@@ -222,7 +222,7 @@ public class GlobalInfoService {
 	public void updateInfo(Integer scheduleID) {
 		logger.info("更新球队信息,scheduleID:{}", new Integer[] {scheduleID});
 		long startmillis = System.currentTimeMillis();
-		Schedule schedule = Schedule.findSchedule(scheduleID);
+		Schedule schedule = Schedule.findSchedule(scheduleID, true);
 		if(null == schedule) {
 			return;
 		}
@@ -454,7 +454,7 @@ public class GlobalInfoService {
 			String key = StringUtil.join("_", "dadaanalysis", "schedulesByDayZq", day);
 			results = cacheService.get(key);
 			if (results==null) {
-				results = getSchedules(day);
+				results = getSchedules(day, 0);
 				if (results!=null) {
 					cacheService.set(key, results);
 				}
@@ -463,12 +463,15 @@ public class GlobalInfoService {
 		return results;
 	}
 	
-	public Map<String, List<ScheduleDTO>> getSchedules(String day) {
+	public Map<String, List<ScheduleDTO>> getSchedules(String day, int scheduleId) {
 		Map<String, List<ScheduleDTO>> results = new LinkedHashMap<String, List<ScheduleDTO>>();
 		Date matchDate = DateUtil.parse("yyyyMMdd", day);
 		calendar.setTime(matchDate);
 		calendar.add(Calendar.DATE, 1);
+		long startmillis = System.currentTimeMillis();
 		List<Schedule> list = Schedule.findByDay(matchDate, calendar.getTime(), true);
+		long endmillis = System.currentTimeMillis();
+		logger.info("Schedule.findByDay,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		if (list!=null && list.size()>0) {
 			for (Schedule schedule : list) {
 				String sclassID = String.valueOf(schedule.getSclassID()); //联赛编号

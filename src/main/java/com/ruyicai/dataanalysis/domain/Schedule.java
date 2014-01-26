@@ -202,9 +202,11 @@ public class Schedule {
 		return new Schedule().getScheduleCache().getSchedule(scheduleID);
     }
 
-	public static Schedule findSchedule(int scheduleID) {
+	public static Schedule findSchedule(int scheduleID, boolean build) {
         Schedule schedule = new Schedule().getScheduleCache().getSchedule(scheduleID);
-        buildSchedule(schedule);
+        if (build) {
+        	buildSchedule(schedule);
+        }
         return schedule;
     }
 

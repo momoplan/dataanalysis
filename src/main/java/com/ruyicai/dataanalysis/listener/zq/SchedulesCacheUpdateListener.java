@@ -38,20 +38,18 @@ public class SchedulesCacheUpdateListener {
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
 			}
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId));
+			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleId), false);
 			if (schedule==null) {
 				return;
 			}
 			Date matchTime = schedule.getMatchTime();
-			updateCacheByDate(matchTime);
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId);
+			updateCacheByDate(matchTime, startmillis, schedule.getScheduleID());
 		} catch (Exception e) {
 			logger.error("足球赛事缓存更新的Jms监听发生异常,scheduleId="+scheduleId, e);
 		}
 	}
 	
-	public void updateCacheByDate(Date matchTime) {
+	public void updateCacheByDate(Date matchTime, long startmillis, int scheduleId) {
 		if (matchTime==null) {
 			return;
 		}
@@ -61,10 +59,12 @@ public class SchedulesCacheUpdateListener {
 		if (value==null) {
 			return;
 		}
-		value = infoService.getSchedules(day);
+		value = infoService.getSchedules(day, scheduleId);
 		if (value!=null) {
 			cacheService.set(key, value);
 		}
+		long endmillis = System.currentTimeMillis();
+		logger.info("足球赛事缓存更新的Jms监听,用时:"+(endmillis - startmillis)+",scheduleId="+scheduleId);
 	}
 	
 }

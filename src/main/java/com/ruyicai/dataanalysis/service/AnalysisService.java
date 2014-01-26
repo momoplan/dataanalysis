@@ -40,7 +40,7 @@ public class AnalysisService {
 	
 	public Collection<RankingDTO> getRanking(int scheduleID, boolean ischeckCache) {
 		logger.info("开始获取赛事球队联赛排名, scheduleID:{}", new Integer[] {scheduleID});
-		Schedule schedule = Schedule.findSchedule(scheduleID);
+		Schedule schedule = Schedule.findSchedule(scheduleID, true);
 		if(null == schedule) {
 			return new ArrayList<RankingDTO>();
 		}
@@ -150,7 +150,7 @@ public class AnalysisService {
 	
 	public Collection<ScheduleDTO> getPreHomeSchedules(int scheduleID, Schedule schedule) {
 		if (schedule==null) {
-			schedule = Schedule.findSchedule(scheduleID);
+			schedule = Schedule.findSchedule(scheduleID, true);
 		}
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
@@ -169,7 +169,7 @@ public class AnalysisService {
 
 	public Collection<ScheduleDTO> getPreGuestSchedules(int scheduleID, Schedule schedule) {
 		if (schedule==null) {
-			schedule = Schedule.findSchedule(scheduleID);
+			schedule = Schedule.findSchedule(scheduleID, true);
 		}
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
@@ -188,7 +188,7 @@ public class AnalysisService {
 	
 	public Collection<ScheduleDTO> getAfterHomeSchedules(int scheduleID, Schedule schedule) {
 		if (schedule==null) {
-			schedule = Schedule.findSchedule(scheduleID);
+			schedule = Schedule.findSchedule(scheduleID, true);
 		}
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
@@ -207,7 +207,7 @@ public class AnalysisService {
 	
 	public Collection<ScheduleDTO> getAfterGuestSchedules(int scheduleID, Schedule schedule) {
 		if (schedule==null) {
-			schedule = Schedule.findSchedule(scheduleID);
+			schedule = Schedule.findSchedule(scheduleID, true);
 		}
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
@@ -226,7 +226,7 @@ public class AnalysisService {
 	
 	public Collection<ScheduleDTO> getPreClashSchedules(int scheduleID, Schedule schedule) {
 		if (schedule==null) {
-			schedule = Schedule.findSchedule(scheduleID);
+			schedule = Schedule.findSchedule(scheduleID, true);
 		}
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();

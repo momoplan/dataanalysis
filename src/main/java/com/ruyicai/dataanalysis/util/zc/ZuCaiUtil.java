@@ -52,7 +52,7 @@ public class ZuCaiUtil {
 			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
 				qiuTanMatches.setZcSfcEvent(null);
 				qiuTanMatches.merge();
-				Schedule schedule = Schedule.findSchedule(scheduleId);
+				Schedule schedule = Schedule.findSchedule(scheduleId, true);
 				if (schedule!=null) {
 					schedule.setZcSfcEvent(null);
 					schedule.merge();
@@ -74,7 +74,7 @@ public class ZuCaiUtil {
 			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
 				qiuTanMatches.setZcJqcEvent(null);
 				qiuTanMatches.merge();
-				Schedule schedule = Schedule.findSchedule(scheduleId);
+				Schedule schedule = Schedule.findSchedule(scheduleId, true);
 				if (schedule!=null) {
 					schedule.setZcJqcEvent(null);
 					schedule.merge();
@@ -96,7 +96,7 @@ public class ZuCaiUtil {
 			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
 				qiuTanMatches.setZcBqcEvent(null);
 				qiuTanMatches.merge();
-				Schedule schedule = Schedule.findSchedule(scheduleId);
+				Schedule schedule = Schedule.findSchedule(scheduleId, true);
 				if (schedule!=null) {
 					schedule.setZcBqcEvent(null);
 					schedule.merge();

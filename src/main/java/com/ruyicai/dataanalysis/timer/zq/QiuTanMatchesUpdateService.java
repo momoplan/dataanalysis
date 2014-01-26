@@ -103,7 +103,7 @@ public class QiuTanMatchesUpdateService {
 			if (JingCaiUtil.isJcLq(lotteryName)) { //竞彩篮球
 				return;
 			}
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(iD_bet007));
+			Schedule schedule = Schedule.findSchedule(Integer.parseInt(iD_bet007), true);
 			if(null == schedule) {
 				return;
 			}

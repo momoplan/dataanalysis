@@ -412,7 +412,7 @@ public class ScheduleUpdateService {
 				if (set!=null && set.size()>0) {
 					for (String dateString : set) {
 						Date date = DateUtil.parse("yyyy-MM-dd", dateString);
-						schedulesCacheUpdateListener.updateCacheByDate(date); //更新赛事缓存
+						schedulesCacheUpdateListener.updateCacheByDate(date, System.currentTimeMillis(), 0); //更新赛事缓存
 					}
 				}
 			}

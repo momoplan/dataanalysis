@@ -72,7 +72,7 @@ public class DetailResultUpdateService {
 			String playername = values.length >= 5 ? values[4] : null;
 			String playerID = values.length >= 6 ? values[5] : null;
 			String playername_j = values.length >= 7 ? values[6] : null;
-			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID));
+			Schedule schedule = Schedule.findSchedule(Integer.parseInt(scheduleID), true);
 			if(schedule==null) {
 				return;
 			}

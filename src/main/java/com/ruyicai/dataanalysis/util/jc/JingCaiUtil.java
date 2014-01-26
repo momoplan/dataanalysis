@@ -133,7 +133,7 @@ public class JingCaiUtil {
 			if (scheduleId!=null&&!StringUtil.isEmpty(iD_bet007)&&scheduleId!=Integer.parseInt(iD_bet007)) {
 				qiuTanMatches.setEvent(null);
 				qiuTanMatches.merge();
-				Schedule schedule = Schedule.findSchedule(scheduleId);
+				Schedule schedule = Schedule.findSchedule(scheduleId, true);
 				if (schedule!=null) {
 					schedule.setEvent(null);
 					schedule.merge();
