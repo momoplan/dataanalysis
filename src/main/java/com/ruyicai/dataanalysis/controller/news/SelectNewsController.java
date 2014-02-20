@@ -31,12 +31,13 @@ public class SelectNewsController {
 			@RequestParam(value = "endLine", required = false, defaultValue = "10") int endLine) {
 		ResponseData rd = new ResponseData();
 		try {
-			Page<News> page = new Page<News>();
-			page.setPageIndex(startLine);
-			page.setMaxResult(endLine);
+			long startMillis = System.currentTimeMillis();
+			Page<News> page = new Page<News>(startLine, endLine);
 			selectNewsService.findNews(event, page);
 			rd.setErrorCode(ErrorCode.OK.value);
 			rd.setValue(page);
+			long endMillis = System.currentTimeMillis();
+			logger.info("新闻查询,用时:"+(endMillis-startMillis));
 		} catch(RuyicaiException e){
 			rd.setErrorCode(e.getErrorCode().value);
 		} catch(Exception e) {

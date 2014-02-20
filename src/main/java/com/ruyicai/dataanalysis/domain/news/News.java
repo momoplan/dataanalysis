@@ -11,7 +11,6 @@ import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
-import com.ruyicai.dataanalysis.util.Page;
 
 /**
  * 新闻
@@ -47,7 +46,7 @@ public class News {
 	@Column(name = "url")
 	private String url;
 	
-	public static void findList(String where, String orderby, List<Object> params, Page<News> page) {
+	/*public static void findList(String where, String orderby, List<Object> params, Page<News> page) {
 		try {
 			TypedQuery<News> q = entityManager().createQuery(
 					"SELECT o FROM News o " + where + orderby, News.class);
@@ -74,7 +73,7 @@ public class News {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public static List<News> getList(String where, String orderby, List<Object> params) {
 		TypedQuery<News> q = entityManager().createQuery(
