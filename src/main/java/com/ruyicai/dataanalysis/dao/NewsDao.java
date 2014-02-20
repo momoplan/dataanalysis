@@ -5,7 +5,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.consts.ErrorCode;
 import com.ruyicai.dataanalysis.domain.news.News;
 import com.ruyicai.dataanalysis.exception.RuyicaiException;

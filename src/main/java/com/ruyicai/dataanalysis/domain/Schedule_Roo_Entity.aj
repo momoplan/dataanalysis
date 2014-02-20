@@ -46,6 +46,10 @@ privileged aspect Schedule_Roo_Entity {
         return entityManager().createQuery("SELECT o FROM Schedule o", Schedule.class).getResultList();
     }
     
+    public static Schedule Schedule.findSchedule(int scheduleID) {
+        return entityManager().find(Schedule.class, scheduleID);
+    }
+    
     public static List<Schedule> Schedule.findScheduleEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Schedule o", Schedule.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
