@@ -26,69 +26,92 @@ public class ScheduleJclFinishListener {
 	public void process(@Header("EVENT") String event) {
 		try {
 			logger.info("竞彩篮球-完场的JMS start, event={}", event);
-			if (StringUtils.isBlank(event)||!StringUtils.startsWith(event, "0")) { //不是篮球
-				logger.info("竞彩篮球-完场的JMS,event为空或不是篮球,event={}", event);
-				return;
-			}
-			ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
-			if (scheduleJcl==null) {
-				logger.info("竞彩篮球-完场的JMS,ScheduleJcl为空,event={}", event);
-				return;
-			}
-			logger.info("竞彩篮球-完场的JMS,ScheduleJcl:"+scheduleJcl.toJson()+",event="+event);
-			
-			String[] events = StringUtils.split(event, "_");
-			String result = lotteryService.getJingcaimatches("J00005", events[1], events[2], events[3]);
-			if (StringUtils.isBlank(result)) {
-				logger.info("竞彩篮球-完场的JMS,lottery返回result为空,event={}", event);
-				return;
-			}
-			JSONObject fromObject = JSONObject.fromObject(result);
-			if (fromObject==null) {
-				logger.info("竞彩篮球-完场的JMS,fromObject为空,event={}", event);
-				return;
-			}
-			String errorCode = fromObject.getString("errorCode");
-			String valueString = fromObject.getString("value");
-			if (!StringUtils.equals(errorCode, "0")||StringUtils.equals(valueString, "null")) {
-				logger.info("竞彩篮球-完场的JMS,errorCode不是0或valueString为空,event={}", event);
-				return;
-			}
-			JSONObject valueObject = fromObject.getJSONObject("value");
-			String resultString = valueObject.getString("result");
-			if (StringUtils.equals(resultString, "null")) {
-				logger.info("竞彩篮球-完场的JMS,resultString为空,event={}", event);
-				return;
-			}
-			JSONObject resultObject = valueObject.getJSONObject("result");
-			String audit = resultObject.getString("audit"); //审核状态(0:已审核)
-			if (StringUtils.equals(audit, "null")||!StringUtils.equals(audit, "0")) {
-				logger.info("竞彩篮球-完场的JMS,未审核,event={}", event);
-				return;
-			}
-			boolean modify = false;
-			//让分
-			String letScore = scheduleJcl.getLetScore();
-			String letpoint = resultObject.getString("letpoint");
-			if (StringUtils.isNotBlank(letpoint)&&!StringUtils.equals(letpoint, "null")
-					&&!StringUtils.equals(letpoint, letScore)) {
-				modify = true;
-				scheduleJcl.setLetScore(letpoint);
-			}
-			//预设总分
-			String totalScore = scheduleJcl.getTotalScore();
-			String basepoint = resultObject.getString("basepoint");
-			if (StringUtils.isNotBlank(basepoint)&&!StringUtils.equals(basepoint, "null")
-					&&!StringUtils.equals(basepoint, totalScore)) {
-				modify = true;
-				scheduleJcl.setTotalScore(basepoint);
-			}
-			if (modify) {
-				logger.info("竞彩篮球-完场的JMS,开始更新让分总分,event={}", event);
-				scheduleJcl.merge();
-			}
+			new Thread(new UpdateThread(event)).start();
 		} catch (Exception e) {
 			logger.error("竞彩篮球-完场的JMS发生异常", e);
+		}
+	}
+	
+	private class UpdateThread implements Runnable {
+
+		private String event;
+
+		public UpdateThread(String event) {
+			this.event = event;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(10000); //睡眠10秒，等待lottery更新缓存
+				updateData(event);
+			} catch (Exception e) {
+				logger.error("竞彩篮球-完场的JMS-UpdateThread发生异常", e);
+			}
+		}
+	}
+	
+	private void updateData(String event) {
+		if (StringUtils.isBlank(event)||!StringUtils.startsWith(event, "0")) { //不是篮球
+			logger.info("竞彩篮球-完场的JMS,event为空或不是篮球,event={}", event);
+			return;
+		}
+		ScheduleJcl scheduleJcl = ScheduleJcl.findByEvent(event, false);
+		if (scheduleJcl==null) {
+			logger.info("竞彩篮球-完场的JMS,ScheduleJcl为空,event={}", event);
+			return;
+		}
+		logger.info("竞彩篮球-完场的JMS,ScheduleJcl:"+scheduleJcl.toJson()+",event="+event);
+		
+		String[] events = StringUtils.split(event, "_");
+		String result = lotteryService.getJingcaimatches("J00005", events[1], events[2], events[3]);
+		if (StringUtils.isBlank(result)) {
+			logger.info("竞彩篮球-完场的JMS,lottery返回result为空,event={}", event);
+			return;
+		}
+		JSONObject fromObject = JSONObject.fromObject(result);
+		if (fromObject==null) {
+			logger.info("竞彩篮球-完场的JMS,fromObject为空,event={}", event);
+			return;
+		}
+		String errorCode = fromObject.getString("errorCode");
+		String valueString = fromObject.getString("value");
+		if (!StringUtils.equals(errorCode, "0")||StringUtils.equals(valueString, "null")) {
+			logger.info("竞彩篮球-完场的JMS,errorCode不是0或valueString为空,event={}", event);
+			return;
+		}
+		JSONObject valueObject = fromObject.getJSONObject("value");
+		String resultString = valueObject.getString("result");
+		if (StringUtils.equals(resultString, "null")) {
+			logger.info("竞彩篮球-完场的JMS,resultString为空,event={}", event);
+			return;
+		}
+		JSONObject resultObject = valueObject.getJSONObject("result");
+		String audit = resultObject.getString("audit"); //审核状态(0:已审核)
+		if (StringUtils.equals(audit, "null")||!StringUtils.equals(audit, "0")) {
+			logger.info("竞彩篮球-完场的JMS,未审核,event={}", event);
+			return;
+		}
+		boolean modify = false;
+		//让分
+		String letScore = scheduleJcl.getLetScore();
+		String letpoint = resultObject.getString("letpoint");
+		if (StringUtils.isNotBlank(letpoint)&&!StringUtils.equals(letpoint, "null")
+				&&!StringUtils.equals(letpoint, letScore)) {
+			modify = true;
+			scheduleJcl.setLetScore(letpoint);
+		}
+		//预设总分
+		String totalScore = scheduleJcl.getTotalScore();
+		String basepoint = resultObject.getString("basepoint");
+		if (StringUtils.isNotBlank(basepoint)&&!StringUtils.equals(basepoint, "null")
+				&&!StringUtils.equals(basepoint, totalScore)) {
+			modify = true;
+			scheduleJcl.setTotalScore(basepoint);
+		}
+		if (modify) {
+			logger.info("竞彩篮球-完场的JMS,开始更新让分总分,event={}", event);
+			scheduleJcl.merge();
 		}
 	}
 	
