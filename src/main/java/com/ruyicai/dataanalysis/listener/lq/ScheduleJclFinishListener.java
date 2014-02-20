@@ -60,18 +60,12 @@ public class ScheduleJclFinishListener {
 				logger.info("竞彩篮球-完场的JMS,resultString为空,event={}", event);
 				return;
 			}
-			String matchesString = valueObject.getString("matches");
-			if (StringUtils.equals(matchesString, "null")) {
-				logger.info("竞彩篮球-完场的JMS,matchesString为空,event={}", event);
-				return;
-			}
-			JSONObject matchesObject = valueObject.getJSONObject("matches");
-			String audit = matchesObject.getString("audit"); //审核状态(0:已审核)
+			JSONObject resultObject = valueObject.getJSONObject("result");
+			String audit = resultObject.getString("audit"); //审核状态(0:已审核)
 			if (StringUtils.equals(audit, "null")||!StringUtils.equals(audit, "0")) {
 				logger.info("竞彩篮球-完场的JMS,未审核,event={}", event);
 				return;
 			}
-			JSONObject resultObject = valueObject.getJSONObject("result");
 			boolean modify = false;
 			//让分
 			String letScore = scheduleJcl.getLetScore();
