@@ -427,6 +427,12 @@ public class Schedule {
 		return schedules;
 	}
 	
+	public static List<Integer> findSaleIds() {
+		TypedQuery<Integer> query = entityManager().createQuery(
+				"select o.scheduleID from Schedule o where o.betState=1", Integer.class);
+		return query.getResultList();
+	}
+	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class", "scheduleCache").serialize(this);
     }
