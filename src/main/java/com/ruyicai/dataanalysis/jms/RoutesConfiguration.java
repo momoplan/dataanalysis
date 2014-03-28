@@ -30,7 +30,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					deadLetterChannel("jms:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
 					//竞彩
-					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleEventAdd?concurrentConsumers=20").to(
+					/*from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleEventAdd?concurrentConsumers=20").to(
 							"bean:scheduleEventAddListener?method=process").routeId("竞彩-event增加");
 					//足球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardAvgUpdate?concurrentConsumers=20").to(
@@ -53,7 +53,7 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleJclFinish?concurrentConsumers=10").to(
 							"bean:scheduleJclFinishListener?method=process").routeId("篮球-完场的监听");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.schedulesJclCacheUpdate?concurrentConsumers=10").to(
-							"bean:schedulesJclCacheUpdateListener?method=process").routeId("篮球-赛事缓存更新");
+							"bean:schedulesJclCacheUpdateListener?method=process").routeId("篮球-赛事缓存更新");*/
 				}
 			});
 		} catch (Exception e) {
@@ -68,12 +68,12 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 				public void configure() throws Exception {
 					deadLetterChannel("jmsLottery:queue:dead").maximumRedeliveries(-1)
 					.redeliveryDelay(3000);
-					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=10").to(
+					/*from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcairesult-topic?concurrentConsumers=10").to(
 							"bean:scheduleJclFinishListener?method=process").routeId("竞彩赛果更新通知");
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaistartsell-topic?concurrentConsumers=10").to(
 							"bean:jingCaiMatchStartListener?method=process").routeId("竞彩赛事开售通知");
 					from("jmsLottery:queue:VirtualTopicConsumers.dataanalysis.jingcaiendsell-topic?concurrentConsumers=10").to(
-							"bean:jingCaiMatchEndListener?method=process").routeId("竞彩赛事停售通知");
+							"bean:jingCaiMatchEndListener?method=process").routeId("竞彩赛事停售通知");*/
 				}
 			});
 		} catch (Exception e) {

@@ -7,7 +7,7 @@ import org.springframework.roo.addon.json.RooJson;
 @RooJson
 public class StandardDto {
 
-	private String companyId;
+	//private String companyId;
 	
 	private Double homeWin;
 	

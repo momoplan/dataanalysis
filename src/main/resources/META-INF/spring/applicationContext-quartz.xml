@@ -272,7 +272,7 @@
    		<property name="triggers">
    			<list>
    				<!-- 竞彩足球 -->
-    			<ref bean="detailResultUpdateTrigger"/>
+    			<!-- <ref bean="detailResultUpdateTrigger"/>
    				<ref bean="qiuTanMatchesUpdateTrigger"/>
    				<ref bean="scheduleUpdateTrigger"/>
    				<ref bean="sclassUpdateTrigger"/>
@@ -284,9 +284,9 @@
    				<ref bean="letgoalUpdateTrigger"/>
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
-   				<ref bean="processWeiKaiTrigger"/>
+   				<ref bean="processWeiKaiTrigger"/> -->
    				<!-- 竞彩篮球 -->
-   				<ref bean="sclassJclUpdateTrigger"/>
+   				<!-- <ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
    				<ref bean="todayScoreJclUpdateTrigger"/>
    				<ref bean="qiuTanMatchesJclUpdateTrigger"/>
@@ -294,9 +294,9 @@
    				<ref bean="peiLvJclUpdateTrigger"/>
    				<ref bean="teamJclUpdateTrigger"/>
    				<ref bean="updateScheduleJclMoreTrigger"/>
-   				<ref bean="processWeiKaiLqTrigger"/>
+   				<ref bean="processWeiKaiLqTrigger"/> -->
    				<!-- 新闻推荐 -->
-   				<ref bean="fetchNewsTrigger"/>
+   				<!-- <ref bean="fetchNewsTrigger"/> -->
    			</list>
    		</property>
    </bean>

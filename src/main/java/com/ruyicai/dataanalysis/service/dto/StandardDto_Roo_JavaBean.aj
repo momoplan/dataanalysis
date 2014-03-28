@@ -4,17 +4,8 @@
 package com.ruyicai.dataanalysis.service.dto;
 
 import java.lang.Double;
-import java.lang.String;
 
 privileged aspect StandardDto_Roo_JavaBean {
-    
-    public String StandardDto.getCompanyId() {
-        return this.companyId;
-    }
-    
-    public void StandardDto.setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
     
     public Double StandardDto.getHomeWin() {
         return this.homeWin;
