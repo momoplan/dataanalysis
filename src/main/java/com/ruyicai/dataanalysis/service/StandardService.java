@@ -27,7 +27,7 @@ public class StandardService {
 			List<Integer> scheduleIds = Schedule.findSaleIds();
 			if (scheduleIds!=null&&scheduleIds.size()>0) {
 				for (Integer scheduleId : scheduleIds) {
-					Schedule schedule = Schedule.findSchedule(scheduleId);
+					Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
 					if (StringUtils.isBlank(schedule.getEvent())) {
 						continue;
 					}
@@ -47,7 +47,7 @@ public class StandardService {
 		return map;
 	}
 	
-	private StandardDto getAvgStandardDto(Schedule schedule) {
+	public StandardDto getAvgStandardDto(Schedule schedule) {
 		StandardDto avgDto = new StandardDto();
 		avgDto.setHomeWin(schedule.getAvgH());
 		avgDto.setStandoff(schedule.getAvgS());

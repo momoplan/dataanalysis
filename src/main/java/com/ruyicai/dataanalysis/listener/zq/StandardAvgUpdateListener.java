@@ -6,9 +6,11 @@ import org.apache.camel.Body;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.ArithUtil;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -22,6 +24,9 @@ import com.ruyicai.dataanalysis.util.NumberUtil;
 public class StandardAvgUpdateListener {
 
 	private Logger logger = LoggerFactory.getLogger(StandardAvgUpdateListener.class);
+	
+	@Autowired
+	private AsyncService asyncService;
 	
 	public void process(@Body String scheduleId) {
 		try {
@@ -40,6 +45,8 @@ public class StandardAvgUpdateListener {
 			List<Standard> list = Standard.getListByScheduleId(Integer.parseInt(scheduleId));
 			//更新平均欧赔
 			doScheduleAvg(schedule, list);
+			//更新正在进行中比赛的平均欧赔
+			updateUsualStandardsAvg(schedule);
 			long endmillis = System.currentTimeMillis();
 			logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
@@ -105,6 +112,21 @@ public class StandardAvgUpdateListener {
 			if (isModify) {
 				schedule.merge();
 			}
+		}
+	}
+	
+	private void updateUsualStandardsAvg(Schedule schedule) {
+		try {
+			if (StringUtils.isBlank(schedule.getEvent())) {
+				return;
+			}
+			Integer betState = schedule.getBetState();
+			if (betState==null||betState!=1) {
+				return;
+			}
+			asyncService.updateUsualStandardsAvg(schedule.getScheduleID());
+		} catch (Exception e) {
+			logger.error("足球平均欧赔更新的Jms-updateUsualStandardsAvg发生异常", e);
 		}
 	}
 	
