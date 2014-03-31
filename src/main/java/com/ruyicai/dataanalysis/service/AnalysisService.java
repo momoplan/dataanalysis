@@ -16,8 +16,8 @@ import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
-import com.ruyicai.dataanalysis.service.dto.RankingDTO;
-import com.ruyicai.dataanalysis.service.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.dto.RankingDTO;
+import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.StringUtil;
 

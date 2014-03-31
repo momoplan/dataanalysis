@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.service.dto.lq;
+package com.ruyicai.dataanalysis.dto.lq;
 
 import java.io.Serializable;
 import java.util.Date;

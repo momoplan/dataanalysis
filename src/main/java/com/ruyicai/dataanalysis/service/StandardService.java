@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
-import com.ruyicai.dataanalysis.service.dto.StandardDto;
+import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service

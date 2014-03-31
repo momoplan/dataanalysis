@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.service.dto.lq;
+package com.ruyicai.dataanalysis.dto.lq;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;

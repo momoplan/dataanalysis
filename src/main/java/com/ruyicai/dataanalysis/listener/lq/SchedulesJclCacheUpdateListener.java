@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
-import com.ruyicai.dataanalysis.service.dto.lq.ScheduleJclDTO;
+import com.ruyicai.dataanalysis.dto.lq.ScheduleJclDTO;
 import com.ruyicai.dataanalysis.service.lq.GlobalInfoJclService;
 import com.ruyicai.dataanalysis.util.StringUtil;
 

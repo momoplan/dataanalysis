@@ -1,4 +1,4 @@
-package com.ruyicai.dataanalysis.service.dto;
+package com.ruyicai.dataanalysis.dto;
 
 import java.io.Serializable;
 
