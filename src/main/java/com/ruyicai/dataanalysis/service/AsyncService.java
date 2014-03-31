@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
+import com.ruyicai.dataanalysis.consts.StandardCompany;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -54,9 +55,38 @@ public class AsyncService {
 		}
 	}
 	
+	@Async
+	public void deleteUsualStandardsCache(String event) {
+		try {
+			//删除平均欧赔缓存
+			deleteUsualStandardsCacheById(event, "avg");
+			//删除公司的平均欧赔缓存
+			StandardCompany[] values = StandardCompany.values();
+			for (StandardCompany standardCompany : values) {
+				deleteUsualStandardsCacheById(event, standardCompany.getCompanyId());
+			}
+		} catch (Exception e) {
+			logger.error("deleteUsualStandardsCache发生异常", e);
+		}
+	}
+	
+	private void deleteUsualStandardsCacheById(String event ,String id) {
+		try {
+			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", id);
+			Map<String, StandardDto> map = cacheService.get(key);
+			if (map!=null) {
+				map.remove(event);
+				cacheService.set(key, map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*public static void main(String[] args) {
-		Integer betState = null;
-		System.out.println(betState!=1);
+		Map<String, StandardDto> map = new HashMap<String, StandardDto>();
+		map.remove("1");
+		System.out.println(map.size());
 	}*/
 	
 	

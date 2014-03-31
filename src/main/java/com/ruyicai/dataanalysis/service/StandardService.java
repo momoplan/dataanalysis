@@ -18,33 +18,54 @@ public class StandardService {
 	@Autowired
 	private CacheService cacheService;
 	
-	public Map<String, StandardDto> getUsualStandards(String companyId) {
-		String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", companyId);
-		Map<String, StandardDto> map = cacheService.get(key);
-		if (map==null) {
-			map = new HashMap<String, StandardDto>();
-			//查询betState=1在售的赛事
-			List<Integer> scheduleIds = Schedule.findSaleIds();
-			if (scheduleIds!=null&&scheduleIds.size()>0) {
-				for (Integer scheduleId : scheduleIds) {
-					Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
-					if (StringUtils.isBlank(schedule.getEvent())) {
-						continue;
+	public Map<String, StandardDto> getUsualStandards(String day, String companyId) {
+		Map<String, StandardDto> resultMap = new HashMap<String, StandardDto>();
+		try {
+			String[] days = StringUtils.splitByWholeSeparator(day, ",");
+			for (String dayStr : days) {
+				if (StringUtils.isNotBlank(dayStr)) {
+					Map<String, StandardDto> map = getUsualStandardsByDayCompanyId(dayStr, companyId);
+					if (map!=null&&map.size()>0) {
+						resultMap.putAll(map);
 					}
-					StandardDto dto = null;
-					if (StringUtils.equals(companyId, "avg")) { //平均欧赔
-						dto = getAvgStandardDto(schedule);
-					} else {
-						dto = getStandardDtoByCompanyId(scheduleId, Integer.parseInt(companyId));
-					}
-					map.put(schedule.getEvent(), dto);
 				}
 			}
-			if (map.size()>0) {
-				cacheService.set(key, map);
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return map;
+		return resultMap;
+	}
+	
+	private Map<String, StandardDto> getUsualStandardsByDayCompanyId(String day, String companyId) {
+		try {
+			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", day, companyId);
+			Map<String, StandardDto> map = cacheService.get(key);
+			if (map==null) {
+				map = new HashMap<String, StandardDto>();
+				List<Schedule> list = Schedule.findByEventAndDay(day);
+				if (list!=null&&list.size()>0) {
+					for (Schedule schedule : list) {
+						if (StringUtils.isBlank(schedule.getEvent())) {
+							continue;
+						}
+						StandardDto dto = null;
+						if (StringUtils.equals(companyId, "avg")) { //平均欧赔
+							dto = getAvgStandardDto(schedule);
+						} else {
+							dto = getStandardDtoByCompanyId(schedule.getScheduleID(), Integer.parseInt(companyId));
+						}
+						map.put(schedule.getEvent(), dto);
+					}
+				}
+				if (map.size()>0) {
+					cacheService.set(key, map);
+				}
+			}
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public StandardDto getAvgStandardDto(Schedule schedule) {

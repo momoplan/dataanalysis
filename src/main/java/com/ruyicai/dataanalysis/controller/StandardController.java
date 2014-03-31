@@ -22,12 +22,13 @@ public class StandardController {
 	
 	@RequestMapping(value = "/getUsualStandard", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData getUsualStandard(@RequestParam("companyId") String companyId) {
+	ResponseData getUsualStandard(@RequestParam("day") String day, 
+			@RequestParam("companyId") String companyId) {
 		ResponseData rd = new ResponseData();
 		ErrorCode result = ErrorCode.OK;
 		try {
 			long startMills = System.currentTimeMillis();
-			rd.setValue(standardService.getUsualStandards(companyId));
+			rd.setValue(standardService.getUsualStandards(day, companyId));
 			long endMills = System.currentTimeMillis();
 			logger.info("竞足getUsualStandard,用时:"+(endMills-startMills));
 		} catch(Exception e) {
