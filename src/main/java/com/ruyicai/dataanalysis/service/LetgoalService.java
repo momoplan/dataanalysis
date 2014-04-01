@@ -65,7 +65,7 @@ public class LetgoalService {
 		return null;
 	}
 
-	private LetgoalDto getLetgoalDtoByCompanyId(int scheduleId, int companyId) {
+	public LetgoalDto getLetgoalDtoByCompanyId(int scheduleId, int companyId) {
 		LetGoal letGoal = LetGoal.findLetGoal(scheduleId, companyId);
 		if (letGoal==null) {
 			return null;

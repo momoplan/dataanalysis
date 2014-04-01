@@ -179,7 +179,7 @@ public class StandardUpdateService {
 					standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
 					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.persist();
-					asyncService.updateUsualStandardsByCompanyId(Integer.parseInt(scheduleId), companyId);
+					asyncService.updateUsualStandards(Integer.parseInt(scheduleId), companyId);
 				} catch (Exception e) {
 					logger.error("足球欧赔更新-doOdd-保存standard发生异常", e);
 					return resultMap;
@@ -222,7 +222,7 @@ public class StandardUpdateService {
 					standard.setGuestWin(new Double(guestWin));
 					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.merge();
-					asyncService.updateUsualStandardsByCompanyId(Integer.parseInt(scheduleId), companyId);
+					asyncService.updateUsualStandards(Integer.parseInt(scheduleId), companyId);
 					StandardDetail detail = new StandardDetail();
 					detail.setOddsID(standard.getOddsID());
 					detail.setIsEarly(0);

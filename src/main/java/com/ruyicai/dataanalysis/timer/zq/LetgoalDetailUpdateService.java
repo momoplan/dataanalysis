@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
@@ -34,6 +35,9 @@ public class LetgoalDetailUpdateService {
 
 	@Value("${peiLvDetail}")
 	private String url;
+	
+	@Autowired
+	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -128,11 +132,13 @@ public class LetgoalDetailUpdateService {
 		}
 		boolean letgoalModify = false;
 		boolean detailModify = false;
+		boolean oddsModify = false;
 		if ((StringUtils.isNotBlank(goal)&&!NumberUtil.compare(new Double(goal).toString(), letGoal.getGoal()))
 				||(StringUtils.isNotBlank(upOdds)&&!NumberUtil.compare(upOdds, letGoal.getUpOdds()))
 				||(StringUtils.isNotBlank(downOdds)&&!NumberUtil.compare(downOdds, letGoal.getDownOdds()))) {
 			letgoalModify = true;
 			detailModify = true;
+			oddsModify = true;
 			letGoal.setGoal(new Double(goal));
 			letGoal.setUpOdds(new Double(upOdds));
 			letGoal.setDownOdds(new Double(downOdds));
@@ -153,6 +159,9 @@ public class LetgoalDetailUpdateService {
 		}
 		if(letgoalModify) {
 			letGoal.merge();
+			if (oddsModify) {
+				asyncService.updateUsualLetgoals(Integer.parseInt(scheduleId), companyId);
+			}
 		}
 		if (detailModify) {
 			sendJmsJczUtil.sendLetgoalCacheUpdateJms(scheduleId); //亚赔缓存更新

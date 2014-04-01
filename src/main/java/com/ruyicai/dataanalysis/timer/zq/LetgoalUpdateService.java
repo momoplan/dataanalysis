@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
@@ -30,6 +31,9 @@ public class LetgoalUpdateService {
 	
 	@Value("${peiluall}")
 	private String url;
+	
+	@Autowired
+	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -137,7 +141,7 @@ public class LetgoalUpdateService {
 			letGoal.setClosePan(cp);
 			letGoal.setZouDi(zd);
 			letGoal.persist();
-			
+			asyncService.updateUsualLetgoals(Integer.parseInt(scheduleID), companyID);
 			LetGoalDetail detail = new LetGoalDetail();
 			detail.setOddsID(letGoal.getOddsID());
 			detail.setGoal(new Double(firstGoal));
