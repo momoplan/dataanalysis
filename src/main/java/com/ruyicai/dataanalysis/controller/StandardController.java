@@ -58,4 +58,23 @@ public class StandardController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getUsualKaiLi", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getUsualKaiLi(@RequestParam("day") String day, 
+			@RequestParam("companyId") String companyId) {
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(standardService.getUsualKaiLi(day, companyId));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getUsualKaiLi,用时:"+(endMills-startMills));
+		} catch(Exception e) {
+			logger.error("竞足getUsualKaiLi发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
+		return rd;
+	}
+	
 }

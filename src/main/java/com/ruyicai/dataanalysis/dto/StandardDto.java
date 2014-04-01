@@ -11,7 +11,7 @@ public class StandardDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	//private String companyId;
+	private String scheduleId;
 	
 	private Double homeWin;
 	

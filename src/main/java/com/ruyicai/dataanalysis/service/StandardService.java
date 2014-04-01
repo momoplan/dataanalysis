@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
+import com.ruyicai.dataanalysis.dto.KaiLiDto;
 import com.ruyicai.dataanalysis.dto.ProbabilityDto;
 import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
@@ -74,6 +75,7 @@ public class StandardService {
 	
 	public StandardDto getAvgStandardDto(Schedule schedule) {
 		StandardDto avgDto = new StandardDto();
+		avgDto.setScheduleId(String.valueOf(schedule.getScheduleID()));
 		avgDto.setHomeWin(schedule.getAvgH());
 		avgDto.setStandoff(schedule.getAvgS());
 		avgDto.setGuestWin(schedule.getAvgG());
@@ -86,6 +88,7 @@ public class StandardService {
 			return null;
 		}
 		StandardDto dto = new StandardDto();
+		dto.setScheduleId(String.valueOf(scheduleId));
 		dto.setHomeWin(standard.getHomeWin());
 		dto.setStandoff(standard.getStandoff());
 		dto.setGuestWin(standard.getGuestWin());
@@ -111,6 +114,36 @@ public class StandardService {
 						dto.setHomeWinLu(homeWinLu);
 						dto.setStandoffLu(standoffLu);
 						dto.setGuestWinLu(guestWinLu);
+						resultMap.put(event, dto);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultMap;
+	}
+	
+	public Map<String, KaiLiDto> getUsualKaiLi(String day, String companyId) {
+		Map<String, KaiLiDto> resultMap = new HashMap<String, KaiLiDto>();
+		try {
+			String[] days = StringUtils.splitByWholeSeparator(day, ",");
+			for (String dayStr : days) {
+				Map<String, StandardDto> smap = getUsualStandardByDayCompanyId(dayStr, companyId);
+				if (smap!=null&&smap.size()>0) {
+					for(Map.Entry<String, StandardDto> entry : smap.entrySet()) {
+						String event = entry.getKey();
+						StandardDto sdto = entry.getValue();
+						
+						Schedule schedule = Schedule.findScheduleWOBuild(Integer.parseInt(sdto.getScheduleId()));
+						Double k_h = CalcUtil.k_h(sdto.getHomeWin(), schedule);
+						Double k_s = CalcUtil.k_s(sdto.getStandoff(), schedule);
+						Double k_g = CalcUtil.k_g(sdto.getGuestWin(), schedule);
+						
+						KaiLiDto dto = new KaiLiDto();
+						dto.setK_h(k_h);
+						dto.setK_s(k_s);
+						dto.setK_g(k_g);
 						resultMap.put(event, dto);
 					}
 				}

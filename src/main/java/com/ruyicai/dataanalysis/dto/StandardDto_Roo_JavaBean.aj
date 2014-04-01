@@ -4,8 +4,17 @@
 package com.ruyicai.dataanalysis.dto;
 
 import java.lang.Double;
+import java.lang.String;
 
 privileged aspect StandardDto_Roo_JavaBean {
+    
+    public String StandardDto.getScheduleId() {
+        return this.scheduleId;
+    }
+    
+    public void StandardDto.setScheduleId(String scheduleId) {
+        this.scheduleId = scheduleId;
+    }
     
     public Double StandardDto.getHomeWin() {
         return this.homeWin;
