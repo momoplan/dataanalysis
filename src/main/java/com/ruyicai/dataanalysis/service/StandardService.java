@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
+import com.ruyicai.dataanalysis.dto.ProbabilityDto;
 import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.zq.CalcUtil;
 
 @Service
 public class StandardService {
@@ -88,6 +90,35 @@ public class StandardService {
 		dto.setStandoff(standard.getStandoff());
 		dto.setGuestWin(standard.getGuestWin());
 		return dto;
+	}
+	
+	public Map<String, ProbabilityDto> getUsualProbability(String day, String companyId) {
+		Map<String, ProbabilityDto> resultMap = new HashMap<String, ProbabilityDto>();
+		try {
+			String[] days = StringUtils.splitByWholeSeparator(day, ",");
+			for (String dayStr : days) {
+				Map<String, StandardDto> smap = getUsualStandardByDayCompanyId(dayStr, companyId);
+				if (smap!=null&&smap.size()>0) {
+					for(Map.Entry<String, StandardDto> entry : smap.entrySet()) {
+						String event = entry.getKey();
+						StandardDto sdto = entry.getValue();
+						
+						Double homeWinLu = CalcUtil.probability_H(sdto.getHomeWin(), sdto.getStandoff(), sdto.getGuestWin());
+						Double standoffLu = CalcUtil.probability_S(sdto.getHomeWin(), sdto.getStandoff(), sdto.getGuestWin());
+						Double guestWinLu = CalcUtil.probability_G(sdto.getHomeWin(), sdto.getStandoff(), sdto.getGuestWin());
+						
+						ProbabilityDto dto = new ProbabilityDto();
+						dto.setHomeWinLu(homeWinLu);
+						dto.setStandoffLu(standoffLu);
+						dto.setGuestWinLu(guestWinLu);
+						resultMap.put(event, dto);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultMap;
 	}
 	
 }

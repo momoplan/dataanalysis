@@ -39,4 +39,23 @@ public class StandardController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getUsualProbability", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getUsualProbability(@RequestParam("day") String day, 
+			@RequestParam("companyId") String companyId) {
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(standardService.getUsualProbability(day, companyId));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getUsualProbability,用时:"+(endMills-startMills));
+		} catch(Exception e) {
+			logger.error("竞足getUsualProbability发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
+		return rd;
+	}
+	
 }
