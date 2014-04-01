@@ -106,8 +106,6 @@ public class JingCaiMatchStartListener {
 			//发送赛事缓存更新的Jms
 			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
 		}
-		//删除
-		
 	}
 	
 }

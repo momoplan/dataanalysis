@@ -120,10 +120,6 @@ public class StandardAvgUpdateListener {
 			if (StringUtils.isBlank(schedule.getEvent())) {
 				return;
 			}
-			Integer betState = schedule.getBetState();
-			if (betState==null||betState!=1) {
-				return;
-			}
 			asyncService.updateUsualStandardsAvg(schedule.getScheduleID());
 		} catch (Exception e) {
 			logger.error("足球平均欧赔更新的Jms-updateUsualStandardsAvg发生异常", e);

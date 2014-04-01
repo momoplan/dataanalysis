@@ -164,4 +164,17 @@ public class JingCaiUtil {
 		}
 	}
 	
+	public static String getDayByEvent(String event) {
+		String[] separator = StringUtils.splitByWholeSeparator(event, "_"); //1_20140330_7_001
+		if (separator!=null&&separator.length==4) {
+			return separator[1];
+		}
+		return null;
+	}
+	
+	/*public static void main(String[] args) {
+		String string = getDayByEvent("1_20140330_7_001");
+		System.out.println(string);
+	}*/
+	
 }

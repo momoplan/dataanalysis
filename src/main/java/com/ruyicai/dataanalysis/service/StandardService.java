@@ -76,8 +76,8 @@ public class StandardService {
 		return avgDto;
 	}
 	
-	private StandardDto getStandardDtoByCompanyId(Integer scheduleId, Integer companyId) {
-		Standard standard = Standard.findByScheduleIdCompanyId(scheduleId, companyId);
+	public StandardDto getStandardDtoByCompanyId(Integer scheduleId, Integer companyId) {
+		Standard standard = Standard.findStandard(scheduleId, companyId);
 		if (standard==null) {
 			return null;
 		}

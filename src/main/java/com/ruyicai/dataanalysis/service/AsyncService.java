@@ -12,6 +12,7 @@ import com.ruyicai.dataanalysis.consts.StandardCompany;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 @Service
 public class AsyncService {
@@ -29,24 +30,21 @@ public class AsyncService {
 		try {
 			long startMillis = System.currentTimeMillis();
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
-			if (StringUtils.isBlank(schedule.getEvent())) {
+			String event = schedule.getEvent();
+			if (StringUtils.isBlank(event)) {
 				return;
 			}
-			Integer betState = schedule.getBetState();
-			if (betState==null||betState!=1) {
+			String day = JingCaiUtil.getDayByEvent(event);
+			if (StringUtils.isBlank(day)) {
 				return;
 			}
-			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", "avg");
+			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", day, "avg");
 			Map<String, StandardDto> map = cacheService.get(key);
 			if (map==null) {
 				return;
 			}
-			StandardDto standardDto = map.get(schedule.getEvent());
-			if (standardDto==null) {
-				return;
-			}
-			standardDto = standardService.getAvgStandardDto(schedule);
-			map.put(schedule.getEvent(), standardDto);
+			StandardDto standardDto = standardService.getAvgStandardDto(schedule);
+			map.put(event, standardDto);
 			cacheService.set(key, map);
 			long endMillis = System.currentTimeMillis();
 			logger.info("updateUsualStandardsAvg用时:"+(endMillis-startMillis)+",scheduleId="+scheduleId);
@@ -56,69 +54,35 @@ public class AsyncService {
 	}
 	
 	@Async
-	public void deleteUsualStandardsCache(String event) {
+	public void updateUsualStandardsByCompanyId(Integer scheduleId, String companyId) {
 		try {
-			//删除平均欧赔缓存
-			deleteUsualStandardsCacheById(event, "avg");
-			//删除公司的平均欧赔缓存
-			StandardCompany[] values = StandardCompany.values();
-			for (StandardCompany standardCompany : values) {
-				deleteUsualStandardsCacheById(event, standardCompany.getCompanyId());
+			long startMillis = System.currentTimeMillis();
+			boolean containsCompanyId = StandardCompany.containsCompanyId(companyId);
+			if (!containsCompanyId) {
+				return;
 			}
-		} catch (Exception e) {
-			logger.error("deleteUsualStandardsCache发生异常", e);
-		}
-	}
-	
-	private void deleteUsualStandardsCacheById(String event ,String id) {
-		try {
-			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", id);
+			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
+			String event = schedule.getEvent();
+			if (StringUtils.isBlank(event)) {
+				return;
+			}
+			String day = JingCaiUtil.getDayByEvent(event);
+			if (StringUtils.isBlank(day)) {
+				return;
+			}
+			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", day, companyId);
 			Map<String, StandardDto> map = cacheService.get(key);
-			if (map!=null) {
-				map.remove(event);
-				cacheService.set(key, map);
+			if (map==null) {
+				return;
 			}
+			StandardDto standardDto = standardService.getStandardDtoByCompanyId(scheduleId, Integer.parseInt(companyId));
+			map.put(event, standardDto);
+			cacheService.set(key, map);
+			long endMillis = System.currentTimeMillis();
+			logger.info("updateUsualStandardsByCompanyId用时:"+(endMillis-startMillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("updateUsualStandardsByCompanyId发生异常", e);
 		}
 	}
-	
-	/*public static void main(String[] args) {
-		Map<String, StandardDto> map = new HashMap<String, StandardDto>();
-		map.remove("1");
-		System.out.println(map.size());
-	}*/
-	
-	
-	/*@Async
-	public void saveTuserinfo(ClientInfo clientInfo) {
-		try {
-			//Thread.sleep(5000);
-			String mac = clientInfo.getMac();
-			logger.info("saveTuserinfo开始,mac="+mac);
-			String softwareVersion = clientInfo.getSoftwareVersion();
-			List<Tuserinfo> list = Tuserinfo.getListByImei(mac);
-			if (list==null||list.size()<=0) {
-				Tuserinfo tuserinfo = new Tuserinfo();
-				tuserinfo.setImei(mac);
-				tuserinfo.setPlatform(clientInfo.getPlatform());
-				tuserinfo.setMachine(clientInfo.getMachineId());
-				tuserinfo.setVersion(softwareVersion);
-				tuserinfo.setCreatetime(new Date());
-				tuserinfo.setLastnettime(new Date());
-				tuserinfo.setChannel(CommonUtil.getChannel(clientInfo));
-				tuserinfo.persist();
-			} else if (list!=null&&list.size()==1) {
-				Tuserinfo tuserinfo = list.get(0);
-				if (!StringUtils.equals(softwareVersion, tuserinfo.getVersion())) {
-					tuserinfo.setVersion(softwareVersion);
-				}
-				tuserinfo.setLastnettime(new Date());
-				tuserinfo.merge();
-			}
-		} catch (Exception e) {
-			logger.error("saveTuserinfo发生异常,mac="+clientInfo.getMac(), e);
-		}
-	}*/
 	
 }

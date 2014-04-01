@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.EuropeCompany;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
@@ -40,6 +41,9 @@ public class StandardUpdateService {
 	
 	@Value("${baijiaoupei}")
 	private String url;
+	
+	@Autowired
+	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -175,6 +179,7 @@ public class StandardUpdateService {
 					standard.setGuestWin(StringUtil.isEmpty(guestWin) ? null : new Double(guestWin));
 					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.persist();
+					asyncService.updateUsualStandardsByCompanyId(Integer.parseInt(scheduleId), companyId);
 				} catch (Exception e) {
 					logger.error("足球欧赔更新-doOdd-保存standard发生异常", e);
 					return resultMap;
@@ -217,6 +222,7 @@ public class StandardUpdateService {
 					standard.setGuestWin(new Double(guestWin));
 					standard.setModifyTime(DateUtil.parse("yyyy/MM/dd HH:mm:ss", modTime));
 					standard.merge();
+					asyncService.updateUsualStandardsByCompanyId(Integer.parseInt(scheduleId), companyId);
 					StandardDetail detail = new StandardDetail();
 					detail.setOddsID(standard.getOddsID());
 					detail.setIsEarly(0);
