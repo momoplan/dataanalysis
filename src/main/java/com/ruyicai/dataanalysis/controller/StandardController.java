@@ -30,7 +30,7 @@ public class StandardController {
 			long startMills = System.currentTimeMillis();
 			rd.setValue(standardService.getUsualStandard(day, companyId));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getUsualStandard,用时:"+(endMills-startMills));
+			logger.info("竞足getUsualStandard,用时:"+(endMills-startMills)+",day="+day+",companyId="+companyId);
 		} catch(Exception e) {
 			logger.error("竞足getUsualStandard发生异常", e);
 			result = ErrorCode.ERROR;
@@ -49,7 +49,7 @@ public class StandardController {
 			long startMills = System.currentTimeMillis();
 			rd.setValue(standardService.getUsualProbability(day, companyId));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getUsualProbability,用时:"+(endMills-startMills));
+			logger.info("竞足getUsualProbability,用时:"+(endMills-startMills)+",day="+day+",companyId="+companyId);
 		} catch(Exception e) {
 			logger.error("竞足getUsualProbability发生异常", e);
 			result = ErrorCode.ERROR;
@@ -68,7 +68,7 @@ public class StandardController {
 			long startMills = System.currentTimeMillis();
 			rd.setValue(standardService.getUsualKaiLi(day, companyId));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getUsualKaiLi,用时:"+(endMills-startMills));
+			logger.info("竞足getUsualKaiLi,用时:"+(endMills-startMills)+",day="+day+",companyId="+companyId);
 		} catch(Exception e) {
 			logger.error("竞足getUsualKaiLi发生异常", e);
 			result = ErrorCode.ERROR;

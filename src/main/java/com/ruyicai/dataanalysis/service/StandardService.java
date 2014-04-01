@@ -87,11 +87,15 @@ public class StandardService {
 		if (standard==null) {
 			return null;
 		}
+		Double homeWin = standard.getHomeWin()==null ? standard.getFirstHomeWin() : standard.getHomeWin();
+		Double standoff = standard.getStandoff()==null ? standard.getFirstStandoff() : standard.getStandoff();
+		Double guestWin = standard.getGuestWin()==null ? standard.getFirstGuestWin() : standard.getGuestWin();
+		
 		StandardDto dto = new StandardDto();
 		dto.setScheduleId(String.valueOf(scheduleId));
-		dto.setHomeWin(standard.getHomeWin());
-		dto.setStandoff(standard.getStandoff());
-		dto.setGuestWin(standard.getGuestWin());
+		dto.setHomeWin(homeWin);
+		dto.setStandoff(standoff);
+		dto.setGuestWin(guestWin);
 		return dto;
 	}
 	

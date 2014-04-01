@@ -30,7 +30,7 @@ public class LetgoalController {
 			long startMills = System.currentTimeMillis();
 			rd.setValue(letgoalService.getUsualLetgoal(day, companyId));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getUsualLetgoal,用时:"+(endMills-startMills));
+			logger.info("竞足getUsualLetgoal,用时:"+(endMills-startMills)+",day="+day+",companyId="+companyId);
 		} catch(Exception e) {
 			logger.error("竞足getUsualLetgoal发生异常", e);
 			result = ErrorCode.ERROR;
