@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruyicai.dataanalysis.consts.ErrorCode;
-import com.ruyicai.dataanalysis.service.StandardService;
+import com.ruyicai.dataanalysis.service.LetgoalService;
 
-@RequestMapping("/standard")
+@RequestMapping("/letgoal")
 @Controller
-public class StandardController {
+public class LetgoalController {
 
-	private Logger logger = LoggerFactory.getLogger(StandardController.class);
+	private Logger logger = LoggerFactory.getLogger(LetgoalController.class);
 	
 	@Autowired
-	private StandardService standardService;
+	private LetgoalService letgoalService;
 	
-	@RequestMapping(value = "/getUsualStandard", method = RequestMethod.POST)
+	@RequestMapping(value = "/getUsualLetgoal", method = RequestMethod.POST)
 	public @ResponseBody
 	ResponseData getUsualStandard(@RequestParam("day") String day, 
 			@RequestParam("companyId") String companyId) {
@@ -28,11 +28,11 @@ public class StandardController {
 		ErrorCode result = ErrorCode.OK;
 		try {
 			long startMills = System.currentTimeMillis();
-			rd.setValue(standardService.getUsualStandard(day, companyId));
+			rd.setValue(letgoalService.getUsualLetgoal(day, companyId));
 			long endMills = System.currentTimeMillis();
-			logger.info("竞足getUsualStandard,用时:"+(endMills-startMills));
+			logger.info("竞足getUsualLetgoal,用时:"+(endMills-startMills));
 		} catch(Exception e) {
-			logger.error("竞足getUsualStandard发生异常", e);
+			logger.error("竞足getUsualLetgoal发生异常", e);
 			result = ErrorCode.ERROR;
 		}
 		rd.setErrorCode(result.value);

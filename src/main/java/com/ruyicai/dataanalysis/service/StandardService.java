@@ -18,13 +18,13 @@ public class StandardService {
 	@Autowired
 	private CacheService cacheService;
 	
-	public Map<String, StandardDto> getUsualStandards(String day, String companyId) {
+	public Map<String, StandardDto> getUsualStandard(String day, String companyId) {
 		Map<String, StandardDto> resultMap = new HashMap<String, StandardDto>();
 		try {
 			String[] days = StringUtils.splitByWholeSeparator(day, ",");
 			for (String dayStr : days) {
 				if (StringUtils.isNotBlank(dayStr)) {
-					Map<String, StandardDto> map = getUsualStandardsByDayCompanyId(dayStr, companyId);
+					Map<String, StandardDto> map = getUsualStandardByDayCompanyId(dayStr, companyId);
 					if (map!=null&&map.size()>0) {
 						resultMap.putAll(map);
 					}
@@ -36,7 +36,7 @@ public class StandardService {
 		return resultMap;
 	}
 	
-	private Map<String, StandardDto> getUsualStandardsByDayCompanyId(String day, String companyId) {
+	private Map<String, StandardDto> getUsualStandardByDayCompanyId(String day, String companyId) {
 		try {
 			String key = StringUtil.join("_", "dadaanalysis", "UsualStandards", day, companyId);
 			Map<String, StandardDto> map = cacheService.get(key);
@@ -54,7 +54,9 @@ public class StandardService {
 						} else {
 							dto = getStandardDtoByCompanyId(schedule.getScheduleID(), Integer.parseInt(companyId));
 						}
-						map.put(schedule.getEvent(), dto);
+						if (dto!=null) {
+							map.put(schedule.getEvent(), dto);
+						}
 					}
 				}
 				if (map.size()>0) {
