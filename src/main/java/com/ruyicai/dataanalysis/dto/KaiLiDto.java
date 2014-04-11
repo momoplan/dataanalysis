@@ -7,6 +7,8 @@ import org.springframework.roo.addon.json.RooJson;
 @RooJson
 public class KaiLiDto {
 
+	private String event;
+	
 	private Double k_h;
 	
 	private Double k_s;

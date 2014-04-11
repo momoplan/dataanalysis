@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,22 +22,27 @@ public class StandardService {
 	@Autowired
 	private CacheService cacheService;
 	
-	public Map<String, StandardDto> getUsualStandard(String day, String companyId) {
-		Map<String, StandardDto> resultMap = new HashMap<String, StandardDto>();
+	public List<StandardDto> getUsualStandard(String day, String companyId) {
+		List<StandardDto> resultList = new ArrayList<StandardDto>();
 		try {
 			String[] days = StringUtils.splitByWholeSeparator(day, ",");
 			for (String dayStr : days) {
 				if (StringUtils.isNotBlank(dayStr)) {
 					Map<String, StandardDto> map = getUsualStandardByDayCompanyId(dayStr, companyId);
 					if (map!=null&&map.size()>0) {
-						resultMap.putAll(map);
+						for(Map.Entry<String, StandardDto> entry : map.entrySet()) {
+							String event = entry.getKey();
+							StandardDto dto = entry.getValue();
+							dto.setEvent(event);
+							resultList.add(dto);
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return resultMap;
+		return resultList;
 	}
 	
 	private Map<String, StandardDto> getUsualStandardByDayCompanyId(String day, String companyId) {
@@ -99,8 +105,8 @@ public class StandardService {
 		return dto;
 	}
 	
-	public Map<String, ProbabilityDto> getUsualProbability(String day, String companyId) {
-		Map<String, ProbabilityDto> resultMap = new HashMap<String, ProbabilityDto>();
+	public List<ProbabilityDto> getUsualProbability(String day, String companyId) {
+		List<ProbabilityDto> resultList = new ArrayList<ProbabilityDto>();
 		try {
 			String[] days = StringUtils.splitByWholeSeparator(day, ",");
 			for (String dayStr : days) {
@@ -115,21 +121,22 @@ public class StandardService {
 						Double guestWinLu = CalcUtil.probability_G(sdto.getHomeWin(), sdto.getStandoff(), sdto.getGuestWin());
 						
 						ProbabilityDto dto = new ProbabilityDto();
+						dto.setEvent(event);
 						dto.setHomeWinLu(homeWinLu);
 						dto.setStandoffLu(standoffLu);
 						dto.setGuestWinLu(guestWinLu);
-						resultMap.put(event, dto);
+						resultList.add(dto);
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return resultMap;
+		return resultList;
 	}
 	
-	public Map<String, KaiLiDto> getUsualKaiLi(String day, String companyId) {
-		Map<String, KaiLiDto> resultMap = new HashMap<String, KaiLiDto>();
+	public List<KaiLiDto> getUsualKaiLi(String day, String companyId) {
+		List<KaiLiDto> resultList = new ArrayList<KaiLiDto>();
 		try {
 			String[] days = StringUtils.splitByWholeSeparator(day, ",");
 			for (String dayStr : days) {
@@ -145,17 +152,18 @@ public class StandardService {
 						Double k_g = CalcUtil.k_g(sdto.getGuestWin(), schedule);
 						
 						KaiLiDto dto = new KaiLiDto();
+						dto.setEvent(event);
 						dto.setK_h(k_h);
 						dto.setK_s(k_s);
 						dto.setK_g(k_g);
-						resultMap.put(event, dto);
+						resultList.add(dto);
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return resultMap;
+		return resultList;
 	}
 	
 }

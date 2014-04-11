@@ -16,6 +16,14 @@ privileged aspect StandardDto_Roo_JavaBean {
         this.scheduleId = scheduleId;
     }
     
+    public String StandardDto.getEvent() {
+        return this.event;
+    }
+    
+    public void StandardDto.setEvent(String event) {
+        this.event = event;
+    }
+    
     public Double StandardDto.getHomeWin() {
         return this.homeWin;
     }

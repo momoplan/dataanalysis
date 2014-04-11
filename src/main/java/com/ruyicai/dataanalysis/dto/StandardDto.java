@@ -13,6 +13,8 @@ public class StandardDto implements Serializable {
 
 	private String scheduleId;
 	
+	private String event;
+	
 	private Double homeWin;
 	
 	private Double standoff;

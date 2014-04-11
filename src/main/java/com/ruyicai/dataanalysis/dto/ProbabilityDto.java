@@ -7,6 +7,8 @@ import org.springframework.roo.addon.json.RooJson;
 @RooJson
 public class ProbabilityDto {
 
+	private String event;
+	
 	private Double homeWinLu;
 	
 	private Double standoffLu;

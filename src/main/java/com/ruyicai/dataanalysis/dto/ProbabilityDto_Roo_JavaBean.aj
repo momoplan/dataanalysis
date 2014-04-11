@@ -4,8 +4,17 @@
 package com.ruyicai.dataanalysis.dto;
 
 import java.lang.Double;
+import java.lang.String;
 
 privileged aspect ProbabilityDto_Roo_JavaBean {
+    
+    public String ProbabilityDto.getEvent() {
+        return this.event;
+    }
+    
+    public void ProbabilityDto.setEvent(String event) {
+        this.event = event;
+    }
     
     public Double ProbabilityDto.getHomeWinLu() {
         return this.homeWinLu;

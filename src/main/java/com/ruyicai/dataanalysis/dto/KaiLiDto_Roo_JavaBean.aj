@@ -4,8 +4,17 @@
 package com.ruyicai.dataanalysis.dto;
 
 import java.lang.Double;
+import java.lang.String;
 
 privileged aspect KaiLiDto_Roo_JavaBean {
+    
+    public String KaiLiDto.getEvent() {
+        return this.event;
+    }
+    
+    public void KaiLiDto.setEvent(String event) {
+        this.event = event;
+    }
     
     public Double KaiLiDto.getK_h() {
         return this.k_h;
