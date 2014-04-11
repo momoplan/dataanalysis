@@ -10,6 +10,8 @@ public class LetgoalDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String event;
+	
 	private Double goal;
 	
 	private Double upOdds;

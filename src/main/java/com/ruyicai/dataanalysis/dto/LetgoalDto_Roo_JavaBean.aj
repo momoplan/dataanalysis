@@ -4,8 +4,17 @@
 package com.ruyicai.dataanalysis.dto;
 
 import java.lang.Double;
+import java.lang.String;
 
 privileged aspect LetgoalDto_Roo_JavaBean {
+    
+    public String LetgoalDto.getEvent() {
+        return this.event;
+    }
+    
+    public void LetgoalDto.setEvent(String event) {
+        this.event = event;
+    }
     
     public Double LetgoalDto.getGoal() {
         return this.goal;

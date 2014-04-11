@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,22 +19,27 @@ public class LetgoalService {
 	@Autowired
 	private CacheService cacheService;
 	
-	public Map<String, LetgoalDto> getUsualLetgoal(String day, String companyId) {
-		Map<String, LetgoalDto> resultMap = new HashMap<String, LetgoalDto>();
+	public List<LetgoalDto> getUsualLetgoal(String day, String companyId) {
+		List<LetgoalDto> resultList = new ArrayList<LetgoalDto>();
 		try {
 			String[] days = StringUtils.splitByWholeSeparator(day, ",");
 			for (String dayStr : days) {
 				if (StringUtils.isNotBlank(dayStr)) {
 					Map<String, LetgoalDto> map = getUsualLetgoalByDayCompanyId(dayStr, companyId);
 					if (map!=null&&map.size()>0) {
-						resultMap.putAll(map);
+						for(Map.Entry<String, LetgoalDto> entry : map.entrySet()) {
+							String event = entry.getKey();
+							LetgoalDto dto = entry.getValue();
+							dto.setEvent(event);
+							resultList.add(dto);
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return resultMap;
+		return resultList;
 	}
 
 	private Map<String, LetgoalDto> getUsualLetgoalByDayCompanyId(String day, String companyId) {
