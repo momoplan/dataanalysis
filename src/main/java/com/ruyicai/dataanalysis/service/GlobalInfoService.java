@@ -104,24 +104,27 @@ public class GlobalInfoService {
 	 * @return
 	 */
 	private InfoDTO getInfoDTO(Schedule schedule) {
-		GlobalCache globalInfo = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+		int scheduleId = schedule.getScheduleID();
+		String key = StringUtil.join("_", "dataanalysis", "Info", String.valueOf(scheduleId));
+		GlobalCache globalInfo = GlobalCache.findGlobalCache(key);
 		if(null != globalInfo) {
 			InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
-			setRanking(schedule.getScheduleID(), schedule.getSclassID(), dto);
+			setRanking(scheduleId, schedule.getSclassID(), dto);
 			return dto;
 		}
 		InfoDTO dto = getUpdateInfoDTO(schedule);
 		
 		globalInfo = new GlobalCache();
-		globalInfo.setId(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+		globalInfo.setId(key);
 		globalInfo.setValue(dto.toJson());
 		globalInfo.persist();
-		setRanking(schedule.getScheduleID(), schedule.getSclassID(), dto);
+		setRanking(scheduleId, schedule.getSclassID(), dto);
 		return dto;
 	}
 
 	private void setRanking(int scheduleID, int sclassID, InfoDTO dto) {
-		GlobalCache ranking = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID)));
+		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
+		GlobalCache ranking = GlobalCache.findGlobalCache(key);
 		if(null != ranking) {
 			dto.setRankings(RankingDTO.fromJsonArrayToRankingDTO(ranking.getValue()));
 		} else {
@@ -131,32 +134,35 @@ public class GlobalInfoService {
 	}
 	
 	public InfoDTO getUpdateInfoDTO(Schedule schedule) {
-		GlobalCache letGoal = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(schedule.getScheduleID())));
+		int scheduleId = schedule.getScheduleID();
+		String letgoalKey = StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId));
+		GlobalCache letGoal = GlobalCache.findGlobalCache(letgoalKey);
 		if(null == letGoal) {
-			List<LetGoal> letGoals = LetGoal.findByScheduleID(schedule.getScheduleID());
+			List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
 			buildLetGoals(letGoals);
 			letGoal = new GlobalCache();
-			letGoal.setId(StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(schedule.getScheduleID())));
+			letGoal.setId(letgoalKey);
 			letGoal.setValue(LetGoal.toJsonArray(letGoals));
 			letGoal.persist();
-		} 
-		GlobalCache standard = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(schedule.getScheduleID())));
+		}
+		String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
+		GlobalCache standard = GlobalCache.findGlobalCache(stardardKey);
 		if(null == standard) {
-			Collection<Standard> standards = Standard.findByScheduleID(schedule.getScheduleID());
+			Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
 			buildStandards(schedule, standards);
 			standard = new GlobalCache();
-			standard.setId(StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(schedule.getScheduleID())));
+			standard.setId(stardardKey);
 			standard.setValue(Standard.toJsonArray(standards));
 			standard.persist();
 		}
 		long startmillis2 = System.currentTimeMillis();
-		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(schedule.getScheduleID(), schedule);
-		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(schedule.getScheduleID(), schedule);
-		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(schedule.getScheduleID(), schedule);
-		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(schedule.getScheduleID(), schedule);
-		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID(), schedule);
+		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(scheduleId, schedule);
+		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(scheduleId, schedule);
+		Collection<ScheduleDTO> homeAfterSchedules = analysisService.getAfterHomeSchedules(scheduleId, schedule);
+		Collection<ScheduleDTO> guestAfterSchedules = analysisService.getAfterGuestSchedules(scheduleId, schedule);
+		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(scheduleId, schedule);
 		long endmillis2 = System.currentTimeMillis();
-		logger.info("getUpdateInfoDTO,scheduleID="+schedule.getScheduleID()+",获取赛事用时:"+(endmillis2-startmillis2));
+		logger.info("getUpdateInfoDTO,scheduleID="+scheduleId+",获取赛事用时:"+(endmillis2-startmillis2));
 		
 		InfoDTO dto = new InfoDTO();
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
@@ -222,19 +228,20 @@ public class GlobalInfoService {
 		}
 	}
 	
-	public void updateInfo(Integer scheduleID) {
-		logger.info("更新球队信息,scheduleID:{}", new Integer[] {scheduleID});
+	public void updateInfo(Integer scheduleId) {
+		logger.info("更新球队信息,scheduleId:{}", new Integer[] {scheduleId});
 		long startmillis = System.currentTimeMillis();
-		Schedule schedule = Schedule.findSchedule(scheduleID, true);
+		Schedule schedule = Schedule.findSchedule(scheduleId, true);
 		if(null == schedule) {
 			return;
 		}
 		InfoDTO dto = getUpdateInfoDTO(schedule);
 		
-		GlobalCache globalInfo = GlobalCache.findGlobalCache(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+		String key = StringUtil.join("_", "dataanalysis", "Info", String.valueOf(scheduleId));
+		GlobalCache globalInfo = GlobalCache.findGlobalCache(key);
 		if(null == globalInfo) {
 			globalInfo = new GlobalCache();
-			globalInfo.setId(StringUtil.join("_", "dataanalysis", "Info", String.valueOf(schedule.getScheduleID())));
+			globalInfo.setId(key);
 			globalInfo.setValue(dto.toJson());
 			globalInfo.persist();
 		} else {
@@ -242,7 +249,7 @@ public class GlobalInfoService {
 			globalInfo.merge();
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("更新球队信息,scheduleID:{},共用时{}", new String[] {String.valueOf(scheduleID), String.valueOf(endmillis - startmillis)});
+		logger.info("更新球队信息,scheduleId:{},共用时{}", new String[] {String.valueOf(scheduleId), String.valueOf(endmillis - startmillis)});
 	}
 	
 	public List<ScheduleDTO> getImmediateScores(String day) {
@@ -256,12 +263,14 @@ public class GlobalInfoService {
 				BeanUtilsEx.copyProperties(dto, s);
 				dto.setSclassName(sclass.getName_J());
 				dto.setSclassName_j(sclass.getName_JS());
-				String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(s.getScheduleID()));
-				GlobalCache globalCache = GlobalCache.findGlobalCache(id);
+				
+				int scheduleId = s.getScheduleID();
+				String key = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
+				GlobalCache globalCache = GlobalCache.findGlobalCache(key);
 				if(null == globalCache) {
-					List<DetailResult> detailResults = DetailResult.findDetailResults(s.getScheduleID());
+					List<DetailResult> detailResults = DetailResult.findDetailResults(scheduleId);
 					globalCache = new GlobalCache();
-					globalCache.setId(id);
+					globalCache.setId(key);
 					globalCache.setValue(DetailResult.toJsonArray(detailResults));
 					globalCache.persist();
 					dto.setDetailResults(detailResults);
@@ -302,12 +311,14 @@ public class GlobalInfoService {
 				BeanUtilsEx.copyProperties(dto, s);
 				dto.setSclassName(sclass.getName_J());
 				dto.setSclassName_j(sclass.getName_JS());
-				String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(s.getScheduleID()));
-				GlobalCache globalCache = GlobalCache.findGlobalCache(id);
+				
+				int scheduleId = s.getScheduleID();
+				String key = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
+				GlobalCache globalCache = GlobalCache.findGlobalCache(key);
 				if(null == globalCache) {
-					List<DetailResult> detailResults = DetailResult.findDetailResults(s.getScheduleID());
+					List<DetailResult> detailResults = DetailResult.findDetailResults(scheduleId);
 					globalCache = new GlobalCache();
-					globalCache.setId(id);
+					globalCache.setId(key);
 					globalCache.setValue(DetailResult.toJsonArray(detailResults));
 					globalCache.persist();
 					dto.setDetailResults(detailResults);
@@ -334,10 +345,12 @@ public class GlobalInfoService {
 			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
-			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(schedule.getScheduleID()));
+			
+			int scheduleId = schedule.getScheduleID();
+			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
 			GlobalCache globalCache = GlobalCache.findGlobalCache(id);
 			if(null == globalCache) {
-				List<DetailResult> detailResults = DetailResult.findDetailResults(schedule.getScheduleID());
+				List<DetailResult> detailResults = DetailResult.findDetailResults(scheduleId);
 				globalCache = new GlobalCache();
 				globalCache.setId(id);
 				globalCache.setValue(DetailResult.toJsonArray(detailResults));
@@ -359,9 +372,10 @@ public class GlobalInfoService {
 			return;
 		}
 		try {
-			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(schedule.getScheduleID()));
+			int scheduleId = schedule.getScheduleID();
+			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
 			GlobalCache globalCache = GlobalCache.findGlobalCache(id);
-			List<DetailResult> detailResults = DetailResult.findDetailResults(schedule.getScheduleID());
+			List<DetailResult> detailResults = DetailResult.findDetailResults(scheduleId);
 			if(null == globalCache) {
 				globalCache = new GlobalCache();
 				globalCache.setId(id);
