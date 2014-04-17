@@ -16,7 +16,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 @Service
 public class TodayScoreUpdateService {
@@ -33,7 +33,7 @@ public class TodayScoreUpdateService {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	public void process() {
 		logger.info("开始更新当天比分数据");
@@ -170,16 +170,16 @@ public class TodayScoreUpdateService {
 				if (MatchState.WANCHANG.value==schedule.getMatchState()) { //已完场
 					if (MatchState.WANCHANG.value!=oldMatchState) { //之前的状态不是完场
 						commonUtil.sendScheduleFinishJms(schedule); //发送完场的Jms
-						sendJmsJczUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
+						jmsZqUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
 					if (MatchState.WANCHANG.value==oldMatchState && scoreModify) { //之前的状态是完场
 						commonUtil.sendScoreModifyJms(schedule); //发送比分变化的Jms
-						sendJmsJczUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
+						jmsZqUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 				}
 				//发送赛事缓存更新的Jms
-				sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+				jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

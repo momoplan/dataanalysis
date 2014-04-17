@@ -23,7 +23,7 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 /**
  * 足球欧赔更新
@@ -49,7 +49,7 @@ public class StandardUpdateService {
 	private HttpUtil httpUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil sendJmsJczUtil;
 	
 	@PostConstruct
 	public void init() {

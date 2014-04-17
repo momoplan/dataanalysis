@@ -45,6 +45,8 @@ public class RoutesConfiguration implements ApplicationListener<ContextRefreshed
 							"bean:letgoalCacheUpdateListener?method=update").routeId("足球-亚赔缓存更新");
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.schedulesCacheUpdate?concurrentConsumers=20").to(
 							"bean:schedulesCacheUpdateListener?method=process").routeId("足球-赛事缓存更新");
+					from("jms:queue:VirtualTopicConsumers.dataanalysis.scheduleUpdate?concurrentConsumers=20").to(
+							"bean:scheduleUpdateListener?method=process").routeId("足球-赛事更新");
 					//篮球
 					from("jms:queue:VirtualTopicConsumers.dataanalysis.standardJclUpdate?concurrentConsumers=10").to(
 							"bean:standarJclUpdateListener?method=update").routeId("篮球-百家欧赔更新");

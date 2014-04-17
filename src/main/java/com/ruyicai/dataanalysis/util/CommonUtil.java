@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.util.bd.SendJmsBdUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 @Service
 public class CommonUtil {
@@ -15,7 +15,7 @@ public class CommonUtil {
 	private Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil sendJmsJczUtil;
 	
 	@Autowired
 	private SendJmsBdUtil sendJmsBdUtil;

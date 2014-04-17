@@ -19,7 +19,7 @@ import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.ThreadPoolUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 /**
  * 足球亚赔Detail更新
@@ -43,7 +43,7 @@ public class LetgoalDetailUpdateService {
 	private HttpUtil httpUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	@PostConstruct
 	public void init() {
@@ -164,7 +164,7 @@ public class LetgoalDetailUpdateService {
 			}
 		}
 		if (detailModify) {
-			sendJmsJczUtil.sendLetgoalCacheUpdateJms(scheduleId); //亚赔缓存更新
+			jmsZqUtil.letgoalCacheUpdate(scheduleId); //亚赔缓存更新
 		}
 		long endmillis = System.currentTimeMillis();
 		logger.info("足球亚赔Detail更新-doLetGoalDetail,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId

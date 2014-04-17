@@ -23,7 +23,7 @@ import com.ruyicai.dataanalysis.util.bd.BeiDanUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
 import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 @Service
 public class QiuTanMatchesUpdateService {
@@ -40,7 +40,7 @@ public class QiuTanMatchesUpdateService {
 	private JmsSendUtil jmsSendUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	public void processFile(String filename) {
 		logger.info("开始读取文件更新彩票赛事与球探网的关联表, filename:{}", new String[] {filename});
@@ -297,11 +297,12 @@ public class QiuTanMatchesUpdateService {
 	private void updateScheduleEvent(QiuTanMatches qiuTanMatches, Schedule schedule) {
 		boolean isUpdate = false;
 		boolean eventModify = false;
+		int scheduleId = schedule.getScheduleID();
 		//竞彩足球
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = schedule.getEvent();
 		if(!StringUtil.isEmpty(eventQ)&&(StringUtil.isEmpty(eventS)||!eventQ.equals(eventS))) {
-			logger.info("赛事添加event,event="+eventQ+",scheduleId="+schedule.getScheduleID());
+			logger.info("赛事添加event,event="+eventQ+",scheduleId="+scheduleId);
 			schedule.setEvent(eventQ);
 			isUpdate = true;
 			eventModify = true;
@@ -368,9 +369,10 @@ public class QiuTanMatchesUpdateService {
 			schedule.merge();
 			//如果赛事已经有了event
 			if (!CommonUtil.isZqEventEmpty(schedule)) {
-				sendJmsJczUtil.standardAvgUpdate(String.valueOf(schedule.getScheduleID())); //更新平均欧赔
-				sendJmsJczUtil.standardCacheUpdate(String.valueOf(schedule.getScheduleID())); //更新欧赔缓存
-				sendJmsJczUtil.sendLetgoalCacheUpdateJms(String.valueOf(schedule.getScheduleID())); //亚赔缓存更新
+				jmsZqUtil.standardAvgUpdate(String.valueOf(scheduleId)); //更新平均欧赔
+				jmsZqUtil.standardCacheUpdate(String.valueOf(scheduleId)); //更新欧赔缓存
+				jmsZqUtil.letgoalCacheUpdate(String.valueOf(scheduleId)); //亚赔缓存更新
+				jmsZqUtil.scheduleUpdate(String.valueOf(scheduleId)); //赛事更新
 			}
 		}
 		//发送event增加的Jms

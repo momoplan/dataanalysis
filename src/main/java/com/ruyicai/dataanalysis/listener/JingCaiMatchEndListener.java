@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 /**
  *  竞彩赛事停售监听
@@ -25,7 +25,7 @@ public class JingCaiMatchEndListener {
 	private SendJmsJclUtil sendJmsJclUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	public void process(@Header("EVENT") String event) {
 		try {
@@ -79,7 +79,7 @@ public class JingCaiMatchEndListener {
 			schedule.setBetState(2); //截止
 			schedule.merge();
 			//发送赛事缓存更新的Jms
-			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+			jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 		}
 	}
 	

@@ -12,7 +12,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
 import com.ruyicai.dataanalysis.util.lq.SendJmsJclUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 /**
  * event增加的Jms监听
@@ -31,7 +31,7 @@ public class ScheduleEventAddListener {
 	private SendJmsJclUtil sendJmsJclUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	public void process(@Body String event) {
 		try {
@@ -153,7 +153,7 @@ public class ScheduleEventAddListener {
 		if (isModify) {
 			schedule.merge();
 			//发送赛事缓存更新的Jms
-			sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+			jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 		}
 	}
 	

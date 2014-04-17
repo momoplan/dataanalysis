@@ -29,7 +29,7 @@ import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.PropertiesUtil;
 import com.ruyicai.dataanalysis.util.jc.JmsSendUtil;
 import com.ruyicai.dataanalysis.util.zq.FootBallMapUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 @RequestMapping("/system")
 @Controller
@@ -74,7 +74,7 @@ public class SystemController {
 	private FetchNewsService fetchNewsService;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil sendJmsJczUtil;
 	
 	@Autowired
 	private FootBallMapUtil footBallMapUtil;

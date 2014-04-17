@@ -25,7 +25,7 @@ import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
 import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
-import com.ruyicai.dataanalysis.util.zq.SendJmsJczUtil;
+import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
 @Service
 public class ScheduleUpdateService {
@@ -50,7 +50,7 @@ public class ScheduleUpdateService {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private SendJmsJczUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	@Autowired
 	private SchedulesCacheUpdateListener schedulesCacheUpdateListener;
@@ -309,7 +309,7 @@ public class ScheduleUpdateService {
 						}
 					}
 					//发送赛事缓存更新的Jms
-					sendJmsJczUtil.sendSchedulesCacheUpdateJms(schedule.getScheduleID());
+					jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 				}
 			}
 		} catch(Exception e) {

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class SendJmsJczUtil {
+public class JmsZqUtil {
 
-	private Logger logger = LoggerFactory.getLogger(SendJmsJczUtil.class);
+	private Logger logger = LoggerFactory.getLogger(JmsZqUtil.class);
 	
 	@Produce(uri = "jms:topic:scheduleFinish")
 	private ProducerTemplate scheduleFinishTemplate;
@@ -42,11 +42,14 @@ public class SendJmsJczUtil {
 	@Produce(uri = "jms:topic:schedulesCacheUpdate")
 	private ProducerTemplate schedulesCacheUpdateTemplate;
 	
+	@Produce(uri = "jms:topic:scheduleUpdate")
+	private ProducerTemplate scheduleUpdateTemplate;
+	
 	/**
 	 * 发送亚赔缓存更新的Jms
 	 * @param body
 	 */
-	public void sendLetgoalCacheUpdateJms(String body) {
+	public void letgoalCacheUpdate(String body) {
 		try {
 			letgoalCacheUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
@@ -139,11 +142,23 @@ public class SendJmsJczUtil {
 	 * 发送赛事缓存更新的Jms
 	 * @param body
 	 */
-	public void sendSchedulesCacheUpdateJms(Integer body) {
+	public void schedulesCacheUpdate(Integer body) {
 		try {
 			schedulesCacheUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error("足球发送赛事缓存更新的Jms发生异常", e);
+		}
+	}
+	
+	/**
+	 * 赛事更新
+	 * @param body
+	 */
+	public void scheduleUpdate(String body) {
+		try {
+			scheduleUpdateTemplate.sendBody(body);
+		} catch(Exception e) {
+			logger.error("足球发送赛事更新的Jms发生异常", e);
 		}
 	}
 	

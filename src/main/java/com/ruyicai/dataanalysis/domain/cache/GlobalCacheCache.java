@@ -18,7 +18,7 @@ public class GlobalCacheCache {
 		if(StringUtil.isEmpty(value)) {
 			globalCache = GlobalCache.findById(id);
 			if(null != globalCache) {
-					cacheService.set(id, 0, globalCache.toJson());
+				cacheService.set(id, 0, globalCache.toJson());
 			}
 		} else {
 			globalCache = GlobalCache.fromJsonToGlobalCache(value);
@@ -27,6 +27,6 @@ public class GlobalCacheCache {
 	}
 	
 	public void setToMemcache(GlobalCache globalCache) {
-			cacheService.set(globalCache.getId(), globalCache.toJson());
+		cacheService.set(globalCache.getId(), globalCache.toJson());
 	}
 }
