@@ -74,7 +74,7 @@ public class SystemController {
 	private FetchNewsService fetchNewsService;
 	
 	@Autowired
-	private JmsZqUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	@Autowired
 	private FootBallMapUtil footBallMapUtil;
@@ -339,7 +339,7 @@ public class SystemController {
 	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJczUtil.sendScheduleFinishJms(event);
+			jmsZqUtil.sendScheduleFinishJms(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -356,7 +356,7 @@ public class SystemController {
 	ResponseData scoreModifyJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJczUtil.sendScoreModifyJms(event);
+			jmsZqUtil.sendScoreModifyJms(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -424,7 +424,7 @@ public class SystemController {
 	ResponseData standardAvgJms(@RequestParam("scheduleId") String scheduleId) {
 		ResponseData rd = new ResponseData();
 		try {
-			sendJmsJczUtil.standardAvgUpdate(scheduleId);
+			jmsZqUtil.standardAvgUpdate(scheduleId);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -456,6 +456,18 @@ public class SystemController {
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			rd.setValue(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/scheduleUpdateJms", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData scheduleUpdateJms(@RequestParam("scheduleId") String scheduleId) {
+		ResponseData rd = new ResponseData();
+		try {
+			jmsZqUtil.scheduleUpdate(scheduleId);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return rd;
 	}
