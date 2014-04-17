@@ -69,6 +69,7 @@ public class GlobalInfoService {
 	 * @return
 	 */
 	public InfoDTO getZcInfo(String zcEvent) {
+		long startMillis = System.currentTimeMillis();
 		String lotNo = ZuCaiUtil.getLotNoByZcEvent(zcEvent); //彩种编号
 		if (StringUtil.isEmpty(lotNo)) {
 			return null;
@@ -78,6 +79,8 @@ public class GlobalInfoService {
 			return null;
 		}
 		InfoDTO dto = getInfoDTO(schedule);
+		long endMillis = System.currentTimeMillis();
+		logger.info("查询足彩数据分析,用时:"+(endMillis-startMillis)+",zcEvent="+zcEvent);
 		return dto;
 	}
 	
