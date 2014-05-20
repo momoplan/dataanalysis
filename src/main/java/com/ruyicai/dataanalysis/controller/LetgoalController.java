@@ -39,4 +39,19 @@ public class LetgoalController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/findByEvent", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getInfo(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(letgoalService.findByEvent(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足Letgoal-findByEvent,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞足Letgoal-findByEvent发生异常", e);
+		}
+		return rd;
+	}
+	
 }

@@ -135,7 +135,8 @@ public class GlobalInfoService {
 	
 	public InfoDTO getUpdateInfoDTO(Schedule schedule) {
 		int scheduleId = schedule.getScheduleID();
-		String letgoalKey = StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId));
+		GlobalCache letGoal = getLetGoal(schedule);
+		/*String letgoalKey = StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId));
 		GlobalCache letGoal = GlobalCache.findGlobalCache(letgoalKey);
 		if(null == letGoal) {
 			List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
@@ -144,7 +145,7 @@ public class GlobalInfoService {
 			letGoal.setId(letgoalKey);
 			letGoal.setValue(LetGoal.toJsonArray(letGoals));
 			letGoal.persist();
-		}
+		}*/
 		GlobalCache standard = getStandard(schedule);
 		/*String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
 		GlobalCache standard = GlobalCache.findGlobalCache(stardardKey);
@@ -183,6 +184,21 @@ public class GlobalInfoService {
 		dto.setPreClashSchedules(preClashSchedules);
 		
 		return dto;
+	}
+	
+	public GlobalCache getLetGoal(Schedule schedule) {
+		int scheduleId = schedule.getScheduleID();
+		String letgoalKey = StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId));
+		GlobalCache letGoal = GlobalCache.findGlobalCache(letgoalKey);
+		if(null == letGoal) {
+			List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
+			buildLetGoals(letGoals);
+			letGoal = new GlobalCache();
+			letGoal.setId(letgoalKey);
+			letGoal.setValue(LetGoal.toJsonArray(letGoals));
+			letGoal.persist();
+		}
+		return letGoal;
 	}
 	
 	public GlobalCache getStandard(Schedule schedule) {

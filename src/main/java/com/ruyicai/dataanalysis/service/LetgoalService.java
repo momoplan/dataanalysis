@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
+import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.LetgoalDto;
+import com.ruyicai.dataanalysis.dto.LetgoalsDto;
+import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
@@ -18,6 +22,12 @@ public class LetgoalService {
 
 	@Autowired
 	private CacheService cacheService;
+	
+	@Autowired
+	private AnalysisService analysisService;
+	
+	@Autowired
+	private GlobalInfoService globalInfoService;
 	
 	public List<LetgoalDto> getUsualLetgoal(String day, String companyId) {
 		List<LetgoalDto> resultList = new ArrayList<LetgoalDto>();
@@ -81,6 +91,21 @@ public class LetgoalService {
 		dto.setUpOdds(letGoal.getUpOdds());
 		dto.setDownOdds(letGoal.getDownOdds());
 		return dto;
+	}
+	
+	public LetgoalsDto findByEvent(String event) {
+		Schedule schedule = Schedule.findByEvent(event, true);
+		if (schedule==null) {
+			return null;
+		}
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		GlobalCache letGoal = globalInfoService.getLetGoal(schedule);
+		Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
+		
+		LetgoalsDto resultDto = new LetgoalsDto();
+		resultDto.setSchedule(scheduleDTO);
+		resultDto.setLetGoals(letGoals);
+		return resultDto;
 	}
 	
 }
