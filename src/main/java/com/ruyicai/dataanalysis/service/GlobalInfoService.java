@@ -110,7 +110,8 @@ public class GlobalInfoService {
 		GlobalCache globalInfo = GlobalCache.findGlobalCache(key);
 		if(null != globalInfo) {
 			InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
-			setRanking(scheduleId, schedule.getSclassID(), dto);
+			dto.setRankings(getRankingDtos(scheduleId, schedule.getSclassID()));
+			//setRanking(scheduleId, schedule.getSclassID(), dto);
 			return dto;
 		}
 		InfoDTO dto = getUpdateInfoDTO(schedule);
@@ -119,11 +120,12 @@ public class GlobalInfoService {
 		globalInfo.setId(key);
 		globalInfo.setValue(dto.toJson());
 		globalInfo.persist();
-		setRanking(scheduleId, schedule.getSclassID(), dto);
+		dto.setRankings(getRankingDtos(scheduleId, schedule.getSclassID()));
+		//setRanking(scheduleId, schedule.getSclassID(), dto);
 		return dto;
 	}
 
-	private void setRanking(int scheduleID, int sclassID, InfoDTO dto) {
+	/*private void setRanking(int scheduleID, int sclassID, InfoDTO dto) {
 		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
 		GlobalCache ranking = GlobalCache.findGlobalCache(key);
 		if(null != ranking) {
@@ -131,6 +133,17 @@ public class GlobalInfoService {
 		} else {
 			Collection<RankingDTO> dtos = analysisService.getRanking(scheduleID, false);
 			dto.setRankings(dtos);
+		}
+	}*/
+	
+	private Collection<RankingDTO> getRankingDtos(int scheduleID, int sclassID) {
+		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
+		GlobalCache ranking = GlobalCache.findGlobalCache(key);
+		if(null != ranking) {
+			return RankingDTO.fromJsonArrayToRankingDTO(ranking.getValue());
+		} else {
+			Collection<RankingDTO> dtos = analysisService.getRanking(scheduleID, false);
+			return dtos;
 		}
 	}
 	
@@ -542,7 +555,7 @@ public class GlobalInfoService {
 		dto.setGuestPreSchedules(infoDTO.getGuestPreSchedules());
 		dto.setGuestAfterSchedules(infoDTO.getGuestAfterSchedules());
 		dto.setPreClashSchedules(infoDTO.getPreClashSchedules());
-		dto.setRankings(infoDTO.getRankings());
+		dto.setRankings(getRankingDtos(schedule.getScheduleID(), schedule.getSclassID()));
 		return dto;
 	}
 	
