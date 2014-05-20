@@ -14,7 +14,9 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.dto.KaiLiDto;
 import com.ruyicai.dataanalysis.dto.ProbabilityDto;
+import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.StandardDto;
+import com.ruyicai.dataanalysis.dto.StandardsDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zq.CalcUtil;
 
@@ -23,6 +25,9 @@ public class StandardService {
 
 	@Autowired
 	private CacheService cacheService;
+	
+	@Autowired
+	private AnalysisService analysisService;
 	
 	@Autowired
 	private GlobalInfoService globalInfoService;
@@ -171,14 +176,19 @@ public class StandardService {
 		return resultList;
 	}
 	
-	public Collection<Standard> findByEvent(String event) {
+	public StandardsDto findByEvent(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if (schedule==null) {
 			return null;
 		}
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
 		GlobalCache standard = globalInfoService.getStandard(schedule);
 		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
-		return standards;
+		
+		StandardsDto resultDto = new StandardsDto();
+		resultDto.setSchedule(scheduleDTO);
+		resultDto.setStandards(standards);
+		return resultDto;
 	}
 	
 }
