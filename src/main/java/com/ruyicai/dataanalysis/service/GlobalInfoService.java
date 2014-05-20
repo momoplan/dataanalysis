@@ -145,7 +145,8 @@ public class GlobalInfoService {
 			letGoal.setValue(LetGoal.toJsonArray(letGoals));
 			letGoal.persist();
 		}
-		String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
+		GlobalCache standard = getStandard(schedule);
+		/*String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
 		GlobalCache standard = GlobalCache.findGlobalCache(stardardKey);
 		if(null == standard) {
 			Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
@@ -154,7 +155,7 @@ public class GlobalInfoService {
 			standard.setId(stardardKey);
 			standard.setValue(Standard.toJsonArray(standards));
 			standard.persist();
-		}
+		}*/
 		long startmillis2 = System.currentTimeMillis();
 		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(scheduleId, schedule);
 		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(scheduleId, schedule);
@@ -182,6 +183,21 @@ public class GlobalInfoService {
 		dto.setPreClashSchedules(preClashSchedules);
 		
 		return dto;
+	}
+	
+	public GlobalCache getStandard(Schedule schedule) {
+		int scheduleId = schedule.getScheduleID();
+		String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
+		GlobalCache standard = GlobalCache.findGlobalCache(stardardKey);
+		if(null == standard) {
+			Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
+			buildStandards(schedule, standards);
+			standard = new GlobalCache();
+			standard.setId(stardardKey);
+			standard.setValue(Standard.toJsonArray(standards));
+			standard.persist();
+		}
+		return standard;
 	}
 	
 	public void buildStandards(Schedule schedule, Collection<Standard> standards) {

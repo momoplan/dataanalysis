@@ -77,4 +77,19 @@ public class StandardController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/findByEvent", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getInfo(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(standardService.findByEvent(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足Standard-findByEvent,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞足Standard-findByEvent发生异常", e);
+		}
+		return rd;
+	}
+	
 }

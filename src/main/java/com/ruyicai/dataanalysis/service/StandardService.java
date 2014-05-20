@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
+import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.dto.KaiLiDto;
@@ -21,6 +23,9 @@ public class StandardService {
 
 	@Autowired
 	private CacheService cacheService;
+	
+	@Autowired
+	private GlobalInfoService globalInfoService;
 	
 	public List<StandardDto> getUsualStandard(String day, String companyId) {
 		List<StandardDto> resultList = new ArrayList<StandardDto>();
@@ -164,6 +169,16 @@ public class StandardService {
 			e.printStackTrace();
 		}
 		return resultList;
+	}
+	
+	public Collection<Standard> findByEvent(String event) {
+		Schedule schedule = Schedule.findByEvent(event, true);
+		if (schedule==null) {
+			return null;
+		}
+		GlobalCache standard = globalInfoService.getStandard(schedule);
+		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
+		return standards;
 	}
 	
 }
