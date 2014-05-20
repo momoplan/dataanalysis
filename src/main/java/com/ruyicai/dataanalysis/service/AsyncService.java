@@ -70,6 +70,9 @@ public class AsyncService {
 				return;
 			}
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
+			if (schedule==null) {
+				return;
+			}
 			String event = schedule.getEvent();
 			if (StringUtils.isBlank(event)) {
 				return;
@@ -105,6 +108,9 @@ public class AsyncService {
 				return;
 			}
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
+			if (schedule==null) {
+				return;
+			}
 			String event = schedule.getEvent();
 			if (StringUtils.isBlank(event)) {
 				return;
