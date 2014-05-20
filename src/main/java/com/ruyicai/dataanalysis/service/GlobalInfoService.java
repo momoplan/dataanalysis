@@ -23,6 +23,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
+import com.ruyicai.dataanalysis.dto.AnalysisDto;
 import com.ruyicai.dataanalysis.dto.InfoDTO;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
@@ -136,27 +137,7 @@ public class GlobalInfoService {
 	public InfoDTO getUpdateInfoDTO(Schedule schedule) {
 		int scheduleId = schedule.getScheduleID();
 		GlobalCache letGoal = getLetGoal(schedule);
-		/*String letgoalKey = StringUtil.join("_", "dataanalysis", "LetGoal", String.valueOf(scheduleId));
-		GlobalCache letGoal = GlobalCache.findGlobalCache(letgoalKey);
-		if(null == letGoal) {
-			List<LetGoal> letGoals = LetGoal.findByScheduleID(scheduleId);
-			buildLetGoals(letGoals);
-			letGoal = new GlobalCache();
-			letGoal.setId(letgoalKey);
-			letGoal.setValue(LetGoal.toJsonArray(letGoals));
-			letGoal.persist();
-		}*/
 		GlobalCache standard = getStandard(schedule);
-		/*String stardardKey = StringUtil.join("_", "dataanalysis", "Standard", String.valueOf(scheduleId));
-		GlobalCache standard = GlobalCache.findGlobalCache(stardardKey);
-		if(null == standard) {
-			Collection<Standard> standards = Standard.findByScheduleID(scheduleId);
-			buildStandards(schedule, standards);
-			standard = new GlobalCache();
-			standard.setId(stardardKey);
-			standard.setValue(Standard.toJsonArray(standards));
-			standard.persist();
-		}*/
 		long startmillis2 = System.currentTimeMillis();
 		Collection<ScheduleDTO> homePreSchedules = analysisService.getPreHomeSchedules(scheduleId, schedule);
 		Collection<ScheduleDTO> guestPreSchedules = analysisService.getPreGuestSchedules(scheduleId, schedule);
@@ -171,7 +152,6 @@ public class GlobalInfoService {
 		dto.setSchedule(scheduleDTO);
 		
 		Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
-		//buildLetGoals(letGoals);
 		dto.setLetGoals(letGoals);
 		
 		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
@@ -536,6 +516,34 @@ public class GlobalInfoService {
 			logger.info("getSchedules-buildDTO,用时:"+(endmillis2-startmillis2)+",size="+list.size());
 		}
 		return results;
+	}
+	
+	public AnalysisDto getAnalysis(String event) {
+		long startMills = System.currentTimeMillis();
+		Schedule schedule = Schedule.findByEvent(event, true);
+		long endMills = System.currentTimeMillis();
+		logger.info("竞足getAnalysis-schedule,用时:"+(endMills-startMills)+",event="+event);
+		if(null == schedule) {
+			return null;
+		}
+		AnalysisDto dto = getAnalysisDto(schedule);
+		return dto;
+	}
+
+	private AnalysisDto getAnalysisDto(Schedule schedule) {
+		InfoDTO infoDTO = getUpdateInfoDTO(schedule);
+		if (infoDTO==null) {
+			return null;
+		}
+		AnalysisDto dto = new AnalysisDto();
+		dto.setSchedule(infoDTO.getSchedule());
+		dto.setHomePreSchedules(infoDTO.getHomePreSchedules());
+		dto.setHomeAfterSchedules(infoDTO.getHomeAfterSchedules());
+		dto.setGuestPreSchedules(infoDTO.getGuestPreSchedules());
+		dto.setGuestAfterSchedules(infoDTO.getGuestAfterSchedules());
+		dto.setPreClashSchedules(infoDTO.getPreClashSchedules());
+		dto.setRankings(infoDTO.getRankings());
+		return dto;
 	}
 	
 }

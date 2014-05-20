@@ -222,4 +222,19 @@ public class SelectController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/getAnalysis", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getAnalysis(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(infoService.getAnalysis(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getAnalysis,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞足getAnalysis发生异常", e);
+		}
+		return rd;
+	}
+	
 }
