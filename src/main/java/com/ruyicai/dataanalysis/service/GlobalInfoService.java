@@ -311,7 +311,7 @@ public class GlobalInfoService {
 	}
 	
 	public List<ScheduleDTO> getImmediateScores(String day, int state) {
-		logger.info("开始获取即时比分数据, day:{},state:{}", new String[] {day, String.valueOf(state)});
+		//logger.info("开始获取即时比分数据, day:{},state:{}", new String[] {day, String.valueOf(state)});
 		List<Schedule> schedules = Schedule.findByEventAndDay(day);
 		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
 		for(Schedule s : schedules) {

@@ -28,15 +28,30 @@ public class LotteryService {
 	 * @return
 	 */
 	public String getJingcaimatches(String lotNo, String day, String weekId, String teamId) {
-		StringBuffer paramStr = new StringBuffer();
-		paramStr.append("lotno=" + lotNo);
-		paramStr.append("&day=" + day);
-		paramStr.append("&weekid=" + weekId);
-		paramStr.append("&teamid=" + teamId);
+		StringBuilder builder = new StringBuilder();
+		builder.append("lotno=" + lotNo);
+		builder.append("&day=" + day);
+		builder.append("&weekid=" + weekId);
+		builder.append("&teamid=" + teamId);
 
 		String url = propertiesUtil.getLotteryUrl() + "select/getjingcaimatchesWithLetpoint";
-		String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, paramStr.toString());
-		logger.info("获取竞彩某场比赛的信息的返回:{},paramStr:{}", result, paramStr.toString());
+		String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, builder.toString());
+		logger.info("获取竞彩某场比赛的信息的返回:{},paramStr:{}", result, builder.toString());
+		return result;
+	}
+	
+	/**
+	 * 查询竞彩在卖的赛事日期
+	 * @param type
+	 * @return
+	 */
+	public String getjingcaiactivedays(String type) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("type=" + type);
+		
+		String url = propertiesUtil.getLotteryUrl() + "select/getjingcaiactivedays";
+		String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, builder.toString());
+		logger.info("查询竞彩在卖的赛事日期返回:{},paramStr:{}", result, builder.toString());
 		return result;
 	}
 	
