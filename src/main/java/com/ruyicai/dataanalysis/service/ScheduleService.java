@@ -1,10 +1,10 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +41,20 @@ public class ScheduleService {
 					continue;
 				}
 				if (state==1) { //未开赛
-					if (matchState!=MatchState.WEIKAI.value||matchState!=MatchState.DAIDING.value
-							||matchState!=MatchState.TUICHI.value) {
+					if (matchState!=MatchState.WEIKAI.value&&matchState!=MatchState.DAIDING.value
+							&&matchState!=MatchState.TUICHI.value) {
 						continue;
 					}
 				}
 				if (state==2) { //比赛中
-					if (matchState!=MatchState.SHANGBANCHANG.value||matchState!=MatchState.ZHONGCHANG.value
-							||matchState!=MatchState.XIABANCHANG.value||matchState!=MatchState.ZHONGDUAN.value) {
+					if (matchState!=MatchState.SHANGBANCHANG.value&&matchState!=MatchState.ZHONGCHANG.value
+							&&matchState!=MatchState.XIABANCHANG.value&&matchState!=MatchState.ZHONGDUAN.value) {
 						continue;
 					}
 				}
 				if(state==3) { // 完场
-					if (matchState!=MatchState.YAOZHAN.value||matchState!=MatchState.WANCHANG.value
-							||matchState!=MatchState.QUXIAO.value) {
+					if (matchState!=MatchState.YAOZHAN.value&&matchState!=MatchState.WANCHANG.value
+							&&matchState!=MatchState.QUXIAO.value) {
 						continue;
 					}
 				}
@@ -67,6 +67,7 @@ public class ScheduleService {
 		return resultMap;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private List<String> getActivedays(String type) {
 		String result = lotteryService.getjingcaiactivedays(type);
 		if (StringUtils.isBlank(result)) {
@@ -78,10 +79,10 @@ public class ScheduleService {
 		}
 		String errorCode = fromObject.getString("errorCode");
 		if (StringUtils.equals(errorCode, "0")) {
-			String value = fromObject.getString("value");
-			String[] separator = StringUtils.splitByWholeSeparator(value, ",");
-			List<String> list = Arrays.asList(separator);
-			return list;
+			JSONArray valueArray = fromObject.getJSONArray("value");
+			if (valueArray!=null&&valueArray.size()>0) {
+				return (List<String>)JSONArray.toCollection(valueArray, List.class);
+			}
 		}
 		return null;
 	}
