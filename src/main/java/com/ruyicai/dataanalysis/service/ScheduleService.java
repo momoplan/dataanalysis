@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
@@ -60,9 +61,14 @@ public class ScheduleService {
 				}
 				ScheduleDTO dto = new ScheduleDTO();
 				BeanUtilsEx.copyProperties(dto, schedule);
+				Sclass sclass = Sclass.findSclass(schedule.getSclassID());
+				dto.setSclassName(sclass.getName_J());
+				dto.setSclassName_j(sclass.getName_JS());
 				dtos.add(dto);
 			}
-			resultMap.put(activeday, dtos);
+			if (dtos==null||dtos.size()<=0) {
+				resultMap.put(activeday, dtos);
+			}
 		}
 		return resultMap;
 	}
