@@ -1,11 +1,19 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruyicai.dataanalysis.consts.MatchState;
+import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
+import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 
 @Service
 public class ScheduleService {
@@ -18,22 +26,64 @@ public class ScheduleService {
 	 * @param state
 	 * @return
 	 */
-	public List<ScheduleDTO> findInstantScores(int state) {
-		getActivedays("1");
-		
-		
-		
-		
-		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-		
-		return dtos;
+	public Map<String, List<ScheduleDTO>> findInstantScores(int state) {
+		List<String> activedays = getActivedays("1");
+		if (activedays==null||activedays.size()<=0) {
+			return null;
+		}
+		Map<String, List<ScheduleDTO>> resultMap = new HashMap<String, List<ScheduleDTO>>();
+		for (String activeday : activedays) {
+			List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+			List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
+			for (Schedule schedule : schedules) {
+				Integer matchState = schedule.getMatchState();
+				if (matchState==null) {
+					continue;
+				}
+				if (state==1) { //未开赛
+					if (matchState!=MatchState.WEIKAI.value||matchState!=MatchState.DAIDING.value
+							||matchState!=MatchState.TUICHI.value) {
+						continue;
+					}
+				}
+				if (state==2) { //比赛中
+					if (matchState!=MatchState.SHANGBANCHANG.value||matchState!=MatchState.ZHONGCHANG.value
+							||matchState!=MatchState.XIABANCHANG.value||matchState!=MatchState.ZHONGDUAN.value) {
+						continue;
+					}
+				}
+				if(state==3) { // 完场
+					if (matchState!=MatchState.YAOZHAN.value||matchState!=MatchState.WANCHANG.value
+							||matchState!=MatchState.QUXIAO.value) {
+						continue;
+					}
+				}
+				ScheduleDTO dto = new ScheduleDTO();
+				BeanUtilsEx.copyProperties(dto, schedule);
+				dtos.add(dto);
+			}
+			resultMap.put(activeday, dtos);
+		}
+		return resultMap;
 	}
 	
 	private List<String> getActivedays(String type) {
-		List<String> resultList = new ArrayList<String>();
 		String result = lotteryService.getjingcaiactivedays(type);
-		System.out.println(result);
-		return resultList;
+		if (StringUtils.isBlank(result)) {
+			return null;
+		}
+		JSONObject fromObject = JSONObject.fromObject(result);
+		if (fromObject==null) {
+			return null;
+		}
+		String errorCode = fromObject.getString("errorCode");
+		if (StringUtils.equals(errorCode, "0")) {
+			String value = fromObject.getString("value");
+			String[] separator = StringUtils.splitByWholeSeparator(value, ",");
+			List<String> list = Arrays.asList(separator);
+			return list;
+		}
+		return null;
 	}
 	
 }
