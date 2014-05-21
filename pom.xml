@@ -629,11 +629,6 @@
 				<database.url>jdbc:mysql://192.168.0.92:3306/dataanalysis?characterEncoding=utf-8</database.url>
 				<database.username>jrtConsole</database.username>
 				<database.password>jrtConsole</database.password>
-				<!-- news数据库 -->
-				<!-- <news.database.driverClassName>com.mysql.jdbc.Driver</news.database.driverClassName>
-				<news.database.url>jdbc:mysql://192.168.0.92:3306/news?characterEncoding=utf-8</news.database.url>
-				<news.database.username>jrtConsole</news.database.username>
-				<news.database.password>jrtConsole</news.database.password> -->
 				<logback.appender>STDOUT</logback.appender>
 				<dataanalysisIp>http://127.0.0.1:8000</dataanalysisIp>
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
@@ -641,6 +636,7 @@
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
 				<!-- 后台url -->
 				<lotteryUrl>http://192.168.0.42:8080/lottery/</lotteryUrl>
+				<analyzeUrl>http://192.168.0.42/analyze/</analyzeUrl>
 			</properties>
 		</profile>
 		
@@ -653,11 +649,6 @@
 				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
 				<database.username>jrtConsole</database.username>
 				<database.password>jrtConsole</database.password>
-				<!-- news数据库 -->
-				<!-- <news.database.driverClassName>com.mysql.jdbc.Driver</news.database.driverClassName>
-				<news.database.url>jdbc:mysql://192.168.0.92:3306/news?characterEncoding=utf-8</news.database.url>
-				<news.database.username>jrtConsole</news.database.username>
-				<news.database.password>jrtConsole</news.database.password> -->
 				<logback.appender>dataanalysisLog</logback.appender>
 				<dataanalysisIp>http://192.168.0.42:80</dataanalysisIp>
 				<memcache.client.ip>192.168.0.92:12000</memcache.client.ip>
@@ -665,6 +656,7 @@
 				<jms.lottery.brokerURL>tcp://192.168.0.92:61616</jms.lottery.brokerURL>
 				<!-- 后台url -->
 				<lotteryUrl>http://192.168.0.42:8080/lottery/</lotteryUrl>
+				<analyzeUrl>http://192.168.0.42/analyze/</analyzeUrl>
 			</properties>
 		</profile>
 
@@ -677,11 +669,6 @@
 				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
 				<database.username>jrtConsole</database.username>
 				<database.password>jrtConsole</database.password>
-				<!-- news数据库 -->
-				<!-- <news.database.url>jdbc:mysql://192.168.99.120:3306/news?characterEncoding=utf-8</news.database.url>
-				<news.database.driverClassName>com.mysql.jdbc.Driver</news.database.driverClassName>
-				<news.database.username>jrtConsole</news.database.username>
-				<news.database.password>jrtConsole</news.database.password> -->
 				<logback.appender>dataanalysisLog</logback.appender>
 				<dataanalysisIp>http://192.168.99.9:8080,http://192.168.99.17:8081</dataanalysisIp>
 				<memcache.client.ip>192.168.99.16:12000,192.168.99.17:12000</memcache.client.ip>
@@ -689,6 +676,7 @@
 				<jms.lottery.brokerURL>failover://(tcp://192.168.99.30:61616,tcp://192.168.99.31:61616)?randomize=false</jms.lottery.brokerURL>
 				<!-- 后台url -->
 				<lotteryUrl>http://192.168.99.6/lottery/</lotteryUrl>
+				<analyzeUrl></analyzeUrl>
 			</properties>
 		</profile>
 	</profiles>

@@ -18,4 +18,10 @@ public class PropertiesUtil {
 		return lotteryUrl;
 	}
 	
+	@Value("${analyzeUrl}")
+	private String analyzeUrl;
+	public String getAnalyzeUrl() {
+		return analyzeUrl;
+	}
+	
 }

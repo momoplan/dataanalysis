@@ -11,6 +11,8 @@ public class AnalysisDto {
 
 	private ScheduleDTO schedule;
 	
+	private BetRatioDto betRatio;
+	
 	private Collection<ScheduleDTO> homePreSchedules;
 	
 	private Collection<ScheduleDTO> guestPreSchedules;

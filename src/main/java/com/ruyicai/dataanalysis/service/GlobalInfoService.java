@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +27,11 @@ import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.dto.AnalysisDto;
+import com.ruyicai.dataanalysis.dto.BetRatioDto;
 import com.ruyicai.dataanalysis.dto.InfoDTO;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.service.back.AnalyzeService;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.Page;
@@ -40,6 +45,9 @@ public class GlobalInfoService {
 	private Logger logger = LoggerFactory.getLogger(GlobalInfoService.class);
 	
 	private Calendar calendar = Calendar.getInstance();
+	
+	@Autowired
+	private AnalyzeService analyzeService;
 	
 	@Autowired
 	private AnalysisService analysisService;
@@ -550,6 +558,7 @@ public class GlobalInfoService {
 		}
 		AnalysisDto dto = new AnalysisDto();
 		dto.setSchedule(infoDTO.getSchedule());
+		dto.setBetRatio(getBetRatioDto(schedule.getEvent()));
 		dto.setHomePreSchedules(infoDTO.getHomePreSchedules());
 		dto.setHomeAfterSchedules(infoDTO.getHomeAfterSchedules());
 		dto.setGuestPreSchedules(infoDTO.getGuestPreSchedules());
@@ -557,6 +566,30 @@ public class GlobalInfoService {
 		dto.setPreClashSchedules(infoDTO.getPreClashSchedules());
 		dto.setRankings(getRankingDtos(schedule.getScheduleID(), schedule.getSclassID()));
 		return dto;
+	}
+	
+	private BetRatioDto getBetRatioDto(String event) {
+		try {
+			String result = analyzeService.getJingcaieventbetcount(event);
+			if (StringUtils.isBlank(result)) {
+				return null;
+			}
+			JSONObject fromObject = JSONObject.fromObject(result);
+			if (fromObject==null) {
+				return null;
+			}
+			String errorCode = fromObject.getString("errorCode");
+			if (StringUtils.equals(errorCode, "0")) {
+				JSONObject valueObject = fromObject.getJSONObject("value");
+				BetRatioDto dto = new BetRatioDto();
+				dto.setSpf(valueObject.getString("spf"));
+				dto.setRfspf(valueObject.getString("rfspf"));
+				return dto;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

@@ -113,7 +113,7 @@ public class LetgoalDetailUpdateService {
 	}
 	
 	private void doLetGoalDetail(String data) {
-		long startmillis = System.currentTimeMillis();
+		//long startmillis = System.currentTimeMillis();
 		//<h>649557,35,-0.75,0.91,0.98,False,True</h>
 		String[] values = StringUtils.split(data, ",");
 		String scheduleId = values[0]; //比赛ID
@@ -166,9 +166,9 @@ public class LetgoalDetailUpdateService {
 		if (detailModify) {
 			jmsZqUtil.letgoalCacheUpdate(scheduleId); //亚赔缓存更新
 		}
-		long endmillis = System.currentTimeMillis();
-		logger.info("足球亚赔Detail更新-doLetGoalDetail,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId
-				+",threadPoolSize="+letgoalDetailUpdateExecutor.getQueue().size());
+		//long endmillis = System.currentTimeMillis();
+		//logger.info("足球亚赔Detail更新-doLetGoalDetail,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId
+				//+",threadPoolSize="+letgoalDetailUpdateExecutor.getQueue().size());
 	}
 	
 }
