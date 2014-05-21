@@ -113,7 +113,7 @@ public class StandardUpdateService {
 	@SuppressWarnings("unchecked")
 	private void doProcess(Element match) {
 		try {
-			long startmillis = System.currentTimeMillis();
+			//long startmillis = System.currentTimeMillis();
 			String scheduleId = match.elementTextTrim("id");
 			List<Element> odds = match.element("odds").elements("o");
 			//logger.info("足球欧赔更新,scheduleId="+scheduleId+",oddsSize="+odds.size());
@@ -136,12 +136,9 @@ public class StandardUpdateService {
 			if (updateCache) { //更新欧赔缓存
 				sendJmsJczUtil.standardCacheUpdate(scheduleId);
 			}
-			/*if (updateAvg&&!updateCache) {
-				logger.info("只更新平均欧赔,不更新缓存");
-			}*/
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
-					",threadPoolSize="+standardUpdateExecutor.getQueue().size());
+			//long endmillis = System.currentTimeMillis();
+			//logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
+					//",threadPoolSize="+standardUpdateExecutor.getQueue().size());
 		} catch (Exception e) {
 			logger.error("足球欧赔更新-doProcess发生异常", e);
 		}
