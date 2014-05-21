@@ -66,7 +66,7 @@ public class ScheduleService {
 				dto.setSclassName_j(sclass.getName_JS());
 				dtos.add(dto);
 			}
-			if (dtos==null||dtos.size()<=0) {
+			if (dtos!=null&&dtos.size()>0) {
 				resultMap.put(activeday, dtos);
 			}
 		}
