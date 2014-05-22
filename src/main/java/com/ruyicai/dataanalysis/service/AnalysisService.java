@@ -11,20 +11,26 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
+import com.ruyicai.dataanalysis.domain.Team;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
+import com.ruyicai.dataanalysis.util.PropertiesUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 
 @Service
 public class AnalysisService {
 
 	private Logger logger = LoggerFactory.getLogger(AnalysisService.class);
+	
+	@Autowired
+	private PropertiesUtil propertiesUtil;
 	
 	public void updateAllRanking() {
 		logger.info("开始更新所有联赛排名");
@@ -155,10 +161,6 @@ public class AnalysisService {
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		/*Schedule Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
-			return new ArrayList<ScheduleDTO>();
-		}*/
 		Integer teamId = schedule.getHomeTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getGuestTeamID();
@@ -174,10 +176,6 @@ public class AnalysisService {
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		/*Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
-			return new ArrayList<ScheduleDTO>();
-		}*/
 		Integer teamId = schedule.getGuestTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getHomeTeamID();
@@ -193,10 +191,6 @@ public class AnalysisService {
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		/*Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
-			return new ArrayList<ScheduleDTO>();
-		}*/
 		Integer teamId = schedule.getHomeTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getGuestTeamID();
@@ -212,10 +206,6 @@ public class AnalysisService {
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		/*Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
-			return new ArrayList<ScheduleDTO>();
-		}*/
 		Integer teamId = schedule.getGuestTeamID();
 		if (StringUtils.equals(schedule.getTurn(), "1")) {
 			teamId = schedule.getHomeTeamID();
@@ -231,10 +221,6 @@ public class AnalysisService {
 		if(schedule==null) {
 			return new ArrayList<ScheduleDTO>();
 		}
-		/*Schedule schedule = Schedule.findSchedule(scheduleID);
-		if(null == schedule) {
-			return new ArrayList<ScheduleDTO>();
-		}*/
 		List<Schedule> schedules = Schedule.findPreClashSchedules(schedule.getHomeTeamID(), schedule.getGuestTeamID(), schedule.getMatchTime());
 		return buildDTOS(schedules);
 	}
@@ -255,10 +241,35 @@ public class AnalysisService {
 			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
+			//设置主队图标
+			dto.setHomeTeamIco(getTeamIco(schedule.getHomeTeamID()));
+			//设置客队图标
+			dto.setGuestTeamIco(getTeamIco(schedule.getGuestTeamID()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return dto;
+	}
+	
+	/**
+	 * 查询球队图标
+	 * @param teamId
+	 * @return
+	 */
+	private String getTeamIco(int teamId) {
+		try {
+			Team team = Team.findTeam(teamId);
+			if (team!=null) {
+				String flag = team.getFlag(); //images/20071241533386732.jpg
+				if (StringUtils.isNotBlank(flag)) {
+					String ico = propertiesUtil.getImageUrl()+flag;
+					return ico;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

@@ -9,6 +9,7 @@ privileged aspect Team_Roo_ToString {
     
     public String Team.toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("Flag: ").append(getFlag()).append(", ");
         sb.append("Name_E: ").append(getName_E()).append(", ");
         sb.append("Name_F: ").append(getName_F()).append(", ");
         sb.append("Name_J: ").append(getName_J()).append(", ");

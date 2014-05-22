@@ -24,4 +24,10 @@ public class PropertiesUtil {
 		return analyzeUrl;
 	}
 	
+	@Value("${imageUrl}")
+	private String imageUrl;
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	
 }

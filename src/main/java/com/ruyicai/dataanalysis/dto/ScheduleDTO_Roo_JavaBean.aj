@@ -83,6 +83,22 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.guestTeam = guestTeam;
     }
     
+    public String ScheduleDTO.getHomeTeamIco() {
+        return this.homeTeamIco;
+    }
+    
+    public void ScheduleDTO.setHomeTeamIco(String homeTeamIco) {
+        this.homeTeamIco = homeTeamIco;
+    }
+    
+    public String ScheduleDTO.getGuestTeamIco() {
+        return this.guestTeamIco;
+    }
+    
+    public void ScheduleDTO.setGuestTeamIco(String guestTeamIco) {
+        this.guestTeamIco = guestTeamIco;
+    }
+    
     public Integer ScheduleDTO.getNeutrality() {
         return this.neutrality;
     }

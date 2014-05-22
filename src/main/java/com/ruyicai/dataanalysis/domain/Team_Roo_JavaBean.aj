@@ -48,4 +48,12 @@ privileged aspect Team_Roo_JavaBean {
         this.name_E = name_E;
     }
     
+    public String Team.getFlag() {
+        return this.flag;
+    }
+    
+    public void Team.setFlag(String flag) {
+        this.flag = flag;
+    }
+    
 }

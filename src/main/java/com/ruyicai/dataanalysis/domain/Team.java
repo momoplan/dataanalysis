@@ -36,6 +36,8 @@ public class Team {
 
 	private String name_E;
 	
+	private String flag;
+	
 	@Autowired
 	private transient TeamCache teamCache;
 	
