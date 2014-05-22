@@ -53,6 +53,9 @@ public class GlobalInfoService {
 	private AnalysisService analysisService;
 	
 	@Autowired
+	private AsyncService asyncService;
+	
+	@Autowired
 	private CacheService cacheService;
 	
 	/**
@@ -119,31 +122,14 @@ public class GlobalInfoService {
 		if(null != globalInfo) {
 			InfoDTO dto = InfoDTO.fromJsonToInfoDTO(globalInfo.getValue());
 			dto.setRankings(getRankingDtos(scheduleId, schedule.getSclassID()));
-			//setRanking(scheduleId, schedule.getSclassID(), dto);
 			return dto;
 		}
 		InfoDTO dto = getUpdateInfoDTO(schedule);
-		
-		globalInfo = new GlobalCache();
-		globalInfo.setId(key);
-		globalInfo.setValue(dto.toJson());
-		globalInfo.persist();
 		dto.setRankings(getRankingDtos(scheduleId, schedule.getSclassID()));
-		//setRanking(scheduleId, schedule.getSclassID(), dto);
+		asyncService.saveGlobalCache(key, dto.toJson());
 		return dto;
 	}
 
-	/*private void setRanking(int scheduleID, int sclassID, InfoDTO dto) {
-		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
-		GlobalCache ranking = GlobalCache.findGlobalCache(key);
-		if(null != ranking) {
-			dto.setRankings(RankingDTO.fromJsonArrayToRankingDTO(ranking.getValue()));
-		} else {
-			Collection<RankingDTO> dtos = analysisService.getRanking(scheduleID, false);
-			dto.setRankings(dtos);
-		}
-	}*/
-	
 	private Collection<RankingDTO> getRankingDtos(int scheduleID, int sclassID) {
 		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
 		GlobalCache ranking = GlobalCache.findGlobalCache(key);
@@ -552,7 +538,7 @@ public class GlobalInfoService {
 	}
 
 	private AnalysisDto getAnalysisDto(Schedule schedule) {
-		InfoDTO infoDTO = getUpdateInfoDTO(schedule);
+		InfoDTO infoDTO = getInfoDTO(schedule);
 		if (infoDTO==null) {
 			return null;
 		}

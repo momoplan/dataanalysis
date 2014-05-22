@@ -262,7 +262,7 @@ public class AnalysisService {
 			if (team!=null) {
 				String flag = team.getFlag(); //images/20071241533386732.jpg
 				if (StringUtils.isNotBlank(flag)) {
-					String ico = propertiesUtil.getImageUrl()+flag;
+					String ico = propertiesUtil.getImageUrl()+"team"+flag;
 					return ico;
 				}
 			}

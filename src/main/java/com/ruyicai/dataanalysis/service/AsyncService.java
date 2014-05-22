@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.consts.LetgoalCompany;
 import com.ruyicai.dataanalysis.consts.StandardCompany;
+import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.LetgoalDto;
 import com.ruyicai.dataanalysis.dto.StandardDto;
@@ -134,6 +135,23 @@ public class AsyncService {
 			logger.info("updateUsualLetgoalsByCompanyId用时:"+(endMillis-startMillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("updateUsualLetgoalsByCompanyId发生异常", e);
+		}
+	}
+	
+	/**
+	 * 保存GlobalCache
+	 * @param key
+	 * @param value
+	 */
+	@Async
+	public void saveGlobalCache(String key, String value) {
+		try {
+			GlobalCache globalInfo = new GlobalCache();
+			globalInfo.setId(key);
+			globalInfo.setValue(value);
+			globalInfo.persist();
+		} catch (Exception e) {
+			logger.error("saveGlobalCache发生异常", e);
 		}
 	}
 	
