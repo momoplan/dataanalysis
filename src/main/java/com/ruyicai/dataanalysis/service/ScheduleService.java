@@ -101,6 +101,9 @@ public class ScheduleService {
 			return null;
 		}
 		TechnicCount technicCount = TechnicCount.findTechnicCount(schedule.getScheduleID());
+		if (technicCount==null) {
+			return null;
+		}
 		TechnicCountDto dto = new TechnicCountDto();
 		dto.setSchedule(analysisService.buildDTO(schedule));
 		dto.setTechnicCount(technicCount);
