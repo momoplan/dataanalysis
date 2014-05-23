@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.domain.TechnicCount;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
 
@@ -88,6 +89,15 @@ public class ScheduleService {
 			}
 		}
 		return null;
+	}
+	
+	public TechnicCount findTechnicCount(String event) {
+		Schedule schedule = Schedule.findByEvent(event, true);
+		if(null == schedule) {
+			return null;
+		}
+		TechnicCount technicCount = TechnicCount.findTechnicCount(schedule.getScheduleID());
+		return technicCount;
 	}
 	
 }

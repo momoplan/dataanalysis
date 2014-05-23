@@ -354,7 +354,7 @@ public class GlobalInfoService {
 	}
 	
 	public ScheduleDTO getImmediateScore(String event) {
-		logger.info("开始获取即时比分数据, event:{}", new String[] {event});
+		//logger.info("开始获取即时比分数据, event:{}", new String[] {event});
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
 			return null;

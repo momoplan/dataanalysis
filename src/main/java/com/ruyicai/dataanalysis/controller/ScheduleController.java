@@ -34,4 +34,19 @@ public class ScheduleController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/findTechnicCount", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findTechnicCount(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.findTechnicCount(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足findTechnicCount,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞足findTechnicCount发生异常", e);
+		}
+		return rd;
+	}
+	
 }
