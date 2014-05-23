@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.consts.LetgoalCompany;
 import com.ruyicai.dataanalysis.consts.StandardCompany;
-import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.dto.LetgoalDto;
 import com.ruyicai.dataanalysis.dto.StandardDto;
@@ -143,7 +142,7 @@ public class AsyncService {
 	 * @param key
 	 * @param value
 	 */
-	@Async
+	/*@Async
 	public void saveGlobalCache(String key, String value) {
 		try {
 			GlobalCache globalInfo = new GlobalCache();
@@ -153,6 +152,6 @@ public class AsyncService {
 		} catch (Exception e) {
 			logger.error("saveGlobalCache发生异常", e);
 		}
-	}
+	}*/
 	
 }

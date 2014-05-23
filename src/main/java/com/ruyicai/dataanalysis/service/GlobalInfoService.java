@@ -53,9 +53,6 @@ public class GlobalInfoService {
 	private AnalysisService analysisService;
 	
 	@Autowired
-	private AsyncService asyncService;
-	
-	@Autowired
 	private CacheService cacheService;
 	
 	/**
@@ -126,7 +123,11 @@ public class GlobalInfoService {
 		}
 		InfoDTO dto = getUpdateInfoDTO(schedule);
 		dto.setRankings(getRankingDtos(scheduleId, schedule.getSclassID()));
-		asyncService.saveGlobalCache(key, dto.toJson());
+		//保存GlobalCache
+		globalInfo = new GlobalCache();
+		globalInfo.setId(key);
+		globalInfo.setValue(dto.toJson());
+		globalInfo.persist();
 		return dto;
 	}
 
