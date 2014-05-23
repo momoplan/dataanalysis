@@ -22,6 +22,7 @@ import com.ruyicai.dataanalysis.timer.zq.DetailResultUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.QiuTanMatchesUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.ScheduleUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.SclassUpdateService;
+import com.ruyicai.dataanalysis.timer.zq.TechnicCountUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.TodayScoreUpdateService;
 import com.ruyicai.dataanalysis.timer.zq.TeamUpdateService;
 import com.ruyicai.dataanalysis.util.DateUtil;
@@ -63,6 +64,9 @@ public class SystemController {
 	
 	@Autowired
 	private LetgoalDetailUpdateService letgoalDetailUpdateService;
+	
+	@Autowired
+	private TechnicCountUpdateService technicCountUpdateService;
 	
 	@Autowired
 	private AnalysisService analysisService;
@@ -468,6 +472,18 @@ public class SystemController {
 			jmsZqUtil.scheduleUpdate(scheduleId);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/technicCountUpdate", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData technicCountUpdate() {
+		ResponseData rd = new ResponseData();
+		try {
+			technicCountUpdateService.process();
+		} catch(Exception e) {
+			logger.error("technicCountUpdate发生异常", e);
 		}
 		return rd;
 	}
