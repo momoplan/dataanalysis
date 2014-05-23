@@ -49,4 +49,19 @@ public class ScheduleController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/findClasliAnalysis", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findClasliAnalysis(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.findClasliAnalysis(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足findClasliAnalysis,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞足findClasliAnalysis发生异常", e);
+		}
+		return rd;
+	}
+	
 }

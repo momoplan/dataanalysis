@@ -131,7 +131,7 @@ public class GlobalInfoService {
 		return dto;
 	}
 
-	private Collection<RankingDTO> getRankingDtos(int scheduleID, int sclassID) {
+	public Collection<RankingDTO> getRankingDtos(int scheduleID, int sclassID) {
 		String key = StringUtil.join("_", "dataanalysis", "Ranking", String.valueOf(sclassID));
 		GlobalCache ranking = GlobalCache.findGlobalCache(key);
 		if(null != ranking) {

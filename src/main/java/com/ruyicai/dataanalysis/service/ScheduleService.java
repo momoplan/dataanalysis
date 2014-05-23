@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.TechnicCount;
+import com.ruyicai.dataanalysis.dto.ClasliAnalysisDto;
+import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.TechnicCountDto;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
@@ -27,6 +30,9 @@ public class ScheduleService {
 	
 	@Autowired
 	private AnalysisService analysisService;
+	
+	@Autowired
+	private GlobalInfoService infoService;
 	
 	/**
 	 * 查询即时比分
@@ -107,6 +113,24 @@ public class ScheduleService {
 		TechnicCountDto dto = new TechnicCountDto();
 		dto.setSchedule(analysisService.buildDTO(schedule));
 		dto.setTechnicCount(technicCount);
+		return dto;
+	}
+	
+	public ClasliAnalysisDto findClasliAnalysis(String event) {
+		Schedule schedule = Schedule.findByEvent(event, true);
+		if(null == schedule) {
+			return null;
+		}
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		int scheduleId = schedule.getScheduleID();
+		//历史交锋
+		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(scheduleId, schedule);
+		//联赛排名
+		Collection<RankingDTO> rankingDtos = infoService.getRankingDtos(scheduleId, schedule.getSclassID());
+		ClasliAnalysisDto dto = new ClasliAnalysisDto();
+		dto.setSchedule(scheduleDTO);
+		dto.setPreClashSchedules(preClashSchedules);
+		dto.setRankings(rankingDtos);
 		return dto;
 	}
 	
