@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.TechnicCount;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
+import com.ruyicai.dataanalysis.dto.TechnicCountDto;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
 
 @Service
@@ -91,13 +95,16 @@ public class ScheduleService {
 		return null;
 	}
 	
-	public TechnicCount findTechnicCount(String event) {
+	public TechnicCountDto findTechnicCount(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
 			return null;
 		}
 		TechnicCount technicCount = TechnicCount.findTechnicCount(schedule.getScheduleID());
-		return technicCount;
+		TechnicCountDto dto = new TechnicCountDto();
+		dto.setSchedule(analysisService.buildDTO(schedule));
+		dto.setTechnicCount(technicCount);
+		return dto;
 	}
 	
 }
