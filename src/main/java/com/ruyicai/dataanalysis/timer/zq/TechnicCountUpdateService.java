@@ -59,6 +59,19 @@ public class TechnicCountUpdateService {
 			if (StringUtils.isBlank(technicCountText)) {
 				return;
 			}
+			TechnicCount technicCount = TechnicCount.findTechnicCount(Integer.parseInt(id));
+			if (technicCount==null) { //记录不存在
+				saveTechnicCount(id, technicCountText);
+			} else { //记录已存在
+				updateTechnicCount(technicCount, technicCountText);
+			}
+		} catch (Exception e) {
+			logger.error("更新比赛的技术统计-processMatchElement发生异常", e);
+		}
+	}
+	
+	private void saveTechnicCount(String id, String technicCountText) {
+		try {
 			boolean isSave = false;
 			TechnicCount technicCount = new TechnicCount();
 			technicCount.setScheduleId(Integer.parseInt(id));
@@ -106,7 +119,58 @@ public class TechnicCountUpdateService {
 				technicCount.persist();
 			}
 		} catch (Exception e) {
-			logger.error("更新比赛的技术统计-processMatchElement发生异常", e);
+			logger.error("更新比赛的技术统计-saveTechnicCount发生异常", e);
+		}
+	}
+	
+	private void updateTechnicCount(TechnicCount technicCount, String technicCountText) {
+		try {
+			boolean isUpdate = false;
+			String[] separator = StringUtils.splitByWholeSeparator(technicCountText, ";");
+			for (String string : separator) {
+				String type = StringUtils.substringBefore(string, ",");
+				String value = StringUtils.substringAfter(string, ",");
+				if (StringUtils.isBlank(type)||StringUtils.isBlank(value)) {
+					continue;
+				}
+				if (StringUtils.equals(type, "14")&&!StringUtils.equals(technicCount.getTrapTime(), value)) { //控球时间
+					isUpdate = true;
+					technicCount.setTrapTime(value);
+				}
+				if (StringUtils.equals(type, "3")&&!StringUtils.equals(technicCount.getShootCount(), value)) { //射门次数
+					isUpdate = true;
+					technicCount.setShootCount(value);
+				}
+				if (StringUtils.equals(type, "4")&&!StringUtils.equals(technicCount.getHitCount(), value)) { //射中次数
+					isUpdate = true;
+					technicCount.setHitCount(value);
+				}
+				if (StringUtils.equals(type, "9")&&!StringUtils.equals(technicCount.getOffsideCount(), value)) { //越位次数
+					isUpdate = true;
+					technicCount.setOffsideCount(value);
+				}
+				if (StringUtils.equals(type, "6")&&!StringUtils.equals(technicCount.getCornerkickCount(), value)) { //角球次数
+					isUpdate = true;
+					technicCount.setCornerkickCount(value);
+				}
+				if (StringUtils.equals(type, "5")&&!StringUtils.equals(technicCount.getFoulCount(), value)) { //犯规次数
+					isUpdate = true;
+					technicCount.setFoulCount(value);
+				}
+				if (StringUtils.equals(type, "11")&&!StringUtils.equals(technicCount.getYellowcardCount(), value)) { //黄牌数
+					isUpdate = true;
+					technicCount.setYellowcardCount(value);
+				}
+				if (StringUtils.equals(type, "13")&&!StringUtils.equals(technicCount.getRedcardCount(), value)) { //红牌数
+					isUpdate = true;
+					technicCount.setRedcardCount(value);
+				}
+			}
+			if (isUpdate) {
+				technicCount.merge();
+			}
+		} catch (Exception e) {
+			logger.error("更新比赛的技术统计-updateTechnicCount发生异常", e);
 		}
 	}
 	

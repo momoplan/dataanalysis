@@ -156,6 +156,17 @@
    		<property name="cronExpression" value="0 30 0 * * ?"></property>  <!-- 每天0点30分执行 -->
    </bean>
    
+   <!-- 赛事技术统计 -->
+   <bean id="technicCountJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="technicCountUpdateService"></property>
+   		<property name="targetMethod" value="process"></property>
+   </bean>
+   
+   <bean id="technicCountTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="technicCountJobDetail"></property>
+   		<property name="cronExpression" value="0 */10 * * * ?"></property>  <!-- 10分钟 -->
+   </bean>
+   
    <!--  篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -285,6 +296,7 @@
    				<ref bean="letgoalDetailUpdateTrigger"/>
    				<ref bean="clearMapTrigger"/>
    				<ref bean="processWeiKaiTrigger"/>
+   				<ref bean="technicCountTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>
