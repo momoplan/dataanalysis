@@ -64,4 +64,19 @@ public class ScheduleController {
 		return rd;
 	}
 	
+	@RequestMapping(value = "/findScheduleByEvents", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findScheduleByEvents(@RequestParam("events") String events) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.findScheduleByEvents(events));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足findScheduleByEvents,用时:"+(endMills-startMills)+",events="+events);
+		} catch(Exception e) {
+			logger.error("竞足findScheduleByEvents发生异常", e);
+		}
+		return rd;
+	}
+	
 }

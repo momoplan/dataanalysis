@@ -134,4 +134,24 @@ public class ScheduleService {
 		return dto;
 	}
 	
+	public Map<String, ScheduleDTO> findScheduleByEvents(String events) {
+		if (StringUtils.isBlank(events)) {
+			return null;
+		}
+		String[] separator = StringUtils.splitByWholeSeparator(events, ",");
+		if (separator==null||separator.length<=0) {
+			return null;
+		}
+		Map<String, ScheduleDTO> resultMap = new HashMap<String, ScheduleDTO>();
+		for (String event : separator) {
+			Schedule schedule = Schedule.findByEvent(event, true);
+			if(schedule==null) {
+				continue;
+			}
+			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+			resultMap.put(event, scheduleDTO);
+		}
+		return resultMap;
+	}
+	
 }
