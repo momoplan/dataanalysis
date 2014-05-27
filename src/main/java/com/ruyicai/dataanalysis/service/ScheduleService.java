@@ -5,14 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.TechnicCount;
@@ -135,7 +132,7 @@ public class ScheduleService {
 		return dto;
 	}
 	
-	public Map<String, ScheduleDTO> findScheduleByEvents(String events) {
+	public List<ScheduleDTO> findScheduleByEvents(String events) {
 		if (StringUtils.isBlank(events)) {
 			return null;
 		}
@@ -143,16 +140,61 @@ public class ScheduleService {
 		if (separator==null||separator.length<=0) {
 			return null;
 		}
-		Map<String, ScheduleDTO> resultMap = new HashMap<String, ScheduleDTO>();
+		List<ScheduleDTO> processingList = new ArrayList<ScheduleDTO>();
+		List<ScheduleDTO> wanchangList = new ArrayList<ScheduleDTO>();
+		List<ScheduleDTO> weikaiList = new ArrayList<ScheduleDTO>();
 		for (String event : separator) {
 			Schedule schedule = Schedule.findByEvent(event, true);
 			if(schedule==null) {
 				continue;
 			}
 			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
-			resultMap.put(event, scheduleDTO);
+			if (scheduleDTO==null) {
+				continue;
+			}
+			Integer matchState = scheduleDTO.getMatchState();
+			if (matchState==null) {
+				continue;
+			}
+			if (matchState==MatchState.SHANGBANCHANG.value&&matchState==MatchState.ZHONGCHANG.value
+					&&matchState==MatchState.XIABANCHANG.value&&matchState==MatchState.ZHONGDUAN.value) { //进行中
+				processingList.add(scheduleDTO);
+			}
+			if (matchState==MatchState.YAOZHAN.value&&matchState==MatchState.WANCHANG.value
+					&&matchState==MatchState.QUXIAO.value) { //完场
+				wanchangList.add(scheduleDTO);
+			}
+			if (matchState==MatchState.WEIKAI.value&&matchState==MatchState.DAIDING.value
+					&&matchState==MatchState.TUICHI.value) { //未开赛
+				weikaiList.add(scheduleDTO);
+			}
 		}
-		return resultMap;
+		List<ScheduleDTO> resultList = new ArrayList<ScheduleDTO>();
+		resultList.addAll(processingList);
+		resultList.addAll(wanchangList);
+		resultList.addAll(weikaiList);
+		return resultList;
+		/*Map<Integer, List<ScheduleDTO>> map = new HashMap<Integer, List<ScheduleDTO>>();
+		if (processingList!=null&&processingList.size()>0) {
+			map.put(1, processingList);
+		}
+		if (wanchangList!=null&&wanchangList.size()>0) {
+			map.put(2, wanchangList);
+		}
+		if (weikaiList!=null&&weikaiList.size()>0) {
+			map.put(3, weikaiList);
+		}
+		Tools.sortMapByKey(map, false);*/
 	}
+	
+	/*public static void main(String[] args) {
+		List<String> list = new ArrayList<String>();
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		for (String string : list) {
+			System.out.println(string);
+		}
+	}*/
 	
 }
