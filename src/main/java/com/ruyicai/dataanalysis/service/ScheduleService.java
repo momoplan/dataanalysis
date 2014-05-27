@@ -156,16 +156,16 @@ public class ScheduleService {
 			if (matchState==null) {
 				continue;
 			}
-			if (matchState==MatchState.SHANGBANCHANG.value&&matchState==MatchState.ZHONGCHANG.value
-					&&matchState==MatchState.XIABANCHANG.value&&matchState==MatchState.ZHONGDUAN.value) { //进行中
+			if (matchState==MatchState.SHANGBANCHANG.value||matchState==MatchState.ZHONGCHANG.value
+					||matchState==MatchState.XIABANCHANG.value||matchState==MatchState.ZHONGDUAN.value) { //进行中
 				processingList.add(scheduleDTO);
 			}
-			if (matchState==MatchState.YAOZHAN.value&&matchState==MatchState.WANCHANG.value
-					&&matchState==MatchState.QUXIAO.value) { //完场
+			if (matchState==MatchState.YAOZHAN.value||matchState==MatchState.WANCHANG.value
+					||matchState==MatchState.QUXIAO.value) { //完场
 				wanchangList.add(scheduleDTO);
 			}
-			if (matchState==MatchState.WEIKAI.value&&matchState==MatchState.DAIDING.value
-					&&matchState==MatchState.TUICHI.value) { //未开赛
+			if (matchState==MatchState.WEIKAI.value||matchState==MatchState.DAIDING.value
+					||matchState==MatchState.TUICHI.value) { //未开赛
 				weikaiList.add(scheduleDTO);
 			}
 		}
