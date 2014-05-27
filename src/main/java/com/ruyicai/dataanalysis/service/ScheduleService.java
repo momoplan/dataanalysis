@@ -173,6 +173,9 @@ public class ScheduleService {
 		resultList.addAll(processingList);
 		resultList.addAll(wanchangList);
 		resultList.addAll(weikaiList);
+		if (resultList==null||resultList.size()<=0) {
+			return null;
+		}
 		return resultList;
 		/*Map<Integer, List<ScheduleDTO>> map = new HashMap<Integer, List<ScheduleDTO>>();
 		if (processingList!=null&&processingList.size()>0) {
