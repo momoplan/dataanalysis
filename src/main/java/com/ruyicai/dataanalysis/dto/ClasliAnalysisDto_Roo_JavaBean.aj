@@ -3,6 +3,7 @@
 
 package com.ruyicai.dataanalysis.dto;
 
+import com.ruyicai.dataanalysis.dto.BetRatioDto;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import java.util.Collection;
@@ -15,6 +16,14 @@ privileged aspect ClasliAnalysisDto_Roo_JavaBean {
     
     public void ClasliAnalysisDto.setSchedule(ScheduleDTO schedule) {
         this.schedule = schedule;
+    }
+    
+    public BetRatioDto ClasliAnalysisDto.getBetRatio() {
+        return this.betRatio;
+    }
+    
+    public void ClasliAnalysisDto.setBetRatio(BetRatioDto betRatio) {
+        this.betRatio = betRatio;
     }
     
     public Collection<ScheduleDTO> ClasliAnalysisDto.getPreClashSchedules() {

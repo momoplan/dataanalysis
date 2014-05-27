@@ -10,6 +10,8 @@ public class ClasliAnalysisDto {
 
 	private ScheduleDTO schedule;
 	
+	private BetRatioDto betRatio;
+	
 	private Collection<ScheduleDTO> preClashSchedules;
 	
 	private Collection<RankingDTO> rankings;

@@ -555,7 +555,7 @@ public class GlobalInfoService {
 		return dto;
 	}
 	
-	private BetRatioDto getBetRatioDto(String event) {
+	public BetRatioDto getBetRatioDto(String event) {
 		try {
 			String result = analyzeService.getJingcaieventbetcount(event);
 			if (StringUtils.isBlank(result)) {

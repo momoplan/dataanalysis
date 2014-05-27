@@ -129,6 +129,7 @@ public class ScheduleService {
 		Collection<RankingDTO> rankingDtos = infoService.getRankingDtos(scheduleId, schedule.getSclassID());
 		ClasliAnalysisDto dto = new ClasliAnalysisDto();
 		dto.setSchedule(scheduleDTO);
+		dto.setBetRatio(infoService.getBetRatioDto(event));
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
 		return dto;
