@@ -25,6 +25,9 @@ public class SelectNewsService {
 			builder.append(" o.event=? ");
 			params.add(event);
 		}
+		if (builder.toString().endsWith("where")) {
+			builder.delete(builder.length() - 5, builder.length());
+		}
 		newsDao.findListWithPage(builder.toString(), "order by o.publishtime desc", params, page);
 	}
 	
