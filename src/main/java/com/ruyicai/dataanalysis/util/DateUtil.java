@@ -14,6 +14,7 @@ public class DateUtil {
 			date_1000 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 			.parse("1000-01-01 00:00:00");
 		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -32,6 +33,7 @@ public class DateUtil {
 		try {
 			return new SimpleDateFormat(pattern).parse(timeStr);
 		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -54,7 +56,7 @@ public class DateUtil {
 	 * 取得下一个更新统计缓存时间，即明日0点
 	 * @return
 	 */
-	public static Date nextTaskTime() {
+	/*public static Date nextTaskTime() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
@@ -62,13 +64,13 @@ public class DateUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.add(Calendar.DATE, 1);
 		return calendar.getTime();
-	}
+	}*/
 	
 	/**
 	 * 取得当前月份
 	 * @return
 	 */
-	public static Date getCurrentMonth() {
+	/*public static Date getCurrentMonth() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
@@ -76,26 +78,26 @@ public class DateUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		return calendar.getTime();
-	}
+	}*/
 	
 	/**
 	 * 取得当日0点
 	 * @return
 	 */
-	public static Date getCurrentDay() {
+	/*public static Date getCurrentDay() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
-	}
+	}*/
 	
-	public static int getDayWeek(Date date) {
+	/*public static int getDayWeek(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		return calendar.get(Calendar.DAY_OF_WEEK);
-	}
+	}*/
 	
 	public static Date getPreDate(int n) {
 		Calendar calendar = Calendar.getInstance();

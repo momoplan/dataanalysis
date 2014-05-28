@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +19,8 @@ import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.TechnicCountDto;
 import com.ruyicai.dataanalysis.service.back.LotteryService;
+import com.ruyicai.dataanalysis.util.DateUtil;
+import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 @Service
 public class ScheduleService {
@@ -37,42 +40,76 @@ public class ScheduleService {
 	 * @return
 	 */
 	public Map<String, List<ScheduleDTO>> findInstantScores(int state) {
-		List<String> activedays = getActivedays("1");
-		if (activedays==null||activedays.size()<=0) {
-			return null;
-		}
 		Map<String, List<ScheduleDTO>> resultMap = new HashMap<String, List<ScheduleDTO>>();
-		for (String activeday : activedays) {
-			List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-			List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
-			for (Schedule schedule : schedules) {
-				Integer matchState = schedule.getMatchState();
-				if (matchState==null) {
-					continue;
-				}
-				if (state==1) { //未开赛
+		if (state==1) { //未开赛
+			List<String> activedays = getActivedays("1");
+			if (activedays==null||activedays.size()<=0) {
+				return null;
+			}
+			for (String activeday : activedays) {
+				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+				List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
+				for (Schedule schedule : schedules) {
+					Integer matchState = schedule.getMatchState();
+					if (matchState==null) {
+						continue;
+					}
 					if (matchState!=MatchState.WEIKAI.value&&matchState!=MatchState.DAIDING.value
 							&&matchState!=MatchState.TUICHI.value) {
 						continue;
 					}
+					ScheduleDTO dto = analysisService.buildDTO(schedule);
+					dtos.add(dto);
 				}
-				if (state==2) { //比赛中
-					if (matchState!=MatchState.SHANGBANCHANG.value&&matchState!=MatchState.ZHONGCHANG.value
-							&&matchState!=MatchState.XIABANCHANG.value&&matchState!=MatchState.ZHONGDUAN.value) {
+				if (dtos!=null&&dtos.size()>0) {
+					resultMap.put(activeday, dtos);
+				}
+			}
+		} else if (state==2) { //进行中
+			List<Schedule> schedules = Schedule.findProcessingMatches();
+			if (schedules==null||schedules.size()<=0) {
+				return null;
+			}
+			for (Schedule schedule : schedules) {
+				String event = schedule.getEvent();
+				if (StringUtils.isBlank(event)) {
+					continue;
+				}
+				String day = JingCaiUtil.getDayByEvent(event);
+				if (StringUtils.isBlank(day)) {
+					continue;
+				}
+				List<ScheduleDTO> dtos = resultMap.get(day);
+				if (dtos==null) {
+					dtos = new ArrayList<ScheduleDTO>();
+				}
+				ScheduleDTO dto = analysisService.buildDTO(schedule);
+				dtos.add(dto);
+				resultMap.put(day, dtos);
+			}
+		} else if (state==3) { //完场
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			List<String> days = new ArrayList<String>();
+			days.add(sdf.format(DateUtil.getPreDate(0))); //今天
+			days.add(sdf.format(DateUtil.getPreDate(1))); //昨天
+			for (String day : days) {
+				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+				List<Schedule> schedules = Schedule.findByEventAndDay(day);
+				for (Schedule schedule : schedules) {
+					Integer matchState = schedule.getMatchState();
+					if (matchState==null) {
 						continue;
 					}
-				}
-				if(state==3) { // 完场
 					if (matchState!=MatchState.YAOZHAN.value&&matchState!=MatchState.WANCHANG.value
 							&&matchState!=MatchState.QUXIAO.value) {
 						continue;
 					}
+					ScheduleDTO dto = analysisService.buildDTO(schedule);
+					dtos.add(dto);
 				}
-				ScheduleDTO dto = analysisService.buildDTO(schedule);
-				dtos.add(dto);
-			}
-			if (dtos!=null&&dtos.size()>0) {
-				resultMap.put(activeday, dtos);
+				if (dtos!=null&&dtos.size()>0) {
+					resultMap.put(day, dtos);
+				}
 			}
 		}
 		return resultMap;
