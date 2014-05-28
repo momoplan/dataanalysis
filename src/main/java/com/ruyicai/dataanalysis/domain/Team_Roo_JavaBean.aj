@@ -56,4 +56,12 @@ privileged aspect Team_Roo_JavaBean {
         this.flag = flag;
     }
     
+    public Integer Team.getSupport() {
+        return this.support;
+    }
+    
+    public void Team.setSupport(Integer support) {
+        this.support = support;
+    }
+    
 }

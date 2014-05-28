@@ -38,6 +38,8 @@ public class Team {
 	
 	private String flag;
 	
+	private Integer support;
+	
 	@Autowired
 	private transient TeamCache teamCache;
 	
@@ -73,4 +75,5 @@ public class Team {
 	public static Team findTeam(int teamID) {
 		return new Team().getTeamCache().getTeam(teamID);
 	}
+	
 }
