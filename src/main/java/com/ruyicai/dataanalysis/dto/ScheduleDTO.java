@@ -38,7 +38,11 @@ public class ScheduleDTO implements Serializable {
 	private String homeTeamIco;
 	
 	private String guestTeamIco;
-
+	
+	private Integer homeTeamSupport;
+	
+	private Integer guestTeamSupport;
+	
 	private Integer neutrality;
 	
 	private Date matchTime;

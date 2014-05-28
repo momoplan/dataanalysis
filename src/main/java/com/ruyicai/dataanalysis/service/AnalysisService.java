@@ -242,9 +242,15 @@ public class AnalysisService {
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
 			//设置主队图标
-			dto.setHomeTeamIco(getTeamIco(schedule.getHomeTeamID()));
+			Team homeTeam = Team.findTeam(schedule.getHomeTeamID());
+			dto.setHomeTeamIco(getTeamIco(homeTeam));
 			//设置客队图标
-			dto.setGuestTeamIco(getTeamIco(schedule.getGuestTeamID()));
+			Team guestTeam = Team.findTeam(schedule.getGuestTeamID());
+			dto.setGuestTeamIco(getTeamIco(guestTeam));
+			//主队支持人数
+			dto.setHomeTeamSupport(homeTeam.getSupport());
+			//客队支持人数
+			dto.setGuestTeamSupport(guestTeam.getSupport());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -256,9 +262,9 @@ public class AnalysisService {
 	 * @param teamId
 	 * @return
 	 */
-	private String getTeamIco(int teamId) {
+	private String getTeamIco(Team team) {
 		try {
-			Team team = Team.findTeam(teamId);
+			//Team team = Team.findTeam(teamId);
 			if (team!=null) {
 				String flag = team.getFlag(); //images/20071241533386732.jpg
 				if (StringUtils.isNotBlank(flag)) {
