@@ -34,7 +34,7 @@ public class SupportDetail {
 	public static List<SupportDetail> findByUsernoTeamid(String userno, String teamid) {
 		TypedQuery<SupportDetail> q = entityManager().createQuery(
 				"select o from SupportDetail o where o.userno=? and o.teamid=?", SupportDetail.class);
-		q.setParameter(1, userno).setParameter(2, teamid);
+		q.setParameter(1, userno).setParameter(2, Integer.parseInt(teamid));
 		return q.getResultList();
 	}
 	
