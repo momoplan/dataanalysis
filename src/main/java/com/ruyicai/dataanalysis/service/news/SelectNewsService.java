@@ -26,7 +26,7 @@ public class SelectNewsService {
 		}
 		if (StringUtils.isNotBlank(type)) {
 			builder.append(" o.type=? ");
-			params.add(type);
+			params.add(Integer.parseInt(type));
 		}
 		if (builder.toString().endsWith("where")) {
 			builder.delete(builder.length() - 5, builder.length());
