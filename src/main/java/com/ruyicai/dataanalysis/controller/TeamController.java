@@ -23,11 +23,11 @@ public class TeamController {
 	
 	@RequestMapping(value = "/support", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseData support(@RequestParam("userno") String userno, @RequestParam("teamid") String teamid) {
+	ResponseData support(@RequestParam("teamid") String teamid) {
 		ResponseData rd = new ResponseData();
 		ErrorCode result = ErrorCode.OK;
 		try {
-			teamService.support(userno, teamid);
+			teamService.support(teamid);
 		} catch (RuyicaiException e) {
 			result = e.getErrorCode();
 		} catch (Exception e) {
