@@ -15,6 +15,7 @@ privileged aspect News_Roo_ToString {
         sb.append("Outid: ").append(getOutid()).append(", ");
         sb.append("Publishtime: ").append(getPublishtime()).append(", ");
         sb.append("Title: ").append(getTitle()).append(", ");
+        sb.append("Type: ").append(getType()).append(", ");
         sb.append("Url: ").append(getUrl());
         return sb.toString();
     }

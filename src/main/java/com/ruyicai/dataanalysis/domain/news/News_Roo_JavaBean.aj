@@ -57,6 +57,14 @@ privileged aspect News_Roo_JavaBean {
         this.event = event;
     }
     
+    public Integer News.getType() {
+        return this.type;
+    }
+    
+    public void News.setType(Integer type) {
+        this.type = type;
+    }
+    
     public String News.getUrl() {
         return this.url;
     }

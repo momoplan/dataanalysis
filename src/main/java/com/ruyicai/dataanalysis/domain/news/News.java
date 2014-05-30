@@ -43,6 +43,9 @@ public class News {
 	@Column(name = "event")
 	private String event;
 	
+	@Column(name = "type")
+	private Integer type;
+	
 	@Column(name = "url")
 	private String url;
 	
