@@ -78,7 +78,7 @@ public class News {
 		}
 	}*/
 	
-	public static List<News> getList(String where, String orderby, List<Object> params) {
+	/*public static List<News> getList(String where, String orderby, List<Object> params) {
 		TypedQuery<News> q = entityManager().createQuery(
 				"SELECT o FROM News o " + where + orderby, News.class);
 		if (null != params && !params.isEmpty()) {
@@ -88,6 +88,13 @@ public class News {
 				index = index + 1;
 			}
 		}
+		return q.getResultList();
+	}*/
+	
+	public static List<News> findByTitle(String title) {
+		TypedQuery<News> q = entityManager().createQuery(
+				"SELECT o FROM News o where o.title=?", News.class);
+		q.setParameter(1, title);
 		return q.getResultList();
 	}
 	

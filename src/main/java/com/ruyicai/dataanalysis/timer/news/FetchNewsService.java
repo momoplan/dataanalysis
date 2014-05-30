@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -215,7 +214,8 @@ public class FetchNewsService {
 			return ;
 		}
 		//防止重复
-		List<News> newsList = getNewsListByTitle(title);
+		//List<News> newsList = getNewsListByTitle(title);
+		List<News> newsList = News.findByTitle(title);
 		if (newsList!=null&&newsList.size()>0) {
 			return ;
 		}
@@ -223,6 +223,7 @@ public class FetchNewsService {
 		if (StringUtils.isBlank(event)) {
 			return ;
 		}
+		String type = StringUtils.substringBefore(event, "_");
 		
 		News news = new News();
 		news.setTitle(title);
@@ -230,6 +231,9 @@ public class FetchNewsService {
 		news.setPublishtime(publishTime);
 		news.setOutid(outId);
 		news.setEvent(event);
+		if (StringUtils.isNotBlank(type)) {
+			news.setType(Integer.parseInt(type));
+		}
 		news.setUrl(url);
 		news.persist();
 	}
@@ -252,8 +256,10 @@ public class FetchNewsService {
 			return ;
 		}
 		String event = getEvent(title, publishTime); //赛事信息
+		String type = StringUtils.substringBefore(event, "_"); //类型(0:篮球;1:足球)
 		//防止重复
-		List<News> newsList = getNewsListByTitle(title);
+		//List<News> newsList = getNewsListByTitle(title);
+		List<News> newsList = News.findByTitle(title);
 		if (newsList!=null&&newsList.size()>0) {
 			return ;
 		}
@@ -264,21 +270,27 @@ public class FetchNewsService {
 			news.setPublishtime(publishTime);
 			news.setOutid(outId);
 			news.setEvent(event);
+			if (StringUtils.isNotBlank(type)) {
+				news.setType(Integer.parseInt(type));
+			}
 			news.setUrl(url);
 			news.persist();
-		} else if (newsList!=null&&newsList.size()>=1) {
+		} else if (newsList.size()==1) {
 			News news = newsList.get(0);
 			news.setTitle(title);
 			news.setContent(content);
 			news.setPublishtime(publishTime);
 			news.setOutid(outId);
 			news.setEvent(event);
+			if (StringUtils.isNotBlank(type)) {
+				news.setType(Integer.parseInt(type));
+			}
 			news.setUrl(url);
 			news.merge();
 		}
 	}
 	
-	private List<News> getNewsListByTitle(String title) {
+	/*private List<News> getNewsListByTitle(String title) {
 		StringBuilder builder = new StringBuilder(" where");
 		List<Object> params = new ArrayList<Object>();
 		
@@ -286,6 +298,6 @@ public class FetchNewsService {
 		params.add(title);
 		List<News> list = News.getList(builder.toString(), "order by o.publishtime asc", params);
 		return list;
-	}
+	}*/
 	
 }
