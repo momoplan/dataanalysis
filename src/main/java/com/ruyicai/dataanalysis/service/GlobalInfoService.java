@@ -356,15 +356,16 @@ public class GlobalInfoService {
 	public ScheduleDTO getImmediateScore(String event) {
 		//logger.info("开始获取即时比分数据, event:{}", new String[] {event});
 		Schedule schedule = Schedule.findByEvent(event, true);
-		if(null == schedule) {
+		if(schedule==null) {
 			return null;
 		}
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
-			Sclass sclass = Sclass.findSclass(schedule.getSclassID());
+			/*Sclass sclass = Sclass.findSclass(schedule.getSclassID());
 			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
-			dto.setSclassName_j(sclass.getName_JS());
+			dto.setSclassName_j(sclass.getName_JS());*/
+			dto = analysisService.buildDTO(schedule);
 			
 			int scheduleId = schedule.getScheduleID();
 			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
