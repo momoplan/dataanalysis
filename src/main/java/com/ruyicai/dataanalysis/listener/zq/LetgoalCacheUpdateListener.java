@@ -31,7 +31,7 @@ public class LetgoalCacheUpdateListener {
 	
 	public void update(@Body String scheduleId) {
 		try {
-			long startmillis = System.currentTimeMillis();
+			//long startmillis = System.currentTimeMillis();
 			//logger.info("亚赔缓存更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
@@ -45,8 +45,8 @@ public class LetgoalCacheUpdateListener {
 			}
 			//更新LetGoal缓存
 			updateCache(schedule);
-			long endmillis = System.currentTimeMillis();
-			logger.info("亚赔缓存更新的Jms end,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
+			// endmillis = System.currentTimeMillis();
+			//logger.info("亚赔缓存更新的Jms end,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("亚赔缓存更新的Jms发生异常,scheduleId="+scheduleId, e);
 		}
