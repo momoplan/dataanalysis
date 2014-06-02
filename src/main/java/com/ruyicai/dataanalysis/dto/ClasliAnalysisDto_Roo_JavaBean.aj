@@ -27,12 +27,12 @@ privileged aspect ClasliAnalysisDto_Roo_JavaBean {
         this.betRatio = betRatio;
     }
     
-    public BetNumDto ClasliAnalysisDto.getBetNumDto() {
-        return this.betNumDto;
+    public BetNumDto ClasliAnalysisDto.getBetNum() {
+        return this.betNum;
     }
     
-    public void ClasliAnalysisDto.setBetNumDto(BetNumDto betNumDto) {
-        this.betNumDto = betNumDto;
+    public void ClasliAnalysisDto.setBetNum(BetNumDto betNum) {
+        this.betNum = betNum;
     }
     
     public Collection<ScheduleDTO> ClasliAnalysisDto.getPreClashSchedules() {

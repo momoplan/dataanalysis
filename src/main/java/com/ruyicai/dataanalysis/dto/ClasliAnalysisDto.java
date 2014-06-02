@@ -12,7 +12,7 @@ public class ClasliAnalysisDto {
 	
 	private BetRatioDto betRatio;
 	
-	private BetNumDto betNumDto;
+	private BetNumDto betNum;
 	
 	private Collection<ScheduleDTO> preClashSchedules;
 	
