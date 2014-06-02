@@ -12,6 +12,8 @@ public class ClasliAnalysisDto {
 	
 	private BetRatioDto betRatio;
 	
+	private BetNumDto betNumDto;
+	
 	private Collection<ScheduleDTO> preClashSchedules;
 	
 	private Collection<RankingDTO> rankings;

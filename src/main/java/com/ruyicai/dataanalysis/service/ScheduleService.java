@@ -164,6 +164,7 @@ public class ScheduleService {
 		ClasliAnalysisDto dto = new ClasliAnalysisDto();
 		dto.setSchedule(scheduleDTO);
 		dto.setBetRatio(infoService.getBetRatioDto(event));
+		dto.setBetNumDto(infoService.getBetNumDto(event));
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
 		return dto;

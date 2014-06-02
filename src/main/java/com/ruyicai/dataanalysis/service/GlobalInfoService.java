@@ -27,6 +27,7 @@ import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.domain.Standard;
 import com.ruyicai.dataanalysis.domain.StandardDetail;
 import com.ruyicai.dataanalysis.dto.AnalysisDto;
+import com.ruyicai.dataanalysis.dto.BetNumDto;
 import com.ruyicai.dataanalysis.dto.BetRatioDto;
 import com.ruyicai.dataanalysis.dto.InfoDTO;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
@@ -570,6 +571,30 @@ public class GlobalInfoService {
 			if (StringUtils.equals(errorCode, "0")) {
 				JSONObject valueObject = fromObject.getJSONObject("value");
 				BetRatioDto dto = new BetRatioDto();
+				dto.setSpf(valueObject.getString("spf"));
+				dto.setRfspf(valueObject.getString("rfspf"));
+				return dto;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public BetNumDto getBetNumDto(String event) {
+		try {
+			String result = analyzeService.getJingcaieventbettotal(event);
+			if (StringUtils.isBlank(result)) {
+				return null;
+			}
+			JSONObject fromObject = JSONObject.fromObject(result);
+			if (fromObject==null) {
+				return null;
+			}
+			String errorCode = fromObject.getString("errorCode");
+			if (StringUtils.equals(errorCode, "0")) {
+				JSONObject valueObject = fromObject.getJSONObject("value");
+				BetNumDto dto = new BetNumDto();
 				dto.setSpf(valueObject.getString("spf"));
 				dto.setRfspf(valueObject.getString("rfspf"));
 				return dto;

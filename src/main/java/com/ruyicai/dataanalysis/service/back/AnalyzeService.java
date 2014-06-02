@@ -33,4 +33,19 @@ public class AnalyzeService {
 		return result;
 	}
 	
+	/**
+	 * 查询投注人数
+	 * @param event
+	 * @return
+	 */
+	public String getJingcaieventbettotal(String event) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("event=" + event);
+		
+		String url = propertiesUtil.getAnalyzeUrl() + "select/jingcaieventbettotal";
+		String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, builder.toString());
+		logger.info("查询投注人数返回:{},paramStr:{}", result, builder.toString());
+		return result;
+	}
+	
 }
