@@ -3,6 +3,8 @@ package com.ruyicai.dataanalysis.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,7 @@ public class ScheduleService {
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
+					sortScheduleDtoList(dtos); //排序
 					resultMap.put(activeday, dtos);
 				}
 			}
@@ -82,7 +85,9 @@ public class ScheduleService {
 				}
 				ScheduleDTO dto = analysisService.buildDTO(schedule);
 				dtos.add(dto);
-				resultMap.put(day, dtos);
+				if (dtos!=null&&dtos.size()>0) {
+					resultMap.put(day, dtos);
+				}
 			}
 		} else if (state==3) { //完场
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -105,12 +110,35 @@ public class ScheduleService {
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
+					sortScheduleDtoList(dtos); //排序
 					resultMap.put(day, dtos);
 				}
 			}
 		}
 		return resultMap;
 	}
+	
+	/**
+	 * 排序ScheduleDTO数组
+	 * @param list
+	 */
+	private void sortScheduleDtoList(List<ScheduleDTO> list) {
+		Collections.sort(list, new Comparator<ScheduleDTO>() {
+			@Override
+			public int compare(ScheduleDTO o1, ScheduleDTO o2) {
+				if (o1.getEvent().compareTo(o2.getEvent())<0) {
+					return -1;
+				}
+				return 1;
+			}
+		});
+	}
+	
+	/*public static void main(String[] args) {
+		String o1 = "1_20140603_2_051";
+		String o2 = "1_20140602_2_053";
+		System.out.println(o1.compareTo(o2));
+	}*/
 	
 	public TechnicCountDto findTechnicCount(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
