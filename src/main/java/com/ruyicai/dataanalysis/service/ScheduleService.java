@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +39,7 @@ public class ScheduleService {
 	 * @return
 	 */
 	public Map<String, List<ScheduleDTO>> findInstantScores(int state) {
-		Map<String, List<ScheduleDTO>> resultMap = new HashMap<String, List<ScheduleDTO>>();
+		Map<String, List<ScheduleDTO>> resultMap = new LinkedHashMap<String, List<ScheduleDTO>>();
 		if (state==1) { //未开赛
 			List<String> activedays = commonService.getActivedays("1");
 			if (activedays==null||activedays.size()<=0) {
