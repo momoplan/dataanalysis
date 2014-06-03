@@ -61,7 +61,6 @@ public class ScheduleService {
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
-					sortScheduleDtoList(dtos); //排序
 					resultMap.put(activeday, dtos);
 				}
 			}
@@ -110,19 +109,34 @@ public class ScheduleService {
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
-					sortScheduleDtoList(dtos); //排序
 					resultMap.put(day, dtos);
 				}
+			}
+		}
+		//排序
+		if (resultMap!=null&&resultMap.size()>0) {
+			for(Map.Entry<String, List<ScheduleDTO>> entry : resultMap.entrySet()) {
+				String key = entry.getKey();
+				List<ScheduleDTO> value = entry.getValue();
+				sortScheduleDtoList(value); //排序
+				resultMap.put(key, value);
 			}
 		}
 		return resultMap;
 	}
 	
+	/*public static void main(String[] args) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("1", 2);
+		map.put("1", 3);
+		System.out.println(map.get("1"));
+	}*/
+	
 	/**
 	 * 排序ScheduleDTO数组
 	 * @param list
 	 */
-	private void sortScheduleDtoList(List<ScheduleDTO> list) {
+	private static void sortScheduleDtoList(List<ScheduleDTO> list) {
 		Collections.sort(list, new Comparator<ScheduleDTO>() {
 			@Override
 			public int compare(ScheduleDTO o1, ScheduleDTO o2) {
@@ -135,6 +149,28 @@ public class ScheduleService {
 	}
 	
 	/*public static void main(String[] args) {
+		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
+		ScheduleDTO o1 = new ScheduleDTO();
+		o1.setEvent("1_20140603_2_051");
+		list.add(o1);
+		
+		ScheduleDTO o2 = new ScheduleDTO();
+		o2.setEvent("1_20140602_2_053");
+		list.add(o2);
+		
+		ScheduleDTO o3 = new ScheduleDTO();
+		o3.setEvent("1_20140702_3_045");
+		list.add(o3);
+		
+		for (ScheduleDTO scheduleDTO : list) {
+			System.out.println(scheduleDTO.getEvent());
+		}
+		System.out.println("******************");
+		sortScheduleDtoList(list);
+		for (ScheduleDTO scheduleDTO : list) {
+			System.out.println(scheduleDTO.getEvent());
+		}
+		
 		String o1 = "1_20140603_2_051";
 		String o2 = "1_20140602_2_053";
 		System.out.println(o1.compareTo(o2));
