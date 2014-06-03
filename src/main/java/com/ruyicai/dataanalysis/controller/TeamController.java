@@ -27,7 +27,10 @@ public class TeamController {
 		ResponseData rd = new ResponseData();
 		ErrorCode result = ErrorCode.OK;
 		try {
+			long startMills = System.currentTimeMillis();
 			teamService.support(teamid);
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足支持球队,用时:"+(endMills-startMills)+",teamid="+teamid);
 		} catch (RuyicaiException e) {
 			result = e.getErrorCode();
 		} catch (Exception e) {

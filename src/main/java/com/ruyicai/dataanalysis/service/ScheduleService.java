@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import com.ruyicai.dataanalysis.dto.ClasliAnalysisDto;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.TechnicCountDto;
-import com.ruyicai.dataanalysis.service.back.LotteryService;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
@@ -26,13 +23,13 @@ import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 public class ScheduleService {
 
 	@Autowired
-	private LotteryService lotteryService;
-	
-	@Autowired
 	private AnalysisService analysisService;
 	
 	@Autowired
 	private GlobalInfoService infoService;
+	
+	@Autowired
+	private CommonService commonService;
 	
 	/**
 	 * 查询即时比分
@@ -42,7 +39,7 @@ public class ScheduleService {
 	public Map<String, List<ScheduleDTO>> findInstantScores(int state) {
 		Map<String, List<ScheduleDTO>> resultMap = new HashMap<String, List<ScheduleDTO>>();
 		if (state==1) { //未开赛
-			List<String> activedays = getActivedays("1");
+			List<String> activedays = commonService.getActivedays("1");
 			if (activedays==null||activedays.size()<=0) {
 				return null;
 			}
@@ -115,26 +112,6 @@ public class ScheduleService {
 		return resultMap;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private List<String> getActivedays(String type) {
-		String result = lotteryService.getjingcaiactivedays(type);
-		if (StringUtils.isBlank(result)) {
-			return null;
-		}
-		JSONObject fromObject = JSONObject.fromObject(result);
-		if (fromObject==null) {
-			return null;
-		}
-		String errorCode = fromObject.getString("errorCode");
-		if (StringUtils.equals(errorCode, "0")) {
-			JSONArray valueArray = fromObject.getJSONArray("value");
-			if (valueArray!=null&&valueArray.size()>0) {
-				return (List<String>)JSONArray.toCollection(valueArray, List.class);
-			}
-		}
-		return null;
-	}
-	
 	public TechnicCountDto findTechnicCount(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
@@ -168,6 +145,26 @@ public class ScheduleService {
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
 		return dto;
+	}
+	
+	/**
+	 * 查询对阵里的赛事信息
+	 * @return
+	 */
+	public List<ScheduleDTO> findClasliSchedules() {
+		List<String> activedays = commonService.getActivedays("1");
+		if (activedays==null||activedays.size()<=0) {
+			return null;
+		}
+		List<ScheduleDTO> resultList = new ArrayList<ScheduleDTO>();
+		for (String activeday : activedays) {
+			List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
+			for (Schedule schedule : schedules) {
+				ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+				resultList.add(scheduleDTO);
+			}
+		}
+		return resultList;
 	}
 	
 	public List<ScheduleDTO> findScheduleByEvents(String events) {

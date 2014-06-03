@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.ruyicai.dataanalysis.consts.ErrorCode;
+import com.ruyicai.dataanalysis.exception.RuyicaiException;
 import com.ruyicai.dataanalysis.service.ScheduleService;
 
 @RequestMapping("/schedule")
@@ -61,6 +63,23 @@ public class ScheduleController {
 		} catch(Exception e) {
 			logger.error("竞足findClasliAnalysis发生异常", e);
 		}
+		return rd;
+	}
+	
+	@RequestMapping(value = "/findClasliSchedules", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findClasliTeam() {
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			rd.setValue(scheduleService.findClasliSchedules());
+		} catch (RuyicaiException e) {
+			result = e.getErrorCode();
+		} catch (Exception e) {
+			logger.error("竞足查询对阵里的赛事信息发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
 		return rd;
 	}
 	
