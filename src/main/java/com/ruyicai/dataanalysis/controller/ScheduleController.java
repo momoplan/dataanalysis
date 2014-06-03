@@ -72,7 +72,10 @@ public class ScheduleController {
 		ResponseData rd = new ResponseData();
 		ErrorCode result = ErrorCode.OK;
 		try {
+			long startMills = System.currentTimeMillis();
 			rd.setValue(scheduleService.findClasliSchedules());
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足findClasliSchedules,用时:"+(endMills-startMills));
 		} catch (RuyicaiException e) {
 			result = e.getErrorCode();
 		} catch (Exception e) {
