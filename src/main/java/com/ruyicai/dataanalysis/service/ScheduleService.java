@@ -93,6 +93,7 @@ public class ScheduleService {
 			List<String> days = new ArrayList<String>();
 			days.add(sdf.format(DateUtil.getPreDate(0))); //今天
 			days.add(sdf.format(DateUtil.getPreDate(1))); //昨天
+			days.add(sdf.format(DateUtil.getPreDate(2))); //前天
 			for (String day : days) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
 				List<Schedule> schedules = Schedule.findByEventAndDay(day);
