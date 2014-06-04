@@ -30,7 +30,7 @@ public class StandardAvgUpdateListener {
 	
 	public void process(@Body String scheduleId) {
 		try {
-			long startmillis = System.currentTimeMillis();
+			//long startmillis = System.currentTimeMillis();
 			//logger.info("足球平均欧赔更新的Jms start scheduleId="+scheduleId);
 			if (StringUtils.isBlank(scheduleId)) {
 				return;
@@ -47,8 +47,8 @@ public class StandardAvgUpdateListener {
 			doScheduleAvg(schedule, list);
 			//更新正在进行中比赛的平均欧赔
 			updateUsualStandardsAvg(schedule);
-			long endmillis = System.currentTimeMillis();
-			logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
+			//long endmillis = System.currentTimeMillis();
+			//logger.info("足球平均欧赔更新的Jms,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("足球平均欧赔更新的Jms发生异常", e);
 		}
