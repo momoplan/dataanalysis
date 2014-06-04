@@ -161,8 +161,8 @@ public class StandardUpdateService {
 			String guestWin = values[7]; //客胜
 			String modTime = values[8]; //变化时间
 			
-			Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
-			//Standard standard = Standard.findByScheduleIdCompanyId(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			//Standard standard = Standard.findStandard(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
+			Standard standard = Standard.findByScheduleIdCompanyId(Integer.parseInt(scheduleId), Integer.parseInt(companyId));
 			if (standard==null) {
 				try {
 					standard = new Standard();

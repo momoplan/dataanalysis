@@ -99,7 +99,8 @@ public class StandardService {
 	}
 	
 	public StandardDto getStandardDtoByCompanyId(Integer scheduleId, Integer companyId) {
-		Standard standard = Standard.findStandard(scheduleId, companyId);
+		//Standard standard = Standard.findStandard(scheduleId, companyId);
+		Standard standard = Standard.findByScheduleIdCompanyId(scheduleId, companyId);
 		if (standard==null) {
 			return null;
 		}
