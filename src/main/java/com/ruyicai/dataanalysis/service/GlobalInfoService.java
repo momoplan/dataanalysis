@@ -546,14 +546,15 @@ public class GlobalInfoService {
 			return null;
 		}
 		AnalysisDto dto = new AnalysisDto();
-		dto.setSchedule(infoDTO.getSchedule());
+		dto.setSchedule(analysisService.buildDTO(schedule));
 		dto.setBetRatio(getBetRatioDto(schedule.getEvent()));
 		dto.setHomePreSchedules(infoDTO.getHomePreSchedules());
 		dto.setHomeAfterSchedules(infoDTO.getHomeAfterSchedules());
 		dto.setGuestPreSchedules(infoDTO.getGuestPreSchedules());
 		dto.setGuestAfterSchedules(infoDTO.getGuestAfterSchedules());
 		dto.setPreClashSchedules(infoDTO.getPreClashSchedules());
-		dto.setRankings(getRankingDtos(schedule.getScheduleID(), schedule.getSclassID()));
+		//dto.setRankings(getRankingDtos(schedule.getScheduleID(), schedule.getSclassID()));
+		dto.setRankings(infoDTO.getRankings());
 		return dto;
 	}
 	
