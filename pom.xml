@@ -679,7 +679,7 @@
 				<jms.lottery.brokerURL>failover://(tcp://192.168.99.30:61616,tcp://192.168.99.31:61616)?randomize=false</jms.lottery.brokerURL>
 				<!-- 后台url -->
 				<lotteryUrl>http://192.168.99.6/lottery/</lotteryUrl>
-				<analyzeUrl></analyzeUrl>
+				<analyzeUrl>http://192.168.99.2:9080/analyze/</analyzeUrl>
 				<imageUrl>http://client.ruyicai.com/xiazai/dataanalysis/image/</imageUrl>
 			</properties>
 		</profile>
