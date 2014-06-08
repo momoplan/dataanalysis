@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,8 +32,10 @@ import flexjson.JSONSerializer;
 @RooToString
 @RooJson
 @RooEntity(versionField="", table="Schedule", identifierField="scheduleID", persistenceUnit="persistenceUnit", transactionManager="transactionManager")
-public class Schedule {
+public class Schedule implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "ScheduleID")
 	private int scheduleID;
