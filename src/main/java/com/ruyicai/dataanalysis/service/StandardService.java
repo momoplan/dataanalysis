@@ -182,7 +182,7 @@ public class StandardService {
 		if (schedule==null) {
 			return null;
 		}
-		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
 		GlobalCache standard = globalInfoService.getStandard(schedule);
 		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
 		

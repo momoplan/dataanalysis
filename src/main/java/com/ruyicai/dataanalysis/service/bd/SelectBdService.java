@@ -153,7 +153,7 @@ public class SelectBdService {
 		if(schedule==null) {
 			return null;
 		}
-		return analysisService.buildDTO(schedule);
+		return analysisService.buildDTO(schedule, false);
 	}
 
 }

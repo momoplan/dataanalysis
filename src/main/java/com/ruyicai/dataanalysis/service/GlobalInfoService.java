@@ -157,7 +157,7 @@ public class GlobalInfoService {
 		logger.info("getUpdateInfoDTO,scheduleID="+scheduleId+",获取赛事用时:"+(endmillis2-startmillis2));
 		
 		InfoDTO dto = new InfoDTO();
-		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
 		dto.setSchedule(scheduleDTO);
 		
 		Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
@@ -362,11 +362,7 @@ public class GlobalInfoService {
 		}
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
-			/*Sclass sclass = Sclass.findSclass(schedule.getSclassID());
-			BeanUtilsEx.copyProperties(dto, schedule);
-			dto.setSclassName(sclass.getName_J());
-			dto.setSclassName_j(sclass.getName_JS());*/
-			dto = analysisService.buildDTO(schedule);
+			dto = analysisService.buildDTO(schedule, false);
 			
 			int scheduleId = schedule.getScheduleID();
 			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
@@ -447,7 +443,7 @@ public class GlobalInfoService {
 		if(schedule==null) {
 			return null;
 		}
-		return analysisService.buildDTO(schedule);
+		return analysisService.buildDTO(schedule, false);
 	}
 	
 	/**
@@ -519,7 +515,7 @@ public class GlobalInfoService {
 				if (dtoList==null) {
 					dtoList = new ArrayList<ScheduleDTO>();
 				}
-				dtoList.add(analysisService.buildDTO(schedule));
+				dtoList.add(analysisService.buildDTO(schedule, false));
 				results.put(sclassID, dtoList);
 			}
 			long endmillis2 = System.currentTimeMillis();
@@ -546,7 +542,7 @@ public class GlobalInfoService {
 			return null;
 		}
 		AnalysisDto dto = new AnalysisDto();
-		dto.setSchedule(analysisService.buildDTO(schedule));
+		dto.setSchedule(analysisService.buildDTO(schedule, true));
 		dto.setBetRatio(getBetRatioDto(schedule.getEvent()));
 		dto.setHomePreSchedules(infoDTO.getHomePreSchedules());
 		dto.setHomeAfterSchedules(infoDTO.getHomeAfterSchedules());

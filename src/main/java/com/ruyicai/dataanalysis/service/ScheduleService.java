@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.TechnicCount;
@@ -19,6 +20,7 @@ import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.TechnicCountDto;
 import com.ruyicai.dataanalysis.util.DateUtil;
+import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 @Service
@@ -32,6 +34,9 @@ public class ScheduleService {
 	
 	@Autowired
 	private CommonService commonService;
+	
+	@Autowired
+	private CacheService cacheService;
 	
 	/**
 	 * 查询即时比分
@@ -57,7 +62,7 @@ public class ScheduleService {
 							&&matchState!=MatchState.TUICHI.value) {
 						continue;
 					}
-					ScheduleDTO dto = analysisService.buildDTO(schedule);
+					ScheduleDTO dto = analysisService.buildDTO(schedule, true);
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
@@ -82,7 +87,7 @@ public class ScheduleService {
 				if (dtos==null) {
 					dtos = new ArrayList<ScheduleDTO>();
 				}
-				ScheduleDTO dto = analysisService.buildDTO(schedule);
+				ScheduleDTO dto = analysisService.buildDTO(schedule, true);
 				dtos.add(dto);
 				if (dtos!=null&&dtos.size()>0) {
 					resultMap.put(day, dtos);
@@ -106,7 +111,7 @@ public class ScheduleService {
 							&&matchState!=MatchState.QUXIAO.value) {
 						continue;
 					}
-					ScheduleDTO dto = analysisService.buildDTO(schedule);
+					ScheduleDTO dto = analysisService.buildDTO(schedule, true);
 					dtos.add(dto);
 				}
 				if (dtos!=null&&dtos.size()>0) {
@@ -149,34 +154,6 @@ public class ScheduleService {
 		});
 	}
 	
-	/*public static void main(String[] args) {
-		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
-		ScheduleDTO o1 = new ScheduleDTO();
-		o1.setEvent("1_20140603_2_051");
-		list.add(o1);
-		
-		ScheduleDTO o2 = new ScheduleDTO();
-		o2.setEvent("1_20140602_2_053");
-		list.add(o2);
-		
-		ScheduleDTO o3 = new ScheduleDTO();
-		o3.setEvent("1_20140702_3_045");
-		list.add(o3);
-		
-		for (ScheduleDTO scheduleDTO : list) {
-			System.out.println(scheduleDTO.getEvent());
-		}
-		System.out.println("******************");
-		sortScheduleDtoList(list);
-		for (ScheduleDTO scheduleDTO : list) {
-			System.out.println(scheduleDTO.getEvent());
-		}
-		
-		String o1 = "1_20140603_2_051";
-		String o2 = "1_20140602_2_053";
-		System.out.println(o1.compareTo(o2));
-	}*/
-	
 	public TechnicCountDto findTechnicCount(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if(null == schedule) {
@@ -187,7 +164,7 @@ public class ScheduleService {
 			return null;
 		}
 		TechnicCountDto dto = new TechnicCountDto();
-		dto.setSchedule(analysisService.buildDTO(schedule));
+		dto.setSchedule(analysisService.buildDTO(schedule, false));
 		dto.setTechnicCount(technicCount);
 		return dto;
 	}
@@ -197,7 +174,7 @@ public class ScheduleService {
 		if(null == schedule) {
 			return null;
 		}
-		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
 		int scheduleId = schedule.getScheduleID();
 		//历史交锋
 		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(scheduleId, schedule);
@@ -223,13 +200,33 @@ public class ScheduleService {
 		}
 		List<ScheduleDTO> resultList = new ArrayList<ScheduleDTO>();
 		for (String activeday : activedays) {
-			List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
+			List<Schedule> schedules = getSchedulesByEventAndDay(activeday);
+			if (schedules==null||schedules.size()<=0) {
+				continue;
+			}
 			for (Schedule schedule : schedules) {
-				ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+				ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
 				resultList.add(scheduleDTO);
 			}
 		}
 		return resultList;
+	}
+	
+	private List<Schedule> getSchedulesByEventAndDay(String day) {
+		try {
+			String key = StringUtil.join("_", "dadaanalysis", "ScheduleByEventAndDay", day);
+			List<Schedule> value = cacheService.get(key);
+			if (value==null) {
+				value = Schedule.findByEventAndDay(day);
+				if (value!=null&&value.size()>0) {
+					cacheService.set(key, 48*60*60, value);
+				}
+			}
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public List<ScheduleDTO> findScheduleByEvents(String events) {
@@ -248,7 +245,7 @@ public class ScheduleService {
 			if(schedule==null) {
 				continue;
 			}
-			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
 			if (scheduleDTO==null) {
 				continue;
 			}
@@ -277,17 +274,6 @@ public class ScheduleService {
 			return null;
 		}
 		return resultList;
-		/*Map<Integer, List<ScheduleDTO>> map = new HashMap<Integer, List<ScheduleDTO>>();
-		if (processingList!=null&&processingList.size()>0) {
-			map.put(1, processingList);
-		}
-		if (wanchangList!=null&&wanchangList.size()>0) {
-			map.put(2, wanchangList);
-		}
-		if (weikaiList!=null&&weikaiList.size()>0) {
-			map.put(3, weikaiList);
-		}
-		Tools.sortMapByKey(map, false);*/
 	}
 	
 	/*public static void main(String[] args) {

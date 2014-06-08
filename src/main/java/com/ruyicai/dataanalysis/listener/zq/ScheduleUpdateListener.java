@@ -43,7 +43,7 @@ public class ScheduleUpdateListener {
 			if (schedule==null) {
 				return;
 			}
-			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
 			dto.setSchedule(scheduleDTO);
 			globalInfo.setValue(dto.toJson());
 			globalInfo.merge();

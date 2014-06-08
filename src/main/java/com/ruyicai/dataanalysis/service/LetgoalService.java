@@ -98,7 +98,7 @@ public class LetgoalService {
 		if (schedule==null) {
 			return null;
 		}
-		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule);
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
 		GlobalCache letGoal = globalInfoService.getLetGoal(schedule);
 		Collection<LetGoal> letGoals = LetGoal.fromJsonArrayToLetGoals(letGoal.getValue());
 		

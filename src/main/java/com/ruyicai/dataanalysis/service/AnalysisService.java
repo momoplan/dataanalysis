@@ -228,29 +228,29 @@ public class AnalysisService {
 	public List<ScheduleDTO> buildDTOS(List<Schedule> schedules) {
 		List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
 		for(Schedule s : schedules) {
-			ScheduleDTO dto = buildDTO(s);
+			ScheduleDTO dto = buildDTO(s, false);
 			dtos.add(dto);
 		}
 		return dtos;
 	}
 	
-	public ScheduleDTO buildDTO(Schedule schedule) {
+	public ScheduleDTO buildDTO(Schedule schedule, boolean buildTeam) {
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
 			Sclass sclass = Sclass.findSclass(schedule.getSclassID());
 			BeanUtilsEx.copyProperties(dto, schedule);
 			dto.setSclassName(sclass.getName_J());
 			dto.setSclassName_j(sclass.getName_JS());
-			//设置主队图标
-			Team homeTeam = Team.findTeam(schedule.getHomeTeamID());
-			dto.setHomeTeamIco(getTeamIco(homeTeam));
-			//设置客队图标
-			Team guestTeam = Team.findTeam(schedule.getGuestTeamID());
-			dto.setGuestTeamIco(getTeamIco(guestTeam));
-			//主队支持人数
-			dto.setHomeTeamSupport(homeTeam.getSupport());
-			//客队支持人数
-			dto.setGuestTeamSupport(guestTeam.getSupport());
+			if (buildTeam) {
+				Team homeTeam = Team.findTeam(schedule.getHomeTeamID()); //主队球队信息
+				Team guestTeam = Team.findTeam(schedule.getGuestTeamID()); //客队球队信息
+				//设置图标
+				dto.setHomeTeamIco(getTeamIco(homeTeam));
+				dto.setGuestTeamIco(getTeamIco(guestTeam));
+				//支持人数
+				dto.setHomeTeamSupport(homeTeam.getSupport());
+				dto.setGuestTeamSupport(guestTeam.getSupport());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
