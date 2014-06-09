@@ -20,7 +20,6 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.listener.zq.SchedulesCacheUpdateListener;
 import com.ruyicai.dataanalysis.service.AnalysisService;
-import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -43,9 +42,6 @@ public class ScheduleUpdateService {
 	
 	@Autowired
 	private AnalysisService analysisService;
-	
-	@Autowired
-	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil; 
@@ -317,7 +313,7 @@ public class ScheduleUpdateService {
 					//发送赛事缓存更新的Jms
 					jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 					if (matchStateModify) { //比赛状态发生变化
-						asyncService.updateSchedulesByEventAndDayCache(schedule.getEvent());
+						jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
 					}
 				}
 			}

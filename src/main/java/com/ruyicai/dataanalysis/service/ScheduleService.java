@@ -52,7 +52,7 @@ public class ScheduleService {
 			}
 			for (String activeday : activedays) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-				List<Schedule> schedules = getSchedulesByEventAndDay(activeday);
+				List<Schedule> schedules = getSchedulesByEvent(activeday);
 				if (schedules==null||schedules.size()<=0) {
 					continue;
 				}
@@ -104,7 +104,7 @@ public class ScheduleService {
 			days.add(sdf.format(DateUtil.getPreDate(0))); //今天
 			for (String day : days) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-				List<Schedule> schedules = getSchedulesByEventAndDay(day);
+				List<Schedule> schedules = getSchedulesByEvent(day);
 				if (schedules==null||schedules.size()<=0) {
 					continue;
 				}
@@ -223,7 +223,7 @@ public class ScheduleService {
 		}
 		List<ScheduleDTO> resultList = new ArrayList<ScheduleDTO>();
 		for (String activeday : activedays) {
-			List<Schedule> schedules = getSchedulesByEventAndDay(activeday);
+			List<Schedule> schedules = getSchedulesByEvent(activeday);
 			if (schedules==null||schedules.size()<=0) {
 				continue;
 			}
@@ -235,9 +235,9 @@ public class ScheduleService {
 		return resultList;
 	}
 	
-	private List<Schedule> getSchedulesByEventAndDay(String day) {
+	private List<Schedule> getSchedulesByEvent(String day) {
 		try {
-			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEventAndDay", day);
+			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEvent", day);
 			List<Schedule> value = cacheService.get(key);
 			if (value==null) {
 				value = Schedule.findByEventAndDay(day);

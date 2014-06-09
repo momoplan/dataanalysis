@@ -49,7 +49,7 @@ public class StandardUpdateService {
 	private HttpUtil httpUtil;
 	
 	@Autowired
-	private JmsZqUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	@PostConstruct
 	public void init() {
@@ -131,10 +131,10 @@ public class StandardUpdateService {
 				}
 			}
 			if (updateAvg) { //更新平均欧赔
-				sendJmsJczUtil.standardAvgUpdate(scheduleId); 
+				jmsZqUtil.standardAvgUpdate(scheduleId); 
 			}
 			if (updateCache) { //更新欧赔缓存
-				sendJmsJczUtil.standardCacheUpdate(scheduleId);
+				jmsZqUtil.standardCacheUpdate(scheduleId);
 			}
 			//long endmillis = System.currentTimeMillis();
 			//logger.info("足球欧赔更新-doProcess,用时:"+(endmillis-startmillis)+",scheduleId="+scheduleId+",oddsSize="+odds.size()+
@@ -188,7 +188,7 @@ public class StandardUpdateService {
 				detail.setStandoff(new Double(firstStandoff));
 				detail.setGuestWin(new Double(firstGuestWin));
 				detail.setModifyTime(standard.getModifyTime());
-				sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+				jmsZqUtil.standardDetailSaveJms(detail.toJson());
 				//detail.persist();
 				if(standard.getHomeWin()!=null) {
 					detail = new StandardDetail();
@@ -198,7 +198,7 @@ public class StandardUpdateService {
 					detail.setStandoff(new Double(standoff));
 					detail.setGuestWin(new Double(guestWin));
 					detail.setModifyTime(standard.getModifyTime());
-					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+					jmsZqUtil.standardDetailSaveJms(detail.toJson());
 					//detail.persist();
 				}
 				resultMap.put("updateAvg", true);
@@ -227,7 +227,7 @@ public class StandardUpdateService {
 					detail.setStandoff(new Double(standoff));
 					detail.setGuestWin(new Double(guestWin));
 					detail.setModifyTime(standard.getModifyTime());
-					sendJmsJczUtil.sendStandardDetailSaveJms(detail.toJson());
+					jmsZqUtil.standardDetailSaveJms(detail.toJson());
 					//detail.persist();
 					resultMap.put("updateAvg", true);
 					boolean isReturn = isReturnCompanyId(companyId);

@@ -18,32 +18,8 @@ public class JmsZqUtil {
 
 	private Logger logger = LoggerFactory.getLogger(JmsZqUtil.class);
 	
-	@Produce(uri = "jms:topic:scheduleFinish")
-	private ProducerTemplate scheduleFinishTemplate;
-	
-	@Produce(uri = "jms:topic:scoreModify")
-	private ProducerTemplate scoreModifyTemplate;
-	
-	@Produce(uri = "jms:topic:rankingUpdate")
-	private ProducerTemplate rankingUpdateTemplate;
-	
-	@Produce(uri = "jms:topic:standardAvgUpdate")
-	private ProducerTemplate standardAvgUpdateTemplate;
-	
-	@Produce(uri = "jms:topic:standardCacheUpdate")
-	private ProducerTemplate standardCacheUpdateTemplate;
-	
-	@Produce(uri = "jms:topic:standardDetailSave")
-	private ProducerTemplate standardDetailSaveTemplate;
-	
 	@Produce(uri = "jms:topic:letgoalCacheUpdate")
 	private ProducerTemplate letgoalCacheUpdateTemplate;
-	
-	@Produce(uri = "jms:topic:schedulesCacheUpdate")
-	private ProducerTemplate schedulesCacheUpdateTemplate;
-	
-	@Produce(uri = "jms:topic:scheduleUpdate")
-	private ProducerTemplate scheduleUpdateTemplate;
 	
 	/**
 	 * 发送亚赔缓存更新的Jms
@@ -57,6 +33,9 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:standardAvgUpdate")
+	private ProducerTemplate standardAvgUpdateTemplate;
+	
 	/**
 	 * 发送更新平均欧赔的Jms
 	 * @param body
@@ -68,6 +47,9 @@ public class JmsZqUtil {
 			logger.error("足球发送更新平均欧赔的Jms发生异常", e);
 		}
 	}
+	
+	@Produce(uri = "jms:topic:standardCacheUpdate")
+	private ProducerTemplate standardCacheUpdateTemplate;
 	
 	/**
 	 * 发送更新欧赔缓存的Jms
@@ -81,11 +63,14 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:standardDetailSave")
+	private ProducerTemplate standardDetailSaveTemplate;
+	
 	/**
 	 * 发送保存欧赔变化的Jms
 	 * @param body
 	 */
-	public void sendStandardDetailSaveJms(String body) {
+	public void standardDetailSaveJms(String body) {
 		try {
 			standardDetailSaveTemplate.sendBody(body);
 		} catch(Exception e) {
@@ -93,11 +78,14 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:rankingUpdate")
+	private ProducerTemplate rankingUpdateTemplate;
+	
 	/**
 	 * 发送联赛排名更新的Jms
 	 * @param body
 	 */
-	public void sendRankingUpdateJms(Integer body) {
+	public void rankingUpdateJms(Integer body) {
 		try {
 			logger.info("rankingUpdateTemplate start, body={}", body);
 			rankingUpdateTemplate.sendBody(body);
@@ -106,11 +94,14 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:scheduleFinish")
+	private ProducerTemplate scheduleFinishTemplate;
+	
 	/**
 	 * 发送比赛完场的Jms
 	 * @param event
 	 */
-	public void sendScheduleFinishJms(String event) {
+	public void scheduleFinishJms(String event) {
 		try {
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
@@ -122,11 +113,14 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:scoreModify")
+	private ProducerTemplate scoreModifyTemplate;
+	
 	/**
 	 * 发送比分变化的Jms
 	 * @param event
 	 */
-	public void sendScoreModifyJms(String event) {
+	public void scoreModifyJms(String event) {
 		try {
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("EVENT", event);
@@ -137,6 +131,9 @@ public class JmsZqUtil {
 			logger.error("足球发送比分变化的Jms发生异常", e);
 		}
 	}
+	
+	@Produce(uri = "jms:topic:schedulesCacheUpdate")
+	private ProducerTemplate schedulesCacheUpdateTemplate;
 	
 	/**
 	 * 发送赛事缓存更新的Jms
@@ -150,6 +147,9 @@ public class JmsZqUtil {
 		}
 	}
 	
+	@Produce(uri = "jms:topic:scheduleUpdate")
+	private ProducerTemplate scheduleUpdateTemplate;
+	
 	/**
 	 * 赛事更新
 	 * @param body
@@ -159,6 +159,36 @@ public class JmsZqUtil {
 			scheduleUpdateTemplate.sendBody(body);
 		} catch(Exception e) {
 			logger.error("足球发送赛事更新的Jms发生异常", e);
+		}
+	}
+	
+	@Produce(uri = "jms:topic:schedulesByEventCacheUpdate")
+	private ProducerTemplate schedulesByEventCacheUpdateTemplate;
+	
+	/**
+	 * 发送按event查询赛事缓存更新的Jms
+	 * @param body
+	 */
+	public void schedulesByEventCacheUpdate(String event) {
+		try {
+			schedulesByEventCacheUpdateTemplate.sendBody(event);
+		} catch(Exception e) {
+			logger.error("足球发送按event查询赛事缓存更新的Jms发生异常", e);
+		}
+	}
+	
+	@Produce(uri = "jms:topic:processingSchedulesCacheUpdate")
+	private ProducerTemplate processingSchedulesCacheUpdateTemplate;
+	
+	/**
+	 * 发送进行中赛事缓存更新的Jms
+	 * @param body
+	 */
+	public void processingSchedulesCacheUpdate() {
+		try {
+			processingSchedulesCacheUpdateTemplate.sendBody(null);
+		} catch(Exception e) {
+			logger.error("足球发送进行中赛事缓存更新的Jms发生异常", e);
 		}
 	}
 	

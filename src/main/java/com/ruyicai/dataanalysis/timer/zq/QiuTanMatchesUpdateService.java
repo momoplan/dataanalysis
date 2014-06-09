@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.FileUtil;
@@ -33,9 +32,6 @@ public class QiuTanMatchesUpdateService {
 
 	@Value("${qiutanmatches}")
 	private String url;
-	
-	@Autowired
-	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -414,7 +410,7 @@ public class QiuTanMatchesUpdateService {
 		}
 		//更新缓存
 		if ((eventModify||turnModify) && StringUtils.isNotBlank(event)) {
-			asyncService.updateSchedulesByEventAndDayCache(event);
+			jmsZqUtil.schedulesByEventCacheUpdate(event);
 		}
 	}
 	

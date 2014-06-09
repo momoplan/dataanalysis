@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
-import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -31,9 +30,6 @@ public class TodayScoreUpdateService {
 	
 	@Value("${todaybifeng}")
 	private String url;
-	
-	@Autowired
-	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -185,19 +181,19 @@ public class TodayScoreUpdateService {
 				if (MatchState.WANCHANG.value==schedule.getMatchState()) { //已完场
 					if (MatchState.WANCHANG.value!=oldMatchState) { //之前的状态不是完场
 						commonUtil.sendScheduleFinishJms(schedule); //发送完场的Jms
-						jmsZqUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
+						jmsZqUtil.rankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
 					if (MatchState.WANCHANG.value==oldMatchState && scoreModify) { //之前的状态是完场
 						commonUtil.sendScoreModifyJms(schedule); //发送比分变化的Jms
-						jmsZqUtil.sendRankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
+						jmsZqUtil.rankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 				}
 				//发送赛事缓存更新的Jms
 				jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
-				asyncService.updateProcessingSchedulesCache();
+				jmsZqUtil.processingSchedulesCacheUpdate(); //进行中比赛缓存更新
 				if (matchStateModify) { //比赛状态发生变化
-					asyncService.updateSchedulesByEventAndDayCache(schedule.getEvent());
+					jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
 				}
 			}
 		} catch(Exception e) {

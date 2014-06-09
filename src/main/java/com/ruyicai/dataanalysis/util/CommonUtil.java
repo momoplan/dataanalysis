@@ -15,7 +15,7 @@ public class CommonUtil {
 	private Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
 	@Autowired
-	private JmsZqUtil sendJmsJczUtil;
+	private JmsZqUtil jmsZqUtil;
 	
 	@Autowired
 	private SendJmsBdUtil sendJmsBdUtil;
@@ -48,7 +48,7 @@ public class CommonUtil {
 			logger.info("sendScheduleFinishJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
 					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
 					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsJczUtil.sendScheduleFinishJms(event);
+			jmsZqUtil.scheduleFinishJms(event);
 		}
 		String bdEvent = schedule.getBdEvent(); //北单
 		if (StringUtils.isNotBlank(bdEvent)) {
@@ -69,7 +69,7 @@ public class CommonUtil {
 			logger.info("sendScoreModifyJms,event="+event+";scheduleId="+schedule.getScheduleID()+";homeScore="+schedule.getHomeScore()
 					+";guestScore="+schedule.getGuestScore()+";homeHalfScore="+schedule.getHomeHalfScore()
 					+";guestHalfScore="+schedule.getGuestHalfScore());
-			sendJmsJczUtil.sendScoreModifyJms(event);
+			jmsZqUtil.scoreModifyJms(event);
 		}
 		String bdEvent = schedule.getBdEvent(); //北单
 		if (StringUtils.isNotBlank(bdEvent)) {

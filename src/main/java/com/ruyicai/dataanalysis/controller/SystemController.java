@@ -343,7 +343,7 @@ public class SystemController {
 	ResponseData scheduleFinishJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			jmsZqUtil.sendScheduleFinishJms(event);
+			jmsZqUtil.scheduleFinishJms(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -360,7 +360,7 @@ public class SystemController {
 	ResponseData scoreModifyJms(@RequestParam("event") String event) {
 		ResponseData rd = new ResponseData();
 		try {
-			jmsZqUtil.sendScoreModifyJms(event);
+			jmsZqUtil.scoreModifyJms(event);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 		}

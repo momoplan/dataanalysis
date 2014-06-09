@@ -1,6 +1,5 @@
 package com.ruyicai.dataanalysis.service;
 
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -138,8 +137,8 @@ public class AsyncService {
 		}
 	}
 	
-	@Async
-	public void updateSchedulesByEventAndDayCache(String event) {
+	/*@Async
+	public void updateSchedulesByEventCache(String event) {
 		try {
 			long startMillis = System.currentTimeMillis();
 			if (StringUtils.isBlank(event)) {
@@ -149,15 +148,15 @@ public class AsyncService {
 			if (StringUtils.isBlank(day)) {
 				return;
 			}
-			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEventAndDay", day);
+			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEvent", day);
 			List<Schedule> list = Schedule.findByEventAndDay(day);
 			if (list!=null&&list.size()>0) {
 				cacheService.set(key, 72*60*60, list);
 			}
 			long endMillis = System.currentTimeMillis();
-			logger.info("updateSchedulesByEventAndDayCache用时:"+(endMillis-startMillis)+",event="+event);
+			logger.info("updateSchedulesByEventCache用时:"+(endMillis-startMillis)+",event="+event);
 		} catch (Exception e) {
-			logger.error("updateSchedulesByEventAndDayCache发生异常,event="+event, e);
+			logger.error("updateSchedulesByEventCache发生异常,event="+event, e);
 		}
 	}
 	
@@ -175,7 +174,7 @@ public class AsyncService {
 		} catch (Exception e) {
 			logger.error("updateProcessingSchedulesCache发生异常", e);
 		}
-	}
+	}*/
 	
 	/**
 	 * 保存GlobalCache
