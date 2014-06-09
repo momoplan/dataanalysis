@@ -362,7 +362,7 @@ public class GlobalInfoService {
 		}
 		ScheduleDTO dto = new ScheduleDTO();
 		try {
-			dto = analysisService.buildDTO(schedule, false);
+			dto = analysisService.buildDTO(schedule, true);
 			
 			int scheduleId = schedule.getScheduleID();
 			String id = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(scheduleId));
