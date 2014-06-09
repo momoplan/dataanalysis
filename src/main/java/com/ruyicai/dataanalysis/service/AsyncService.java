@@ -1,5 +1,6 @@
 package com.ruyicai.dataanalysis.service;
 
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -134,6 +135,45 @@ public class AsyncService {
 			logger.info("updateUsualLetgoalsByCompanyId用时:"+(endMillis-startMillis)+",scheduleId="+scheduleId);
 		} catch (Exception e) {
 			logger.error("updateUsualLetgoalsByCompanyId发生异常", e);
+		}
+	}
+	
+	@Async
+	public void updateSchedulesByEventAndDayCache(String event) {
+		try {
+			long startMillis = System.currentTimeMillis();
+			if (StringUtils.isBlank(event)) {
+				return;
+			}
+			String day = JingCaiUtil.getDayByEvent(event);
+			if (StringUtils.isBlank(day)) {
+				return;
+			}
+			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEventAndDay", day);
+			List<Schedule> list = Schedule.findByEventAndDay(day);
+			if (list!=null&&list.size()>0) {
+				cacheService.set(key, 72*60*60, list);
+			}
+			long endMillis = System.currentTimeMillis();
+			logger.info("updateSchedulesByEventAndDayCache用时:"+(endMillis-startMillis)+",event="+event);
+		} catch (Exception e) {
+			logger.error("updateSchedulesByEventAndDayCache发生异常,event="+event, e);
+		}
+	}
+	
+	@Async
+	public void updateProcessingSchedulesCache() {
+		try {
+			long startMillis = System.currentTimeMillis();
+			String key = StringUtil.join("_", "dadaanalysis", "ProcessingSchedules");
+			List<Schedule> list = Schedule.findProcessingMatches();
+			if (list!=null) {
+				cacheService.set(key, 72*60*60, list);
+			}
+			long endMillis = System.currentTimeMillis();
+			logger.info("updateProcessingSchedulesCache用时:"+(endMillis-startMillis));
+		} catch (Exception e) {
+			logger.error("updateProcessingSchedulesCache发生异常", e);
 		}
 	}
 	

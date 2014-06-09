@@ -52,7 +52,10 @@ public class ScheduleService {
 			}
 			for (String activeday : activedays) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-				List<Schedule> schedules = Schedule.findByEventAndDay(activeday);
+				List<Schedule> schedules = getSchedulesByEventAndDay(activeday);
+				if (schedules==null||schedules.size()<=0) {
+					continue;
+				}
 				for (Schedule schedule : schedules) {
 					Integer matchState = schedule.getMatchState();
 					if (matchState==null) {
@@ -70,7 +73,7 @@ public class ScheduleService {
 				}
 			}
 		} else if (state==2) { //进行中
-			List<Schedule> schedules = Schedule.findProcessingMatches();
+			List<Schedule> schedules = getProcessingSchedulesFromCache();
 			if (schedules==null||schedules.size()<=0) {
 				return null;
 			}
@@ -101,7 +104,10 @@ public class ScheduleService {
 			days.add(sdf.format(DateUtil.getPreDate(0))); //今天
 			for (String day : days) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-				List<Schedule> schedules = Schedule.findByEventAndDay(day);
+				List<Schedule> schedules = getSchedulesByEventAndDay(day);
+				if (schedules==null||schedules.size()<=0) {
+					continue;
+				}
 				for (Schedule schedule : schedules) {
 					Integer matchState = schedule.getMatchState();
 					if (matchState==null) {
@@ -152,6 +158,23 @@ public class ScheduleService {
 				return 1;
 			}
 		});
+	}
+	
+	private List<Schedule> getProcessingSchedulesFromCache() {
+		try {
+			String key = StringUtil.join("_", "dadaanalysis", "ProcessingSchedules");
+			List<Schedule> value = cacheService.get(key);
+			if (value==null) {
+				value = Schedule.findProcessingMatches();
+				if (value!=null) {
+					cacheService.set(key, 72*60*60, value);
+				}
+			}
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public TechnicCountDto findTechnicCount(String event) {
@@ -214,12 +237,12 @@ public class ScheduleService {
 	
 	private List<Schedule> getSchedulesByEventAndDay(String day) {
 		try {
-			String key = StringUtil.join("_", "dadaanalysis", "ScheduleByEventAndDay", day);
+			String key = StringUtil.join("_", "dadaanalysis", "SchedulesByEventAndDay", day);
 			List<Schedule> value = cacheService.get(key);
 			if (value==null) {
 				value = Schedule.findByEventAndDay(day);
 				if (value!=null&&value.size()>0) {
-					cacheService.set(key, 48*60*60, value);
+					cacheService.set(key, 72*60*60, value);
 				}
 			}
 			return value;

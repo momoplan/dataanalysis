@@ -12,10 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.QiuTanMatches;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.FileUtil;
@@ -36,7 +35,7 @@ public class QiuTanMatchesUpdateService {
 	private String url;
 	
 	@Autowired
-	private CacheService cacheService;
+	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -415,9 +414,7 @@ public class QiuTanMatchesUpdateService {
 		}
 		//更新缓存
 		if ((eventModify||turnModify) && StringUtils.isNotBlank(event)) {
-			String day = JingCaiUtil.getDayByEvent(event);
-			String key = StringUtil.join("_", "dadaanalysis", "ScheduleByEventAndDay", day);
-			cacheService.delete(key);
+			asyncService.updateSchedulesByEventAndDayCache(event);
 		}
 	}
 	

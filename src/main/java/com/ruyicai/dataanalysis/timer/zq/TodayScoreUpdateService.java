@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -18,6 +19,11 @@ import com.ruyicai.dataanalysis.util.NumberUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.zq.JmsZqUtil;
 
+/**
+ * 足球-今日比分数据更新
+ * @author Administrator
+ *
+ */
 @Service
 public class TodayScoreUpdateService {
 
@@ -25,6 +31,9 @@ public class TodayScoreUpdateService {
 	
 	@Value("${todaybifeng}")
 	private String url;
+	
+	@Autowired
+	private AsyncService asyncService;
 	
 	@Autowired
 	private HttpUtil httpUtil;
@@ -36,23 +45,27 @@ public class TodayScoreUpdateService {
 	private JmsZqUtil jmsZqUtil;
 	
 	public void process() {
-		logger.info("开始更新当天比分数据");
-		long startmillis = System.currentTimeMillis();
-		String data = httpUtil.downfile(url, HttpUtil.GBK);
-		if (StringUtil.isEmpty(data)) {
-			logger.info("更新当天比分数据时获取数据为空");
-			return;
-		}
-		String[] datas = data.split("\\;");
-		for(int i = 0 ; i < datas.length; i++) {
-			String value = datas[i];
-			value = value.replaceFirst("^\\s*", "");
-			if(value.startsWith("A")) {
-				doProcess(value);
+		try {
+			logger.info("足球-今日比分数据更新 start");
+			long startmillis = System.currentTimeMillis();
+			String data = httpUtil.downfile(url, HttpUtil.GBK);
+			if (StringUtil.isEmpty(data)) {
+				logger.info("足球-今日比分数据更新获取数据为空");
+				return;
 			}
+			String[] datas = data.split("\\;");
+			for(int i = 0 ; i < datas.length; i++) {
+				String value = datas[i];
+				value = value.replaceFirst("^\\s*", "");
+				if(value.startsWith("A")) {
+					doProcess(value);
+				}
+			}
+			long endmillis = System.currentTimeMillis();
+			logger.info("足球-今日比分数据更新end,用时 {}", new Long[] {endmillis - startmillis});
+		} catch (Exception e) {
+			logger.error("足球-今日比分数据更新发生异常", e);
 		}
-		long endmillis = System.currentTimeMillis();
-		logger.info("更新当天比分数据结束,共用时 {}", new Long[] {endmillis - startmillis});
 	}
 
 	private void doProcess(String data) {
@@ -92,10 +105,12 @@ public class TodayScoreUpdateService {
 				return;
 			}
 			boolean ismod = false;
+			boolean matchStateModify = false;
 			boolean scoreModify = false;
 			int oldMatchState = schedule.getMatchState(); //比赛状态
 			if(matchState != oldMatchState) {
 				ismod = true;
+				matchStateModify = true;
 				schedule.setMatchState(matchState);
 			}
 			if(homeScore != schedule.getHomeScore()) {
@@ -180,9 +195,13 @@ public class TodayScoreUpdateService {
 				}
 				//发送赛事缓存更新的Jms
 				jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
+				asyncService.updateProcessingSchedulesCache();
+				if (matchStateModify) { //比赛状态发生变化
+					asyncService.updateSchedulesByEventAndDayCache(schedule.getEvent());
+				}
 			}
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球-今日比分数据更新数据处理发生异常", e);
 		}
 	}
 	

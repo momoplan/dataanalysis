@@ -20,6 +20,7 @@ import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.Sclass;
 import com.ruyicai.dataanalysis.listener.zq.SchedulesCacheUpdateListener;
 import com.ruyicai.dataanalysis.service.AnalysisService;
+import com.ruyicai.dataanalysis.service.AsyncService;
 import com.ruyicai.dataanalysis.util.CommonUtil;
 import com.ruyicai.dataanalysis.util.DateUtil;
 import com.ruyicai.dataanalysis.util.HttpUtil;
@@ -41,10 +42,13 @@ public class ScheduleUpdateService {
 	private String scheduleByIdUrl;
 	
 	@Autowired
-	private HttpUtil httpUtil; 
+	private AnalysisService analysisService;
 	
 	@Autowired
-	private AnalysisService analysisService;
+	private AsyncService asyncService;
+	
+	@Autowired
+	private HttpUtil httpUtil; 
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -180,8 +184,6 @@ public class ScheduleUpdateService {
 			Integer weatherIcon = NumberUtil.parseInt(u, 0); //天气图标
 			
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
-			boolean ismod = false;
-			boolean scoreModify = false;
 			if(schedule == null) {
 				schedule = new Schedule();
 				schedule.setScheduleID(scheduleId);
@@ -212,6 +214,9 @@ public class ScheduleUpdateService {
 				schedule.persist();
 				updateRanking(schedule.getScheduleID(), updateRanking);
 			} else {
+				boolean ismod = false;
+				boolean matchStateModify = false;
+				boolean scoreModify = false;
 				if (StringUtils.isNotBlank(d)) {
 					String pattern = "yyyy/MM/dd HH:mm:ss";
 					Date dDate = DateUtil.parse(pattern, d);
@@ -241,6 +246,7 @@ public class ScheduleUpdateService {
 				Integer oldMatchState = schedule.getMatchState();
 				if(matchState != oldMatchState) {
 					ismod = true;
+					matchStateModify = true;
 					schedule.setMatchState(matchState);
 				}
 				if(homeScore != schedule.getHomeScore()) {
@@ -310,10 +316,13 @@ public class ScheduleUpdateService {
 					}
 					//发送赛事缓存更新的Jms
 					jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
+					if (matchStateModify) { //比赛状态发生变化
+						asyncService.updateSchedulesByEventAndDayCache(schedule.getEvent());
+					}
 				}
 			}
 		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("足球处理赛程赛果发生异常", e);
 		}
 	}
 	
