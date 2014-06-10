@@ -129,7 +129,7 @@ public class ScheduleUpdateService {
 			logger.error("更新足球赛程赛果出错, date:" + DateUtil.format(date) + ",sclassID:" + sclassID, e);
 		}
 		long endmillis = System.currentTimeMillis();
-		logger.info("更新足球赛程赛果结束, date:{}, sclassID:{}, 共用时 {}", new String[] {DateUtil.format(date), sclassID, String.valueOf((endmillis - startmillis))});
+		logger.info("更新足球赛程赛果结束, date:{},sclassID:{},共用时 {}", new String[] {DateUtil.format(date), sclassID, String.valueOf((endmillis - startmillis))});
 	}
 
 	private void doProcess(Element match, boolean updateRanking) {
@@ -211,7 +211,6 @@ public class ScheduleUpdateService {
 				updateRanking(schedule.getScheduleID(), updateRanking);
 			} else {
 				boolean ismod = false;
-				boolean matchStateModify = false;
 				boolean scoreModify = false;
 				if (StringUtils.isNotBlank(d)) {
 					String pattern = "yyyy/MM/dd HH:mm:ss";
@@ -242,7 +241,6 @@ public class ScheduleUpdateService {
 				Integer oldMatchState = schedule.getMatchState();
 				if(matchState != oldMatchState) {
 					ismod = true;
-					matchStateModify = true;
 					schedule.setMatchState(matchState);
 				}
 				if(homeScore != schedule.getHomeScore()) {
@@ -312,9 +310,7 @@ public class ScheduleUpdateService {
 					}
 					//发送赛事缓存更新的Jms
 					jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
-					if (matchStateModify) { //比赛状态发生变化
-						jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
-					}
+					jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
 				}
 			}
 		} catch(Exception e) {

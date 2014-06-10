@@ -101,12 +101,10 @@ public class TodayScoreUpdateService {
 				return;
 			}
 			boolean ismod = false;
-			boolean matchStateModify = false;
 			boolean scoreModify = false;
 			int oldMatchState = schedule.getMatchState(); //比赛状态
 			if(matchState != oldMatchState) {
 				ismod = true;
-				matchStateModify = true;
 				schedule.setMatchState(matchState);
 			}
 			if(homeScore != schedule.getHomeScore()) {
@@ -192,9 +190,7 @@ public class TodayScoreUpdateService {
 				//发送赛事缓存更新的Jms
 				jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
 				jmsZqUtil.processingSchedulesCacheUpdate(); //进行中比赛缓存更新
-				if (matchStateModify) { //比赛状态发生变化
-					jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
-				}
+				jmsZqUtil.schedulesByEventCacheUpdate(schedule.getEvent());
 			}
 		} catch(Exception e) {
 			logger.error("足球-今日比分数据更新数据处理发生异常", e);
