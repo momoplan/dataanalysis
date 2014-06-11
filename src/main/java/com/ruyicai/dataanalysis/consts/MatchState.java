@@ -10,6 +10,8 @@ public enum MatchState {
 	
 	XIABANCHANG(3, "下半场"),
 	
+	JIASHI(4, "加时"),
+	
 	DAIDING(-11, "待定"),
 	
 	YAOZHAN(-12, "腰斩"),
