@@ -18,4 +18,6 @@ public class LetgoalDto implements Serializable {
 
 	private Double downOdds;
 	
+	private String goalName;
+	
 }

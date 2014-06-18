@@ -16,6 +16,7 @@ import com.ruyicai.dataanalysis.dto.LetgoalDto;
 import com.ruyicai.dataanalysis.dto.LetgoalsDto;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.zq.CalcUtil;
 
 @Service
 public class LetgoalService {
@@ -90,6 +91,7 @@ public class LetgoalService {
 		dto.setGoal(letGoal.getGoal());
 		dto.setUpOdds(letGoal.getUpOdds());
 		dto.setDownOdds(letGoal.getDownOdds());
+		dto.setGoalName(CalcUtil.handicap(letGoal.getGoal()));
 		return dto;
 	}
 	

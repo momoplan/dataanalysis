@@ -40,4 +40,12 @@ privileged aspect LetgoalDto_Roo_JavaBean {
         this.downOdds = downOdds;
     }
     
+    public String LetgoalDto.getGoalName() {
+        return this.goalName;
+    }
+    
+    public void LetgoalDto.setGoalName(String goalName) {
+        this.goalName = goalName;
+    }
+    
 }
