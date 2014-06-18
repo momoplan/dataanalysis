@@ -200,7 +200,8 @@ public class ScheduleService {
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
 		int scheduleId = schedule.getScheduleID();
 		//历史交锋
-		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(scheduleId, schedule);
+		//Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(scheduleId, schedule);
+		Collection<ScheduleDTO> preClashSchedules = getPreClashSchedules(schedule);
 		//联赛排名
 		Collection<RankingDTO> rankingDtos = infoService.getRankingDtos(scheduleId, schedule.getSclassID());
 		ClasliAnalysisDto dto = new ClasliAnalysisDto();
@@ -210,6 +211,19 @@ public class ScheduleService {
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
 		return dto;
+	}
+	
+	public Collection<ScheduleDTO> getPreClashSchedules(Schedule schedule) {
+		String key = StringUtil.join("_", "dataanalysis", "PreClashSchedules", String.valueOf(schedule.getScheduleID()));
+		String value = cacheService.get(key);
+		if (value!=null) {
+			return ScheduleDTO.fromJsonArrayToScheduleDTO(value);
+		}
+		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID(), schedule);
+		if (preClashSchedules!=null) {
+			cacheService.set(key, preClashSchedules.toString());
+		}
+		return preClashSchedules;
 	}
 	
 	/**
