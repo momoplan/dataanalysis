@@ -221,7 +221,8 @@ public class ScheduleService {
 		}
 		Collection<ScheduleDTO> preClashSchedules = analysisService.getPreClashSchedules(schedule.getScheduleID(), schedule);
 		if (preClashSchedules!=null) {
-			cacheService.set(key, preClashSchedules.toString());
+			String jsonArray = ScheduleDTO.toJsonArray(preClashSchedules);
+			cacheService.set(key, jsonArray);
 		}
 		return preClashSchedules;
 	}
