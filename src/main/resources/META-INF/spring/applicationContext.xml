@@ -61,58 +61,11 @@
 		<property name="connectionTestStatement" value="select 1 from dual" />
 	</bean> -->
 	
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
 	    <property name="driverClassName" value="${database.driverClassName}" />  
 	    <property name="url" value="${database.url}" />  
 	    <property name="username" value="${database.username}" /> 
         <property name="password" value="${database.password}" />  
-        <property name="maxActive" value="35" />  
-        <property name="initialSize" value="10" />  
-        <property name="maxWait" value="60000" />  
-        <property name="maxIdle" value="15" />  
-        <property name="minIdle" value="10" />  
-        <property name="removeAbandoned" value="true" />  
-        <property name="removeAbandonedTimeout" value="180" />  
-        <property name="testWhileIdle" value="true" /><!-- 打开检查,用异步线程evict进行检查 -->  
-	    <property name="testOnBorrow" value="true" />  
-	    <property name="testOnReturn" value="false" />  
-	    <property name="validationQuery" value="select 1" />  
-	    <property name="validationQueryTimeout" value="1" />  
-	    <property name="timeBetweenEvictionRunsMillis" value="30000" />  
-	    <property name="numTestsPerEvictionRun" value="20" />
-	</bean>
-	
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
-	
-	<tx:annotation-driven mode="aspectj" transaction-manager="transactionManager" />
-	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
-		<property name="persistenceUnitName" value="persistenceUnit" />
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<!-- <bean id="newsDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-		<property name="driverClass" value="${news.database.driverClassName}" />
-		<property name="jdbcUrl" value="${news.database.url}" />
-		<property name="username" value="${news.database.username}" />
-		<property name="password" value="${news.database.password}" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="idleMaxAge" value="240" />
-		<property name="maxConnectionsPerPartition" value="20" />
-		<property name="minConnectionsPerPartition" value="5" />
-		<property name="partitionCount" value="1" />
-		<property name="acquireIncrement" value="5" />
-		<property name="statementsCacheSize" value="10" />
-		<property name="releaseHelperThreads" value="3" />
-		<property name="connectionTestStatement" value="select 1 from dual" />
-	</bean> -->
-	
-	<!-- <bean id="newsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
-	    <property name="driverClassName" value="${news.database.driverClassName}" />  
-	    <property name="url" value="${news.database.url}" />  
-	    <property name="username" value="${news.database.username}" /> 
-        <property name="password" value="${news.database.password}" />  
         <property name="maxActive" value="35" />  
         <property name="initialSize" value="10" />  
         <property name="maxWait" value="60000" />  
@@ -127,16 +80,38 @@
 	    <property name="validationQueryTimeout" value="1" />  
 	    <property name="timeBetweenEvictionRunsMillis" value="30000" />  
 	    <property name="numTestsPerEvictionRun" value="20" />
-	</bean> 
+	</bean> -->
 	
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="newsTransactionManager">
-		<property name="entityManagerFactory" ref="newsEntityManagerFactory" />
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="initialSize" value="10" />
+		<property name="maxActive" value="100" />
+		<property name="minIdle" value="10" />
+		<property name="maxWait" value="60000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="180" />
+		
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="1800000" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+		<property name="validationQuery" value="SELECT 1" />
+		
+		<property name="filters" value="stat" />
 	</bean>
 	
-	<tx:annotation-driven mode="aspectj" transaction-manager="newsTransactionManager" />
-	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="newsEntityManagerFactory">
-		<property name="persistenceUnitName" value="newsPersistenceUnit" />
-		<property name="dataSource" ref="newsDataSource" />
-	</bean> -->
+	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	
+	<tx:annotation-driven mode="aspectj" transaction-manager="transactionManager" />
+	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+		<property name="persistenceUnitName" value="persistenceUnit" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
 	
 </beans>

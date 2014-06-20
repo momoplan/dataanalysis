@@ -231,7 +231,7 @@
 			<artifactId>bonecp</artifactId>
 			<version>0.7.1.RELEASE</version>
 		</dependency> -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.3</version>
@@ -257,7 +257,7 @@
 					<artifactId>xml-apis</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -464,6 +464,12 @@
 			<groupId>net.sf.ezmorph</groupId>
 			<artifactId>ezmorph</artifactId>
 			<version>1.0.6</version>
+		</dependency>
+		<!-- connection pool -->
+		<dependency>
+		     <groupId>com.alibaba</groupId>
+		     <artifactId>druid</artifactId>
+		     <version>1.0.0</version>
 		</dependency>
 	</dependencies>
     <build>
