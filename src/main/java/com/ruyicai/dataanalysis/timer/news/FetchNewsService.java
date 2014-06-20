@@ -205,13 +205,15 @@ public class FetchNewsService {
 	}
 	
 	private void fetchNewsContent(String url, String outId) throws IOException {
+		if (!StringUtils.startsWith(url, "http://")) {
+			return;
+		}
 		Document contentDocument = Jsoup.parse(new URL(url).openStream(), HttpUtil.GBK, url);
 		Date publishTime = getPublishTime(contentDocument); //发布时间
 		String content = getNewsContent(contentDocument); //新闻内容
 		String title = getNewsTitle(contentDocument); //新闻标题
 		if (StringUtils.isBlank(title)||StringUtils.isBlank(content)) {
-			//System.out.println("aa");
-			return ;
+			return;
 		}
 		//防止重复
 		//List<News> newsList = getNewsListByTitle(title);

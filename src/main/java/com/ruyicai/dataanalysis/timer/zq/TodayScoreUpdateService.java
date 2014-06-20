@@ -84,10 +84,10 @@ public class TodayScoreUpdateService {
 			String guest_Yellow = values[21]; //客队黄牌
 			String homeOrder = values[22]; //主队排名
 			String guestOrder = values[23]; //客队排名
-			/*String explainList = values[42]; //标识是否有加时
+			String explainList = values.length>=43 ? values[42] : ""; //标识是否有加时
 			if (StringUtils.isNotBlank(explainList)) {
 				logger.info("scheduleId:"+scheduleIdStr+";explainList:"+explainList);
-			}*/
+			}
 			Integer scheduleId = Integer.parseInt(scheduleIdStr); //比赛Id
 			Integer matchState = Integer.parseInt(matchStateStr); //比赛状态
 			Integer homeScore = NumberUtil.parseInt(homeScoreStr, 0); //主队比分
