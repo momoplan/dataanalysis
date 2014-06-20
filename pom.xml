@@ -674,7 +674,7 @@
 			<properties>
 				<tomcat.manager.url>http://192.168.99.16:8888/manager</tomcat.manager.url>
 				<!-- dataanalysis数据库 -->
-				<database.url>jdbc:mysql://192.168.99.120:3306/dataanalysis?characterEncoding=utf-8</database.url>
+				<database.url>jdbc:mysql://192.168.99.23:3307/dataanalysis?characterEncoding=utf-8</database.url>
 				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
 				<database.username>jrtConsole</database.username>
 				<database.password>jrtConsole</database.password>
