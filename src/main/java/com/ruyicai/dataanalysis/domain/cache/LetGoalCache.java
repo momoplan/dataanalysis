@@ -29,7 +29,9 @@ public class LetGoalCache {
 	}
 	
 	public void setToMemcache(LetGoal letGoal) {
-		String key = StringUtil.join("_", "dadaanalysis", "LetGoal", String.valueOf(letGoal.getScheduleID()), String.valueOf(letGoal.getCompanyID()));
+		Integer scheduleId = letGoal.getScheduleID();
+		Integer companyId = letGoal.getCompanyID();
+		String key = StringUtil.join("_", "dadaanalysis", "LetGoal", String.valueOf(scheduleId), String.valueOf(companyId));
 		cacheService.set(key, 24*60*60, letGoal.toJson());
 	}
 	

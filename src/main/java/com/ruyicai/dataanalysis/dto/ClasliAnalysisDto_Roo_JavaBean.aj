@@ -5,6 +5,7 @@ package com.ruyicai.dataanalysis.dto;
 
 import com.ruyicai.dataanalysis.dto.BetNumDto;
 import com.ruyicai.dataanalysis.dto.BetRatioDto;
+import com.ruyicai.dataanalysis.dto.LetgoalDto;
 import com.ruyicai.dataanalysis.dto.RankingDTO;
 import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import java.util.Collection;
@@ -49,6 +50,14 @@ privileged aspect ClasliAnalysisDto_Roo_JavaBean {
     
     public void ClasliAnalysisDto.setRankings(Collection<RankingDTO> rankings) {
         this.rankings = rankings;
+    }
+    
+    public LetgoalDto ClasliAnalysisDto.getLetgoal() {
+        return this.letgoal;
+    }
+    
+    public void ClasliAnalysisDto.setLetgoal(LetgoalDto letgoal) {
+        this.letgoal = letgoal;
     }
     
 }

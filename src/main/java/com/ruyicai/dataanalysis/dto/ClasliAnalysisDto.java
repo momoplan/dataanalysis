@@ -18,4 +18,6 @@ public class ClasliAnalysisDto {
 	
 	private Collection<RankingDTO> rankings;
 	
+	private LetgoalDto letgoal;
+	
 }
