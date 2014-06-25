@@ -179,16 +179,20 @@ public class TodayScoreUpdateService {
 			}
 			if(ismod) {
 				schedule.merge();
-				if (MatchState.WANCHANG.value==schedule.getMatchState()) { //已完场
-					if (MatchState.WANCHANG.value!=oldMatchState) { //之前的状态不是完场
+				int wanChangS = MatchState.WANCHANG.value; //完场状态
+				if (wanChangS==schedule.getMatchState()) { //已完场
+					if (wanChangS!=oldMatchState) { //之前的状态不是完场
 						commonUtil.sendScheduleFinishJms(schedule); //发送完场的Jms
 						jmsZqUtil.rankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
 					//处理完场后比分发生变化的情况(球探网的比分错误,之后人工修改正确)
-					if (MatchState.WANCHANG.value==oldMatchState && scoreModify) { //之前的状态是完场
+					if (wanChangS==oldMatchState && scoreModify) { //之前的状态是完场
 						commonUtil.sendScoreModifyJms(schedule); //发送比分变化的Jms
 						jmsZqUtil.rankingUpdateJms(schedule.getScheduleID()); //更新联赛排名的Jms
 					}
+				}
+				if (wanChangS==oldMatchState&&wanChangS!=schedule.getMatchState()) {
+					logger.info("比赛状态由完场变为其他状态,matchState:"+schedule.getMatchState()+",scheduleId:"+schedule.getScheduleID());
 				}
 				//发送赛事缓存更新的Jms
 				jmsZqUtil.schedulesCacheUpdate(schedule.getScheduleID());
