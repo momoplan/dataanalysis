@@ -32,8 +32,8 @@ public class ScheduleService {
 	@Autowired
 	private GlobalInfoService infoService;
 	
-	@Autowired
-	private LetgoalService letgoalService;
+	/*@Autowired
+	private LetgoalService letgoalService;*/
 	
 	@Autowired
 	private CommonService commonService;
@@ -213,7 +213,7 @@ public class ScheduleService {
 		dto.setBetNum(infoService.getBetNumDto(event));
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
-		dto.setLetgoal(letgoalService.getLetgoalDtoByCompanyId(scheduleId, 1)); //澳门
+		//dto.setLetgoal(letgoalService.getLetgoalDtoByCompanyId(scheduleId, 1)); //澳门
 		return dto;
 	}
 	
