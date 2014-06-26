@@ -95,6 +95,11 @@ public class ScheduleUpdateService {
 		processDateAndSclassID(DateUtil.getAfterDate(1), null, true);
 		processDateAndSclassID(DateUtil.getAfterDate(2), null, true);
 		processDateAndSclassID(DateUtil.getAfterDate(3), null, true);
+		processDateAndSclassID(DateUtil.getAfterDate(4), null, true);
+		processDateAndSclassID(DateUtil.getAfterDate(5), null, true);
+		processDateAndSclassID(DateUtil.getAfterDate(6), null, true);
+		processDateAndSclassID(DateUtil.getAfterDate(7), null, true);
+		processDateAndSclassID(DateUtil.getAfterDate(8), null, true);
 		long endmillis = System.currentTimeMillis();
 		logger.info("更新足球赛程赛果结束, 共用时 " + (endmillis - startmillis));
 	}

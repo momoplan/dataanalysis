@@ -54,7 +54,7 @@
    
    <bean id="scheduleUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="scheduleUpdateJobDetail"></property>
-   		<property name="cronExpression" value="0 0 */5 * * ?"></property>  <!-- 5小时 -->
+   		<property name="cronExpression" value="0 0 */2 * * ?"></property>  <!-- 2小时 -->
    </bean>
    
    <!-- 联赛更新 -->
