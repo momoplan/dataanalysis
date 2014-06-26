@@ -32,8 +32,8 @@ public class ScheduleService {
 	@Autowired
 	private GlobalInfoService infoService;
 	
-	/*@Autowired
-	private LetgoalService letgoalService;*/
+	@Autowired
+	private LetgoalService letgoalService;
 	
 	@Autowired
 	private CommonService commonService;
@@ -140,13 +140,6 @@ public class ScheduleService {
 		return resultMap;
 	}
 	
-	/*public static void main(String[] args) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put("1", 2);
-		map.put("1", 3);
-		System.out.println(map.get("1"));
-	}*/
-	
 	/**
 	 * 排序ScheduleDTO数组
 	 * @param list
@@ -213,7 +206,7 @@ public class ScheduleService {
 		dto.setBetNum(infoService.getBetNumDto(event));
 		dto.setPreClashSchedules(preClashSchedules);
 		dto.setRankings(rankingDtos);
-		//dto.setLetgoal(letgoalService.getLetgoalDtoByCompanyId(scheduleId, 1)); //澳门
+		dto.setLetgoal(letgoalService.getLetgoalDtoByCompanyId(scheduleId, 1)); //澳门
 		return dto;
 	}
 	
