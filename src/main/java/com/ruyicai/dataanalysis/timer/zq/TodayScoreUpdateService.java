@@ -73,7 +73,7 @@ public class TodayScoreUpdateService {
 			String scheduleIdStr = values[0]; //比赛Id
 			String matchTime = values[11]; //比赛时间(只有小时和分数 20:30 格式)
 			String matchTime2 = values[12]; //上半场时为开上半场的时间,下半场时为开下半场的时间(js日期时间格式)
-			String matchStateStr = values[13]; //比赛状态 (0:未开,1:上半场,2:中场,3:下半场,-11:待定,-12:腰斩,-13:中断,-14:推迟,-1:完场，-10取消)
+			String matchStateStr = values[13]; //比赛状态 (0:未开,1:上半场,2:中场,3:下半场,4:加时,-11:待定,-12:腰斩,-13:中断,-14:推迟,-1:完场，-10取消)
 			String homeScoreStr = values[14]; //主队比分
 			String guestScoreStr = values[15]; //客队比分
 			String homeHalfScoreStr = values[16]; //主队上半场比分
@@ -84,10 +84,10 @@ public class TodayScoreUpdateService {
 			String guest_Yellow = values[21]; //客队黄牌
 			String homeOrder = values[22]; //主队排名
 			String guestOrder = values[23]; //客队排名
-			String explainList = values.length>=43 ? values[42] : ""; //标识是否有加时
+			/*String explainList = values.length>=43 ? values[42] : ""; //标识是否有加时
 			if (StringUtils.isNotBlank(explainList)) {
 				logger.info("scheduleId:"+scheduleIdStr+";explainList:"+explainList);
-			}
+			}*/
 			Integer scheduleId = Integer.parseInt(scheduleIdStr); //比赛Id
 			Integer matchState = Integer.parseInt(matchStateStr); //比赛状态
 			Integer homeScore = NumberUtil.parseInt(homeScoreStr, 0); //主队比分
@@ -176,6 +176,12 @@ public class TodayScoreUpdateService {
 					ismod = true;
 					schedule.setMatchTime2(matchTime2Date);
 				}
+			}
+			//是否有加时
+			String oldIsAddTime = schedule.getIsAddTime(); //是否有加时(0:无;1:有)
+			if ((StringUtils.isBlank(oldIsAddTime)||StringUtils.equals(oldIsAddTime, "0"))
+					&&matchState==MatchState.JIASHI.value) {
+				schedule.setIsAddTime("1");
 			}
 			if(ismod) {
 				schedule.merge();

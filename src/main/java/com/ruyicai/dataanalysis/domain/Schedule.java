@@ -165,6 +165,8 @@ public class Schedule implements Serializable {
 	
 	private Date betEndTime;
 	
+	private String isAddTime; //是否有加时(0:无;1:有)
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	
