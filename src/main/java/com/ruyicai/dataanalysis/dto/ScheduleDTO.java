@@ -3,12 +3,9 @@ package com.ruyicai.dataanalysis.dto;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
-
 import com.ruyicai.dataanalysis.domain.DetailResult;
-
 import flexjson.JSONSerializer;
 
 @RooJavaBean
@@ -100,6 +97,8 @@ public class ScheduleDTO implements Serializable {
 	private Integer betState;
 	
 	private Date betEndTime;
+	
+	private String isAddTime; //是否有加时(0:无;1:有)
 	
 	private Collection<DetailResult> detailResults;
 	

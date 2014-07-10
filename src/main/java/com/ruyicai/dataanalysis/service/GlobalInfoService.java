@@ -378,7 +378,7 @@ public class GlobalInfoService {
 				dto.setDetailResults(DetailResult.fromJsonArrayToDetailResults(globalCache.getValue()));
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			e.printStackTrace();
 		} 
 		return dto;
 	}

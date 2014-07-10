@@ -347,6 +347,14 @@ privileged aspect ScheduleDTO_Roo_JavaBean {
         this.betEndTime = betEndTime;
     }
     
+    public String ScheduleDTO.getIsAddTime() {
+        return this.isAddTime;
+    }
+    
+    public void ScheduleDTO.setIsAddTime(String isAddTime) {
+        this.isAddTime = isAddTime;
+    }
+    
     public Collection<DetailResult> ScheduleDTO.getDetailResults() {
         return this.detailResults;
     }
