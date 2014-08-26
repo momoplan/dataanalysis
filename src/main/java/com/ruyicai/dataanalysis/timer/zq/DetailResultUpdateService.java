@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.domain.DetailResult;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -38,7 +40,8 @@ public class DetailResultUpdateService {
 		logger.info("开始更新当天比赛的入球、红黄牌事件");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.downfile(url, HttpUtil.GBK);
+//			String data = httpUtil.downfile(url, HttpUtil.GBK);
+			String data = httpUtil.getResponse(url, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("更新当天比赛的入球、红黄牌事件时获取数据为空");
 				return;

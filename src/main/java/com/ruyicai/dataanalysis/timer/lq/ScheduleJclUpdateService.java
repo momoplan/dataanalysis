@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.listener.lq.SchedulesJclCacheUpdateListener;
@@ -74,13 +76,15 @@ public class ScheduleJclUpdateService {
 			if(null != date) {
 				param = "time=" + DateUtil.format("yyyy-MM-dd", date);
 			}
-			String data = httpUtil.getResponse(matchResultJclUrl, HttpUtil.GET, HttpUtil.GBK, param);
+//			String data = httpUtil.getResponse(matchResultJclUrl, HttpUtil.GET, HttpUtil.GBK, param);
+			String data = httpUtil.getResponse(matchResultJclUrl, HttpUtil.GET, HttpUtil.UTF8, param);
 			if (StringUtil.isEmpty(data)) {
 				logger.info("竞彩篮球-赛程赛果更新时获取数据为空");
 				return;
 			}
 			Document doc = DocumentHelper.parseText(data);
-			List<Element> matches = doc.getRootElement().element("m").elements("h");
+//			List<Element> matches = doc.getRootElement().element("m").elements("h");
+			List<Element> matches = doc.getRootElement().elements("h");
 			for(Element match : matches) {
 				doProcess(match, date, updateRanking);
 			}
@@ -101,43 +105,44 @@ public class ScheduleJclUpdateService {
 			String info = match.getText();
 			String[] infos = info.split("\\^");
 			String scheduleId = infos[0]; //赛事ID
-			String sclassName = infos[1]; //联赛名(如 NBA,WNBA)
+			String sclassName = infos[3]; //联赛名(如 NBA,WNBA)
 			String sclassNameJs = sclassName.split(",")[0]; //联赛名(简体简称)
-			String sclassType = infos[2]; //分几节进行(2:上下半场;4:分4小节)
-			String matchTime = infos[4]; //开赛时间(12月04日<br>08:00)
+			String sclassType = infos[4]; //分几节进行(2:上下半场;4:分4小节)
+			String matchTime = infos[6]; //开赛时间(2014/8/20 18:15:00)
 			matchTime = matchTime.replaceAll("<br>", " "); //去掉换行符
-			matchTime = DateUtil.format("yyyy", date)+"年"+matchTime+":00";
-			String matchState = infos[5]; //状态
-			String remainTime = infos[6]; //小节剩余时间
-			String homeTeamId = infos[7]; //主队ID
-			String homeTeam = infos[8].indexOf(",")>-1?infos[8].split(",")[0]:""; //主队名
-			String guestTeamId = infos[9]; //客队ID
-			String guestTeam = infos[10].indexOf(",")>-1?infos[10].split(",")[0]:""; //客队名
-			String homeScore = infos[11]; //主队得分
-			String guestScore = infos[12]; //客队得分
-			String homeOne = infos[13]; //主队一节得分(上半场)
-			String guestOne = infos[14]; //客队一节得分（上半场）
-			String homeTwo = infos[15]; //主队二节得分
-			String guestTwo = infos[16]; //客队二节得分
-			String homeThree = infos[17]; //主队三节得分(下半场）
-			String guestThree = infos[18]; //客队三节得分(下半场）
-			String homeFour = infos[19]; //主队四节得分
-			String guestFour = infos[20]; //客队四节得分
-			String addTime = infos[21]; //加时数
-			String homeAddTime1 = infos[22]; //主队1'ot得分
-			String guestAddTime1 = infos[23]; //客队1'ot得分
-			String homeAddTime2 = infos[24]; //主队2'ot得分
-			String guestAddTime2 = infos[25]; //客队2'ot得分
-			String homeAddTime3 = infos[26]; //主队3'ot得分
-			String guestAddTime3 = infos[27]; //客队3'ot得分
-			String homeWinLv = infos[34].indexOf(",")>-1?(infos[34].split(",").length==2?infos[34].split(",")[0]:""):""; //主胜赔率
-			String guestWinLv = infos[34].indexOf(",")>-1?(infos[34].split(",").length==2?infos[34].split(",")[1]:""):""; //客胜赔率
-			String matchSeason = infos[35]; //赛季(如:12-13赛季)
+			matchTime = convertMatchTime(matchTime);
+			String matchState = infos[7]; //状态
+			String remainTime = infos[8]; //小节剩余时间
+			String homeTeamId = infos[9]; //主队ID
+			String homeTeam = infos[10].indexOf(",")>-1?infos[10].split(",")[0]:""; //主队名
+			String guestTeamId = infos[11]; //客队ID
+			String guestTeam = infos[12].indexOf(",")>-1?infos[12].split(",")[0]:""; //客队名
+			String homeScore = infos[15]; //主队得分
+			String guestScore = infos[16]; //客队得分
+			String homeOne = infos[17]; //主队一节得分(上半场)
+			String guestOne = infos[18]; //客队一节得分（上半场）
+			String homeTwo = infos[19]; //主队二节得分
+			String guestTwo = infos[20]; //客队二节得分
+			String homeThree = infos[21]; //主队三节得分(下半场）
+			String guestThree = infos[22]; //客队三节得分(下半场）
+			String homeFour = infos[23]; //主队四节得分
+			String guestFour = infos[24]; //客队四节得分
+			String addTime = infos[25]; //加时数
+			String homeAddTime1 = infos[26]; //主队1'ot得分
+			String guestAddTime1 = infos[27]; //客队1'ot得分
+			String homeAddTime2 = infos[28]; //主队2'ot得分
+			String guestAddTime2 = infos[29]; //客队2'ot得分
+			String homeAddTime3 = infos[30]; //主队3'ot得分
+			String guestAddTime3 = infos[31]; //客队3'ot得分
+			//==========新接口中主胜赔率与客胜赔率取消了==============
+			String homeWinLv = ""; //主胜赔率
+			String guestWinLv = ""; //客胜赔率
+			String matchSeason = infos[36]; //赛季(如:12-13赛季)
 			if (matchSeason!=null&&matchSeason.endsWith("赛季")) {
 				matchSeason = matchSeason.substring(0, matchSeason.length()-2).trim();
 			}
-			String matchType = infos[36]; //类型(如季前赛,常规赛,季后赛)
-			String sclassId = infos[37]; //联赛ID
+			String matchType = infos[37]; //类型(如季前赛,常规赛,季后赛)
+			String sclassId = infos[1]; //联赛ID
 			
 			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJclNotBuild(Integer.parseInt(scheduleId));
 			if (scheduleJcl==null) {
@@ -478,6 +483,16 @@ public class ScheduleJclUpdateService {
 		} catch (Exception e) {
 			logger.error("篮球根据matchtime处理未开赛事发生异常", e);
 		}
+	}
+	
+	/**
+	 * 将matchTime转换成标准格式
+	 * @param matchTime 2014/2/11 8:15:00
+	 * @return
+	 */
+	public String convertMatchTime(String matchTime){
+		Date date = DateUtil.parse("yyyy/MM/dd HH:mm:ss", matchTime);
+		return new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(date);
 	}
 	
 }

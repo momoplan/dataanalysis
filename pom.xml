@@ -14,25 +14,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<logback.version>0.9.30</logback.version>
 		<!-- 足球 -->
-		<liansaibeisai>http://dxbf.bet007.com/League_XML.aspx</liansaibeisai>
-		<qiuduiziliao>http://dxbf.bet007.com/Team_XML.aspx</qiuduiziliao>
+		<liansaibeisai>http://interface.win007.com/zq/League_XML.aspx</liansaibeisai>
+		<qiuduiziliao>http://interface.win007.com/zq/Team_XML.aspx</qiuduiziliao>
 		<qiutanmatches>http://www.310win.com/handle/MatchidInterface.aspx</qiutanmatches>
-		<saichensaiguo>http://dxbf.bet007.com/BF_XML.aspx</saichensaiguo>
-		<scheduleById>http://dxbf.bet007.com/BF_XMLByID.aspx</scheduleById>
-		<detailresult>http://dxbf.bet007.com/vbsxml/detail.js</detailresult>
-		<baijiaoupei>http://data.nowgoal.com/1x2/datacn.aspx</baijiaoupei>
-		<peiluall>http://vip.bet007.com/xmlvbs/odds.txt</peiluall>
-		<todaybifeng>http://dxbf.bet007.com/vbsxml/bfdata.js</todaybifeng>
-		<detailResultDate>http://dxbf.bet007.com/Event_XML.aspx</detailResultDate>
-		<peiLvDetail>http://vip.bet007.com/xmlvbs/ch_odds.xml</peiLvDetail>
-		<technicCountUrl>http://bf.bet007.com/Technic_XML.aspx</technicCountUrl>
+		<saichensaiguo>http://interface.win007.com/zq/BF_XML.aspx</saichensaiguo>
+		<scheduleById>http://interface.win007.com/zq/BF_XMLByID.aspx</scheduleById>
+		<detailresult>http://interface.win007.com/zq/detail.aspx</detailresult>
+		<baijiaoupei>http://interface.win007.com/zq/1x2.aspx</baijiaoupei>
+		<peiluall>http://interface.win007.com/zq/odds.aspx</peiluall>
+		<todaybifeng>http://interface.win007.com/zq/today.aspx</todaybifeng>
+		<detailResultDate>http://interface.win007.com/zq/Event_XML.aspx</detailResultDate>
+		<peiLvDetail>http://interface.win007.com/zq/ch_odds.xml</peiLvDetail>
+		<technicCountUrl>http://interface.win007.com/zq/Technic_XML.aspx</technicCountUrl>
 		<!-- 篮球 -->
-		<leagueJclUrl>http://dxbf.bet007.com/LqLeague_Xml.aspx</leagueJclUrl>
-		<matchResultJclUrl>http://dxbf.bet007.com/nba_date.aspx</matchResultJclUrl>
-		<todayScoreJclUrl>http://dxbf.bet007.com/nba/today.xml</todayScoreJclUrl>
-		<standardJclUrl>http://data.nowgoal.com/1x2/fbdatacn.aspx</standardJclUrl>
-		<peiLvJclUrl>http://nba.bet007.com/odds/OddsData/oddsBsk.txt</peiLvJclUrl>
-		<teamJclUrl>http://dxbf.bet007.com/LqTeam_Xml.aspx</teamJclUrl>
+		<leagueJclUrl>http://interface.win007.com/lq/LqLeague_Xml.aspx</leagueJclUrl>
+		<matchResultJclUrl>http://interface.win007.com/lq/LqSchedule.aspx</matchResultJclUrl>
+		<todayScoreJclUrl>http://interface.win007.com/lq/today.aspx</todayScoreJclUrl>
+		<standardJclUrl>http://interface.win007.com/lq/1x2.aspx</standardJclUrl>
+		<peiLvJclUrl>http://interface.win007.com/lq/LqOdds.aspx</peiLvJclUrl>
+		<teamJclUrl>http://interface.win007.com/lq/LqTeam_Xml.aspx</teamJclUrl>
 		<!-- 新闻 -->
 		<jingCaiNewsUrl>http://info.sporttery.cn/roll/</jingCaiNewsUrl>
 		<jingCaiZuQiuUrl>http://www.sporttery.cn/football/index.html</jingCaiZuQiuUrl>

@@ -1,6 +1,7 @@
 package com.ruyicai.dataanalysis.timer.lq;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -43,13 +44,14 @@ public class TodayScoreJclUpdateService {
 		logger.info("竞彩篮球-今日比分更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.downfile(todayScoreJclUrl, HttpUtil.GBK);
+//			String data = httpUtil.downfile(todayScoreJclUrl, HttpUtil.GBK);
+			String data = httpUtil.getResponse(todayScoreJclUrl, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("竞彩篮球-今日比分更新时获取数据为空");
 				return;
 			}
 			Document doc = DocumentHelper.parseText(data);
-			List<Element> matches = doc.getRootElement().element("m").elements("h");
+			List<Element> matches = doc.getRootElement().elements("h");
 			for(Element match : matches) {
 				doProcess(match);
 			}
@@ -69,32 +71,32 @@ public class TodayScoreJclUpdateService {
 			String info = match.getText();
 			String[] infos = info.split("\\^");
 			String scheduleId = infos[0]; //赛事ID
-			String sclassName = infos[1]; //联赛名(如 NBA,WNBA)
+			String sclassName = infos[3]; //联赛名(如 NBA,WNBA)
 			String sclassNameJs = sclassName.split(",")[0]; //联赛名(简体简称)
-			String sclassType = infos[2]; //分几节进行(2:上下半场;4:分4小节)
-			String matchState = infos[5]; //状态
-			String remainTime = infos[6]; //小节剩余时间
-			String homeTeamId = infos[7]; //主队ID
-			String homeTeam = infos[8].indexOf(",")>-1?infos[8].split(",")[0]:""; //主队名
-			String guestTeamId = infos[9]; //客队ID
-			String guestTeam = infos[10].indexOf(",")>-1?infos[10].split(",")[0]:""; //客队名
-			String homeScore = infos[11]; //主队得分
-			String guestScore = infos[12]; //客队得分
-			String homeOne = infos[13]; //主队一节得分(上半场)
-			String guestOne = infos[14]; //客队一节得分（上半场）
-			String homeTwo = infos[15]; //主队二节得分
-			String guestTwo = infos[16]; //客队二节得分
-			String homeThree = infos[17]; //主队三节得分(下半场）
-			String guestThree = infos[18]; //客队三节得分(下半场）
-			String homeFour = infos[19]; //主队四节得分
-			String guestFour = infos[20]; //客队四节得分
-			String addTime = infos[21]; //加时数
-			String homeAddTime1 = infos[22]; //主队1'ot得分
-			String guestAddTime1 = infos[23]; //客队1'ot得分
-			String homeAddTime2 = infos[24]; //主队2'ot得分
-			String guestAddTime2 = infos[25]; //客队2'ot得分
-			String homeAddTime3 = infos[26]; //主队3'ot得分
-			String guestAddTime3 = infos[27]; //客队3'ot得分
+			String sclassType = infos[4]; //分几节进行(2:上下半场;4:分4小节)
+			String matchState = infos[7]; //状态
+			String remainTime = infos[8]; //小节剩余时间
+			String homeTeamId = infos[9]; //主队ID
+			String homeTeam = infos[10].indexOf(",")>-1?infos[10].split(",")[0]:""; //主队名
+			String guestTeamId = infos[11]; //客队ID
+			String guestTeam = infos[12].indexOf(",")>-1?infos[12].split(",")[0]:""; //客队名
+			String homeScore = infos[15]; //主队得分
+			String guestScore = infos[16]; //客队得分
+			String homeOne = infos[17]; //主队一节得分(上半场)
+			String guestOne = infos[18]; //客队一节得分（上半场）
+			String homeTwo = infos[19]; //主队二节得分
+			String guestTwo = infos[20]; //客队二节得分
+			String homeThree = infos[21]; //主队三节得分(下半场）
+			String guestThree = infos[22]; //客队三节得分(下半场）
+			String homeFour = infos[23]; //主队四节得分
+			String guestFour = infos[24]; //客队四节得分
+			String addTime = infos[25]; //加时数
+			String homeAddTime1 = infos[26]; //主队1'ot得分
+			String guestAddTime1 = infos[27]; //客队1'ot得分
+			String homeAddTime2 = infos[28]; //主队2'ot得分
+			String guestAddTime2 = infos[29]; //客队2'ot得分
+			String homeAddTime3 = infos[30]; //主队3'ot得分
+			String guestAddTime3 = infos[31]; //客队3'ot得分
 			
 			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJclNotBuild(Integer.parseInt(scheduleId));
 			if(null == scheduleJcl) {

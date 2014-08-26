@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,8 @@ public class PeiLvJclUpdateService {
 		logger.info("竞彩篮球-赔率更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.downfile(peiLvJclUrl, HttpUtil.UTF8);
+//			String data = httpUtil.downfile(peiLvJclUrl, HttpUtil.UTF8);
+			String data = httpUtil.getResponse(peiLvJclUrl, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("竞彩篮球-赔率更新时获取数据为空");
 				return;

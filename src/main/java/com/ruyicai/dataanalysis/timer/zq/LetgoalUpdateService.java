@@ -2,13 +2,16 @@ package com.ruyicai.dataanalysis.timer.zq;
 
 import java.util.Date;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.domain.LetGoal;
 import com.ruyicai.dataanalysis.domain.LetGoalDetail;
 import com.ruyicai.dataanalysis.service.AsyncService;
@@ -50,7 +53,8 @@ public class LetgoalUpdateService {
 		try {
 			logger.info("足球亚赔更新开始");
 			//long startmillis = System.currentTimeMillis();
-			String data = httpUtil.downfile(url, HttpUtil.UTF8);
+//			String data = httpUtil.downfile(url, HttpUtil.UTF8);
+			String data = httpUtil.getResponse(url, HttpUtil.GET, HttpUtil.UTF8, "");
 			if(StringUtils.isBlank(data)) {
 				logger.error("足球亚赔更新获取数据为空");
 				return ;
