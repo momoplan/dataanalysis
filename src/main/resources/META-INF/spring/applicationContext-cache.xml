@@ -18,6 +18,7 @@
 			<value>true</value>
 		</property>
 		<property name="connectionPoolSize" value="2"></property>
+		<property name="opTimeout" value="3000" />
 	</bean>
 	
 	<bean name="cacheService" class="com.ruyicai.dataanalysis.cache.MemCachedCacheService">

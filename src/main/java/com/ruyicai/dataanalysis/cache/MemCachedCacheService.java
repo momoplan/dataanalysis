@@ -1,26 +1,34 @@
 package com.ruyicai.dataanalysis.cache;
 
 import java.util.concurrent.TimeoutException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.exception.MemcachedException;
 
 public class MemCachedCacheService implements CacheService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	MemcachedClient memcachedClient;
-	
+
 	public void setMemcachedClient(MemcachedClient memcachedClient) {
 		this.memcachedClient = memcachedClient;
 	}
 
-	public <T> void  set(String key, T t) {
+	public <T> void set(String key, T t) {
 		try {
 			memcachedClient.set(key, 0, t);
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.error("set error key:" + key + " T:" + t, e);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("set error key:" + key + " T:" + t, e);
+		} catch (Exception e) {
+			logger.error("set error key:" + key + " T:" + t, e);
 		}
 	}
 
@@ -31,11 +39,13 @@ public class MemCachedCacheService implements CacheService {
 		try {
 			memcachedClient.set(key, exp, t);
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
+		} catch (Exception e) {
+			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
 		}
 	}
 
@@ -44,11 +54,13 @@ public class MemCachedCacheService implements CacheService {
 		try {
 			t = memcachedClient.get(key);
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.error("get error key:" + key, e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("get error key:" + key, e);
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("get error key:" + key, e);
+		}catch (Exception e) {
+			logger.error("get error key:" + key, e);
 		}
 		return t;
 	}
@@ -58,11 +70,13 @@ public class MemCachedCacheService implements CacheService {
 		try {
 			temp = memcachedClient.get(key);
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.error("checkToSet error key:" + key + " T:" + t, e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("checkToSet error key:" + key + " T:" + t, e);
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("checkToSet error key:" + key + " T:" + t, e);
+		}catch(Exception e){
+			logger.error("checkToSet error key:" + key + " T:" + t, e);
 		}
 		if (temp == null) {
 			set(key, t);
@@ -73,9 +87,11 @@ public class MemCachedCacheService implements CacheService {
 		try {
 			memcachedClient.deleteWithNoReply(key);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("delete error key:" + key, e);
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("delete error key:" + key, e);
+		}catch(Exception e){
+			logger.error("delete error key:" + key, e);
 		}
 	}
 
@@ -83,11 +99,13 @@ public class MemCachedCacheService implements CacheService {
 		try {
 			memcachedClient.flushAll();
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.error("flushAll error", e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("flushAll error", e);
 		} catch (MemcachedException e) {
-			e.printStackTrace();
+			logger.error("flushAll error", e);
+		}catch(Exception e){
+			logger.error("flushAll error", e);
 		}
 	}
 }
