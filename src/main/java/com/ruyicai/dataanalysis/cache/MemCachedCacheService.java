@@ -1,18 +1,18 @@
 package com.ruyicai.dataanalysis.cache;
 
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.TimeUnit;
+
+import net.spy.memcached.MemcachedClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 
-import net.rubyeye.xmemcached.MemcachedClient;
-import net.rubyeye.xmemcached.exception.MemcachedException;
-
-public class MemCachedCacheService implements CacheService {
+public class MemCachedCacheService implements CacheService, DisposableBean {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	MemcachedClient memcachedClient;
+	private MemcachedClient memcachedClient;
 
 	public void setMemcachedClient(MemcachedClient memcachedClient) {
 		this.memcachedClient = memcachedClient;
@@ -21,12 +21,6 @@ public class MemCachedCacheService implements CacheService {
 	public <T> void set(String key, T t) {
 		try {
 			memcachedClient.set(key, 0, t);
-		} catch (TimeoutException e) {
-			logger.error("set error key:" + key + " T:" + t, e);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (MemcachedException e) {
-			logger.error("set error key:" + key + " T:" + t, e);
 		} catch (Exception e) {
 			logger.error("set error key:" + key + " T:" + t, e);
 		}
@@ -38,44 +32,25 @@ public class MemCachedCacheService implements CacheService {
 		}
 		try {
 			memcachedClient.set(key, exp, t);
-		} catch (TimeoutException e) {
-			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
-		} catch (InterruptedException e) {
-			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
-		} catch (MemcachedException e) {
-			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
 		} catch (Exception e) {
 			logger.error("set error key:" + key + "exp:" + exp + " T:" + t, e);
 		}
 	}
 
 	public <T> T get(String key) {
-		T t = null;
 		try {
-			t = memcachedClient.get(key);
-		} catch (TimeoutException e) {
+			return (T) memcachedClient.get(key);
+		} catch (Exception e) {
 			logger.error("get error key:" + key, e);
-		} catch (InterruptedException e) {
-			logger.error("get error key:" + key, e);
-		} catch (MemcachedException e) {
-			logger.error("get error key:" + key, e);
-		}catch (Exception e) {
-			logger.error("get error key:" + key, e);
+			return null;
 		}
-		return t;
 	}
 
 	public <T> void checkToSet(String key, T t) {
 		T temp = null;
 		try {
-			temp = memcachedClient.get(key);
-		} catch (TimeoutException e) {
-			logger.error("checkToSet error key:" + key + " T:" + t, e);
-		} catch (InterruptedException e) {
-			logger.error("checkToSet error key:" + key + " T:" + t, e);
-		} catch (MemcachedException e) {
-			logger.error("checkToSet error key:" + key + " T:" + t, e);
-		}catch(Exception e){
+			temp = (T) memcachedClient.get(key);
+		} catch (Exception e) {
 			logger.error("checkToSet error key:" + key + " T:" + t, e);
 		}
 		if (temp == null) {
@@ -85,27 +60,24 @@ public class MemCachedCacheService implements CacheService {
 
 	public void delete(String key) {
 		try {
-			memcachedClient.deleteWithNoReply(key);
-		} catch (InterruptedException e) {
-			logger.error("delete error key:" + key, e);
-		} catch (MemcachedException e) {
-			logger.error("delete error key:" + key, e);
-		}catch(Exception e){
+			memcachedClient.delete(key);
+		} catch (Exception e) {
 			logger.error("delete error key:" + key, e);
 		}
 	}
 
 	public void flushAll() {
 		try {
-			memcachedClient.flushAll();
-		} catch (TimeoutException e) {
+			memcachedClient.flush();
+		} catch (Exception e) {
 			logger.error("flushAll error", e);
-		} catch (InterruptedException e) {
-			logger.error("flushAll error", e);
-		} catch (MemcachedException e) {
-			logger.error("flushAll error", e);
-		}catch(Exception e){
-			logger.error("flushAll error", e);
+		}
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		if (memcachedClient != null) {
+			memcachedClient.shutdown(2500, TimeUnit.MILLISECONDS);
 		}
 	}
 }
