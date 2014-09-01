@@ -157,7 +157,8 @@ public class DetailResultUpdateService {
 		logger.info("开始更新"+date+"比赛的入球、红黄牌事件");
 		long startmillis = System.currentTimeMillis();
 		try {
-			String data = httpUtil.downfile(urlDate+"?date="+date, HttpUtil.UTF8);
+//			String data = httpUtil.downfile(urlDate+"?date="+date, HttpUtil.UTF8);
+			String data = httpUtil.getResponse(urlDate+"?date="+date, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("更新"+date+"比赛的入球、红黄牌事件时获取数据为空");
 				return;
