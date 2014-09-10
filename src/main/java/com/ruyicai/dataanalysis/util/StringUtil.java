@@ -75,9 +75,11 @@ public class StringUtil {
 		return sb.toString();
 	}
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		String fillZero = fillZero(111, 3);
 		System.out.println(fillZero);
-	}*/
+		String key = StringUtil.join("_", "dataanalysis", "DetailResult", String.valueOf(996641));
+		System.out.println(key);
+	}
 	
 }

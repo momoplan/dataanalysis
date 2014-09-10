@@ -328,6 +328,7 @@ public class QiuTanMatchesUpdateService {
 		//竞彩足球
 		String eventQ = qiuTanMatches.getEvent();
 		String eventS = schedule.getEvent();
+		logger.info("更新赛事scheduleId="+scheduleId+"的event时两参数值eventQ="+eventQ+",eventS="+eventS);
 		if(StringUtils.isNotBlank(eventQ)&&(StringUtils.isBlank(eventS)||!StringUtils.equals(eventQ, eventS))) {
 			logger.info("赛事添加event,event="+eventQ+",scheduleId="+scheduleId);
 			schedule.setEvent(eventQ);
@@ -404,6 +405,7 @@ public class QiuTanMatchesUpdateService {
 			}
 		}
 		String event = schedule.getEvent();
+		logger.info("彩票赛事与球探网的关联更新跟踪event,event="+event);
 		//发送event增加的Jms
 		if (eventModify && StringUtils.isNotBlank(event)) {
 			jmsSendUtil.scheduleEventAdd(event);
