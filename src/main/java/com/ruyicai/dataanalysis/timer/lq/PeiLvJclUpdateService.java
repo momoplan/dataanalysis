@@ -55,13 +55,13 @@ public class PeiLvJclUpdateService {
 			}
 			final String[] datas = data.split("\\$");
 			//防止数据为空(data=$$$$$$)时出现数组越界的异常
-			if (datas!=null&&datas.length>=2) {
+			if (datas!=null&&datas.length>2) {
 				processLetGoal(datas[2]); //亚赔-让分盘
 			}
 			//此处不处理欧赔,因为如果某场赛事没有亚赔,那么欧赔也不会返回,这样就不能更新这场赛事的缓存,
 			//迁移到插入欧赔数据的时候更新缓存
 			//processStandard(datas[3]); //欧赔
-			if (datas!=null&&datas.length>=4) {
+			if (datas!=null&&datas.length>4) {
 				processTotalScore(datas[4]); //亚赔-总分盘
 			}
 		} catch(Exception e) {
@@ -403,6 +403,18 @@ public class PeiLvJclUpdateService {
 			totalScoreJcls.add(totalScoreJcl);
 		}
 		return totalScoreJcls;
+	}
+	
+	public static void main(String args[]){
+		String data="148,1,#666DCE,东南澳联,1,4$186801,148,1411055940000,2359,堪培拉枪手,堪培拉槍手,Canberra Gunners,11,2350,丹德农游骑兵,丹德農遊騎兵,Dandenong Rangers,4,0,,,,0,0$$$";
+		final String[] datas = data.split("\\$");
+		//防止数据为空(data=$$$$$$)时出现数组越界的异常
+		System.out.println("data:"+data);
+		System.out.println("---datas.length---"+datas.length);
+		System.out.println("datas[1]:"+datas[1]);
+		if (datas!=null&&datas.length>=2) {
+			System.out.println(datas[2]); //亚赔-让分盘
+		}
 	}
 	
 }
