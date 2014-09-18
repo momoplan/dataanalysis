@@ -9,27 +9,27 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 public class RankingDTO implements Comparable<RankingDTO> {
 
-	private int ranking;
+	private int ranking = 0;
 	
-	private int teamID;
+	private int teamID = 0;
 	
-	private String teamName;
+	private String teamName = "";
 	
-	private int win;
+	private int win = 0;
 	
-	private int standoff;
+	private int standoff = 0;
 	
-	private int lose;
+	private int lose = 0;
 	
-	private int goinBall;
+	private int goinBall = 0;
 	
-	private int loseBall;
+	private int loseBall = 0;
 	
-	private int goalDifference;
+	private int goalDifference = 0;
 	
-	private int integral;
+	private int integral = 0;
 	
-	private int matchcount;
+	private int matchcount = 0;
 
 	@Override
 	public int compareTo(RankingDTO o) {

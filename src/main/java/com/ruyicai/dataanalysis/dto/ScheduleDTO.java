@@ -17,89 +17,89 @@ public class ScheduleDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private int scheduleID;
+	private int scheduleID = 0;
 	
-	private Integer sclassID;
+	private Integer sclassID = 0;
 
-	private String matchSeason;
+	private String matchSeason = "";
 
-	private Integer round;
+	private Integer round = 0;
 
-	private String grouping;
+	private String grouping = "";
 
-	private Integer homeTeamID;
+	private Integer homeTeamID = 0;
 
-	private Integer guestTeamID;
+	private Integer guestTeamID = 0;
 
-	private String homeTeam;
+	private String homeTeam = "";
 
-	private String guestTeam;
+	private String guestTeam = "";
 	
-	private String homeTeamIco;
+	private String homeTeamIco = "";
 	
-	private String guestTeamIco;
+	private String guestTeamIco = "";
 	
-	private Integer homeTeamSupport;
+	private Integer homeTeamSupport = 0;
 	
-	private Integer guestTeamSupport;
+	private Integer guestTeamSupport = 0;
 	
-	private Integer neutrality;
+	private Integer neutrality = 0;
 	
-	private Date matchTime;
+	private Date matchTime = null;
 	
-	private Date matchTime2;
+	private Date matchTime2 = null;
 	
-	private String location;
+	private String location = "";
 	
-	private String home_Order;
+	private String home_Order = "";
 	
-	private String guest_Order;
+	private String guest_Order = "";
 	
-	private Integer matchState;
+	private Integer matchState = 0;
 	
-	private Integer weatherIcon;
+	private Integer weatherIcon = 0;
 	
-	private String weather;
+	private String weather = "";
 	
-	private String temperature;
+	private String temperature = "";
 	
-	private Integer homeScore;
+	private Integer homeScore = 0;
 	
-	private Integer guestScore;
+	private Integer guestScore = 0;
 
-	private Integer homeHalfScore;
+	private Integer homeHalfScore = 0;
 	
-	private Integer guestHalfScore;
+	private Integer guestHalfScore = 0;
 
-	private Integer home_Red;
+	private Integer home_Red = 0;
 	
-	private Integer guest_Red;
+	private Integer guest_Red = 0;
 
-	private Integer home_Yellow;
+	private Integer home_Yellow = 0;
 
-	private Integer guest_Yellow;
+	private Integer guest_Yellow = 0;
 	
-	private String sclassName;
+	private String sclassName = "";
 	
-	private String sclassName_j;
+	private String sclassName_j = "";
 	
-	private String event;
+	private String event = "";
 	
-	private String bdEvent;
+	private String bdEvent = "";
 	
-	private String turn;
+	private String turn = "";
 	
-	private String zcSfcTurn;
+	private String zcSfcTurn = "";
 	
-	private String zcJqcTurn;
+	private String zcJqcTurn = "";
 	
-	private String zcBqcTurn;
+	private String zcBqcTurn = "";
 	
-	private String bdTurn;
+	private String bdTurn = "";
 	
-	private Integer betState;
+	private Integer betState = 0;
 	
-	private Date betEndTime;
+	private Date betEndTime = null;
 	
 	private Collection<DetailResult> detailResults;
 	

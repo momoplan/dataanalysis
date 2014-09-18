@@ -197,8 +197,9 @@ public class ScheduleService {
 	
 	public ClasliAnalysisDto findClasliAnalysis(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
+		ClasliAnalysisDto dto = new ClasliAnalysisDto();
 		if(null == schedule) {
-			return null;
+			return dto;
 		}
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
 		int scheduleId = schedule.getScheduleID();
@@ -207,7 +208,6 @@ public class ScheduleService {
 		Collection<ScheduleDTO> preClashSchedules = getPreClashSchedules(schedule);
 		//联赛排名
 		Collection<RankingDTO> rankingDtos = infoService.getRankingDtos(scheduleId, schedule.getSclassID());
-		ClasliAnalysisDto dto = new ClasliAnalysisDto();
 		dto.setSchedule(scheduleDTO);
 		dto.setBetRatio(infoService.getBetRatioDto(event));
 		dto.setBetNum(infoService.getBetNumDto(event));

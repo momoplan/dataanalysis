@@ -7,8 +7,8 @@ import org.springframework.roo.addon.json.RooJson;
 @RooJson
 public class BetNumDto {
 
-	private String spf;
+	private String spf = "";
 	
-	private String rfspf;
+	private String rfspf = "";
 	
 }
