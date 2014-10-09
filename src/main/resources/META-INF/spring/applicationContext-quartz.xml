@@ -23,7 +23,7 @@
    
    <bean id="detailResultUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="detailResultUpdateJobDetail"></property>
-   		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
+   		<property name="cronExpression" value="0 */1 * * * ?"></property>  <!-- 1分钟 -->
    </bean>
    
    <!-- 亚赔更新 -->
@@ -83,7 +83,7 @@
    
    <bean id="todayScoreUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="todayScoreUpdateJobDetail"></property>
-   		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
+   		<property name="cronExpression" value="0 */1 * * * ?"></property>  <!-- 1分钟 -->
    </bean>
    
    <!-- 欧赔更新 -->
