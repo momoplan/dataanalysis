@@ -8,9 +8,11 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -25,7 +27,7 @@ import com.ruyicai.dataanalysis.util.jc.JingCaiUtil;
 
 @Service
 public class ScheduleService {
-
+	
 	@Autowired
 	private AnalysisService analysisService;
 	
@@ -102,9 +104,9 @@ public class ScheduleService {
 		} else if (state==3) { //完场
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			List<String> days = new ArrayList<String>();
-			days.add(sdf.format(DateUtil.getPreDate(2))); //前天
-			days.add(sdf.format(DateUtil.getPreDate(1))); //昨天
 			days.add(sdf.format(DateUtil.getPreDate(0))); //今天
+			days.add(sdf.format(DateUtil.getPreDate(1))); //昨天
+			days.add(sdf.format(DateUtil.getPreDate(2))); //前天
 			for (String day : days) {
 				List<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
 				List<Schedule> schedules = getSchedulesByEvent(day);
