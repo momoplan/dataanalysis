@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,11 +64,16 @@ public class ScheduleService {
 				}
 				for (Schedule schedule : schedules) {
 					Integer matchState = schedule.getMatchState();
+					Date matchTime = schedule.getMatchTime();
+					Date nowTime = new Date();
 					if (matchState==null) {
 						continue;
 					}
 					if (matchState!=MatchState.WEIKAI.value&&matchState!=MatchState.DAIDING.value
-							&&matchState!=MatchState.TUICHI.value) {
+							&&matchState!=MatchState.TUICHI.value&&matchState!=MatchState.QUXIAO.value) {
+						continue;
+					}
+					if(matchTime.before(nowTime) || matchTime.equals(nowTime)){//过滤掉比赛开始时间在当前时间之前的场次
 						continue;
 					}
 					ScheduleDTO dto = analysisService.buildDTO(schedule, true);

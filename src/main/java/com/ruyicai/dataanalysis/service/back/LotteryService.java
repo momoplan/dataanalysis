@@ -49,7 +49,7 @@ public class LotteryService {
 		StringBuilder builder = new StringBuilder();
 		builder.append("type=" + type);
 		
-		String url = propertiesUtil.getLotteryUrl() + "select/getjingcaiactivedays";
+		String url = propertiesUtil.getLotteryUrl() + "select/getjingcainotenddays";
 		String result = httpUtil.getResponse(url, HttpUtil.POST, HttpUtil.UTF8, builder.toString());
 		logger.info("查询竞彩在卖的赛事日期返回:{},paramStr:{}", result, builder.toString());
 		return result;
