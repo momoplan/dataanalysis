@@ -18,18 +18,15 @@ public class SelectNewsService {
 	private NewsDao newsDao;
 	
 	public void findNews(String event, String type, Page<News> page) {
-		StringBuilder builder = new StringBuilder(" where");
+		StringBuilder builder = new StringBuilder(" where 1=1 ");
 		List<Object> params = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(event)) {
-			builder.append(" o.event=? ");
+			builder.append(" and o.event=? ");
 			params.add(event);
 		}
 		if (StringUtils.isNotBlank(type)) {
-			builder.append(" o.type=? ");
+			builder.append(" and o.type=? ");
 			params.add(Integer.parseInt(type));
-		}
-		if (builder.toString().endsWith("where")) {
-			builder.delete(builder.length() - 5, builder.length());
 		}
 		newsDao.findListWithPage(builder.toString(), "order by o.publishtime desc", params, page);
 	}
