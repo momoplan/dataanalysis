@@ -182,6 +182,30 @@
    		<property name="cronExpression" value="0 */30 * * * ?"></property>  <!-- 30分钟 -->
    </bean>
    
+   <!-- 亚洲杯积分榜数据统计 -->
+   <bean id="cupMatchJiFenJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="cupMatchJiFenUpdateService"></property>
+   		<property name="targetMethod" value="process"></property>
+   		<property name="concurrent" value="false"/>
+   </bean>
+   
+   <bean id="cupMatchJiFenUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="cupMatchJiFenJobDetail"></property>
+   		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
+   </bean>
+   
+   <!-- 亚洲杯射手榜数据统计 -->
+   <bean id="cupMatchRankingJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+   		<property name="targetObject" ref="cupMatchRankingUpdateService"></property>
+   		<property name="targetMethod" value="process"></property>
+   		<property name="concurrent" value="false"/>
+   </bean>
+   
+   <bean id="cupMatchRankingUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="cupMatchRankingJobDetail"></property>
+   		<property name="cronExpression" value="0 */5 * * * ?"></property>  <!-- 5分钟 -->
+   </bean>
+   
    <!--  篮球 -->
    <!-- 联赛更新 -->
    <bean id="sclassJclUpdateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -322,6 +346,8 @@
    				<ref bean="clearMapTrigger"/>
    				<ref bean="processWeiKaiTrigger"/>
    				<ref bean="technicCountTrigger"/>
+   				<ref bean="cupMatchJiFenUpdateTrigger"/>
+   				<ref bean="cupMatchRankingUpdateTrigger"/>
    				<!-- 竞彩篮球 -->
    				<ref bean="sclassJclUpdateTrigger"/>
    				<ref bean="scheduleJclUpdateTrigger"/>

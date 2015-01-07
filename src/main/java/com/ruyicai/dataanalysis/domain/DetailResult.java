@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Query;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -68,6 +69,34 @@ public class DetailResult {
 	public static List<DetailResult> findDetailResults(int scheduleID) {
 		return entityManager().createQuery("select o from DetailResult o where deleteState=1 and scheduleID=? order by happenTime asc", DetailResult.class)
 				.setParameter(1, scheduleID).getResultList();
+	}
+
+	public static List<String> findPlayerByLeague(List<Integer> leagues) {
+		Query query = entityManager().createNativeQuery(
+				"select aa.playername from ( select d.playername , count(1) as goals from DetailResult d where d.playername!='' and d.kind in (1,7) "
+						+ "and d.scheduleID in (:scheduleID) group by d.playername order by goals desc ) aa limit 10");
+		query.setParameter("scheduleID", leagues);
+		List<String> schedules = query.getResultList();
+		return schedules;
+	}
+	
+	public static String findGoalsByPlayer(List<Integer> leagues,String playername){
+		Query query = entityManager()
+				.createNativeQuery(
+						"select count(1) from DetailResult d where d.kind in (1,7) and d.scheduleID in (:scheduleID) and d.playername=:playername");
+		query.setParameter("scheduleID", leagues);
+		query.setParameter("playername", playername);
+		return query.getSingleResult().toString();
+	}
+	
+	public static String findCountryByPlayer(List<Integer> leagues,String playername){
+		Query query = entityManager()
+				.createNativeQuery(
+						"select DISTINCT(p.country) from DetailResult d left join Player p on d.playerID=p.playerID "
+						+ "where p.country!='' and d.kind in (1,7) and d.scheduleID in (:scheduleID) and d.playername=:playername ");
+		query.setParameter("scheduleID", leagues);
+		query.setParameter("playername", playername);
+		return query.getResultList().get(0).toString().trim();
 	}
 	
 }

@@ -41,10 +41,12 @@ privileged aspect Schedule_Roo_ToString {
         sb.append("Home_Order: ").append(getHome_Order()).append(", ");
         sb.append("Home_Red: ").append(getHome_Red()).append(", ");
         sb.append("Home_Yellow: ").append(getHome_Yellow()).append(", ");
+        sb.append("IsAddTime: ").append(getIsAddTime()).append(", ");
         sb.append("IsGoalC: ").append(getIsGoalC()).append(", ");
         sb.append("IsWFC: ").append(getIsWFC()).append(", ");
         sb.append("Isanaly: ").append(getIsanaly()).append(", ");
         sb.append("Location: ").append(getLocation()).append(", ");
+        sb.append("MatchExplain: ").append(getMatchExplain()).append(", ");
         sb.append("MatchSeason: ").append(getMatchSeason()).append(", ");
         sb.append("MatchState: ").append(getMatchState()).append(", ");
         sb.append("MatchTime: ").append(getMatchTime()).append(", ");

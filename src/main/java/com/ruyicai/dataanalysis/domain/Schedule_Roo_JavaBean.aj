@@ -514,4 +514,20 @@ privileged aspect Schedule_Roo_JavaBean {
         this.betEndTime = betEndTime;
     }
     
+    public String Schedule.getIsAddTime() {
+        return this.isAddTime;
+    }
+    
+    public void Schedule.setIsAddTime(String isAddTime) {
+        this.isAddTime = isAddTime;
+    }
+    
+    public String Schedule.getMatchExplain() {
+        return this.matchExplain;
+    }
+    
+    public void Schedule.setMatchExplain(String matchExplain) {
+        this.matchExplain = matchExplain;
+    }
+    
 }

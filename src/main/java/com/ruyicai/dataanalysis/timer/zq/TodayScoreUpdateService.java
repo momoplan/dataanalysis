@@ -80,7 +80,7 @@ public class TodayScoreUpdateService {
 			String scheduleIdStr = match.elementTextTrim("ID"); //比赛ID
 			String matchTime = match.elementTextTrim("time"); //比赛时间(只有小时和分数 20:30 格式)
 			String matchTime2 = match.elementTextTrim("time2"); //上半场时为开上半场的时间,下半场时为开下半场的时间(js日期时间格式)
-			String matchStateStr = match.elementTextTrim("state"); //比赛状态 (0:未开,1:上半场,2:中场,3:下半场,-11:待定,-12:腰斩,-13:中断,-14:推迟,-1:完场，-10取消)
+			String matchStateStr = match.elementTextTrim("state"); //比赛状态 (0:未开,1:上半场,2:中场,3:下半场,4:加时,-11:待定,-12:腰斩,-13:中断,-14:推迟,-1:完场，-10取消)
 			String homeScoreStr = match.elementTextTrim("homeScore"); //主队比分
 			String guestScoreStr = match.elementTextTrim("awayScore"); //客队比分
 			String homeHalfScoreStr = match.elementTextTrim("bc1"); //主队上半场比分
@@ -94,6 +94,16 @@ public class TodayScoreUpdateService {
 			String explainList = matchStateStr.equals("4") ? "4" : ""; //标识是否有加时
 			if (StringUtils.isNotBlank(explainList)) {
 				logger.info("scheduleId:"+scheduleIdStr+";explainList:"+explainList);
+			}
+			String matchExplainData = match.elementTextTrim("explain2");	//比赛说明
+			String matchExplain = "";
+			//CCTV5上海体育北京体育;|2;|4;3|90,2-1;3-3;1,2-1;1-3;2
+			if (StringUtils.isNotBlank(matchExplainData)) {
+				logger.info("比赛说明数据matchExplainData:" + matchExplainData);
+				String[] explainArr = matchExplainData.split("\\|");
+				if (explainArr != null && explainArr.length > 0) {
+					matchExplain = matchExplain.concat(explainArr[3]);
+				}
 			}
 			Integer scheduleId = Integer.parseInt(scheduleIdStr); //比赛Id
 			Integer matchState = Integer.parseInt(matchStateStr); //比赛状态
@@ -180,6 +190,16 @@ public class TodayScoreUpdateService {
 					ismod = true;
 					schedule.setMatchTime2(matchTime2Date);
 				}
+			}
+            //是否有加时
+            String oldIsAddTime = schedule.getIsAddTime(); //是否有加时(0:无;1:有)
+            if ((StringUtils.isBlank(oldIsAddTime)||StringUtils.equals(oldIsAddTime, "0"))
+                    &&matchState==MatchState.JIASHI.value) {
+                schedule.setIsAddTime("1");
+            }
+			if (!matchExplain.equals(schedule.getMatchExplain())) {
+				ismod = true;
+				schedule.setMatchExplain(matchExplain);
 			}
 			if(ismod) {
 				schedule.merge();

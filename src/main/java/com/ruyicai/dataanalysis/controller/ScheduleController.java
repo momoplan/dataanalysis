@@ -101,4 +101,65 @@ public class ScheduleController {
 		return rd;
 	}
 	
+	/**
+	 * 获取杯赛相关赛程
+	 * @param league
+	 * @return
+	 */
+	@RequestMapping(value = "/findScheduleByLeague", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findScheduleByLeague(@RequestParam("league") String league,@RequestParam(value="grouping",required=false) String grouping) {
+		logger.info("竞足findScheduleByLeague,league:{},grouping:{}", new Object[] { league, grouping });
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.getScheduleByLeague(league,grouping));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足findScheduleByLeague,用时:"+(endMills-startMills));
+		} catch(Exception e) {
+			logger.error("竞足findScheduleByLeague发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getLeagueCupRanking", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getLeagueCupRanking(@RequestParam(value = "league", required = false) String league,
+			@RequestParam(value = "season", required = false) String season) {
+		logger.info("竞足getLeagueCupRanking,league:{},season:{}", new Object[] { league, season });
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.getCupMatchRanking(league,season));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getLeagueCupRanking,用时:"+(endMills-startMills));
+		} catch(Exception e) {
+			logger.error("竞足getLeagueCupRanking发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
+		return rd;
+	}
+	
+	@RequestMapping(value = "/getCupMatchJifenRanking", method = RequestMethod.POST)
+	public @ResponseBody ResponseData getCupMatchJifenRanking(@RequestParam("grouping") String grouping){
+		ResponseData rd = new ResponseData();
+		ErrorCode result = ErrorCode.OK;
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(scheduleService.getCupMatchJifenRanking(grouping));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞足getLeagueCupRanking,用时:"+(endMills-startMills));
+		} catch(Exception e) {
+			logger.error("竞足getLeagueCupRanking发生异常", e);
+			result = ErrorCode.ERROR;
+		}
+		rd.setErrorCode(result.value);
+		return rd;
+	}
+	
 }

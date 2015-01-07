@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.consts.MatchState;
+import com.ruyicai.dataanalysis.domain.CupMatchJiFen;
+import com.ruyicai.dataanalysis.domain.CupMatchRanking;
 import com.ruyicai.dataanalysis.domain.Schedule;
 import com.ruyicai.dataanalysis.domain.TechnicCount;
 import com.ruyicai.dataanalysis.dto.ClasliAnalysisDto;
@@ -324,6 +326,66 @@ public class ScheduleService {
 			return null;
 		}
 		return resultList;
+	}
+	
+	public List<ScheduleDTO> getScheduleByLeague(String league,String grouping) {
+		if (StringUtils.isBlank(league)) {
+			return null;
+		}
+		List<ScheduleDTO> processingList = new ArrayList<ScheduleDTO>();
+		List<ScheduleDTO> wanchangList = new ArrayList<ScheduleDTO>();
+		List<ScheduleDTO> weikaiList = new ArrayList<ScheduleDTO>();
+		List<Schedule> schedules = Schedule.findByLeague(league,grouping, true);
+		for(Schedule schedule : schedules){
+			if(schedule==null) {
+				continue;
+			}
+			ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, true);
+			if (scheduleDTO==null) {
+				continue;
+			}
+			Integer matchState = scheduleDTO.getMatchState();
+			if (matchState==null) {
+				continue;
+			}
+			if (matchState==MatchState.SHANGBANCHANG.value||matchState==MatchState.ZHONGCHANG.value
+					||matchState==MatchState.XIABANCHANG.value||matchState==MatchState.ZHONGDUAN.value) { //进行中
+				processingList.add(scheduleDTO);
+			}
+			if (matchState==MatchState.YAOZHAN.value||matchState==MatchState.WANCHANG.value
+					||matchState==MatchState.QUXIAO.value) { //完场
+				wanchangList.add(scheduleDTO);
+			}
+			if (matchState==MatchState.WEIKAI.value||matchState==MatchState.DAIDING.value
+					||matchState==MatchState.TUICHI.value) { //未开赛
+				weikaiList.add(scheduleDTO);
+			}
+		}
+		List<ScheduleDTO> resultList = new ArrayList<ScheduleDTO>();
+		resultList.addAll(processingList);
+		resultList.addAll(wanchangList);
+		resultList.addAll(weikaiList);
+		if (resultList==null||resultList.size()<=0) {
+			return null;
+		}
+		return resultList;
+	}
+	
+	public List<CupMatchRanking> getCupMatchRanking(String league,String season) {
+		if (StringUtils.isBlank(league)) {
+			league = "亚洲杯";	//默认杯赛为亚洲杯
+		}
+		if (StringUtils.isBlank(season)) {
+			season = "2013-2015";	//默认当前赛季
+		}
+		return CupMatchRanking.findCupMatchRanking(league,season);
+	}
+	
+	public List<CupMatchJiFen> getCupMatchJifenRanking(String grouping) {
+		if (StringUtils.isBlank(grouping)) {
+			return null;
+		}
+		return CupMatchJiFen.findCupMatchJiFenByGrouping(grouping);
 	}
 	
 	/*public static void main(String[] args) {

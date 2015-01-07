@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ruyicai.dataanalysis.consts.MatchState;
 import com.ruyicai.dataanalysis.domain.cache.ScheduleCache;
+import com.ruyicai.dataanalysis.util.StringUtil;
 
 import flexjson.JSON;
 import flexjson.JSONDeserializer;
@@ -165,6 +166,10 @@ public class Schedule implements Serializable {
 	
 	private Date betEndTime;
 	
+	private String isAddTime;	//是否有加时（0：无；1：有）
+	
+	private String matchExplain; //比赛说明，加时点球结果
+	
 	@Autowired
 	private transient ScheduleCache scheduleCache;
 	
@@ -245,6 +250,26 @@ public class Schedule implements Serializable {
 			buildSchedule(schedule);
 		}
         return schedule;
+	}
+	
+	public static List<Schedule> findByLeague(String league,String grouping, boolean buildSchedule) {
+		String sql = "select o from Schedule o where o.sclassID in (select s.sclassID from Sclass s where s.name_JS=? ) and o.matchTime>'2015-01-01' ";
+		if(!StringUtil.isEmpty(grouping)){
+			sql = sql.concat(" and o.grouping = ?");
+		}
+		sql = sql.concat(" order by o.matchTime asc");
+		TypedQuery<Schedule> query = entityManager().createQuery(sql,Schedule.class);
+		query.setParameter(1, league);
+		if(!StringUtil.isEmpty(grouping)){
+			query.setParameter(2, grouping);
+		}
+		List<Schedule> schedules = query.getResultList();
+		for(Schedule schedule : schedules){
+			if (buildSchedule) {
+				buildSchedule(schedule);
+			}
+		}
+        return schedules;
 	}
 	
 	public static Schedule findByZcSfcEvent(String zcEvent) {
@@ -429,12 +454,6 @@ public class Schedule implements Serializable {
 		List<Schedule> schedules = query.getResultList();
 		return schedules;
 	}
-	
-	/*public static List<Integer> findSaleIds() {
-		TypedQuery<Integer> query = entityManager().createQuery(
-				"select o.scheduleID from Schedule o where o.betState=1", Integer.class);
-		return query.getResultList();
-	}*/
 	
 	public String toJson() {
         return new JSONSerializer().exclude("*.class", "scheduleCache").serialize(this);

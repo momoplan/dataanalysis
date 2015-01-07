@@ -101,6 +101,10 @@ public class ScheduleDTO implements Serializable {
 	
 	private Date betEndTime = null;
 	
+	private String isAddTime;	//是否有加时（0：无；1：有）
+	
+	private String matchExplain; //比赛说明，加时点球结果
+	
 	private Collection<DetailResult> detailResults;
 	
 	public String toJson() {

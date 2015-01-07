@@ -447,6 +447,16 @@
 			<artifactId>druid</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+		  <groupId>net.databinder.dispatch</groupId>
+		  <artifactId>jsoup_2.9.2</artifactId>
+		  <version>0.9.1</version>
+		</dependency>
+		<dependency>
+		  <groupId>net.sourceforge.htmlunit</groupId>
+		  <artifactId>htmlunit</artifactId>
+		  <version>2.15</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>dataanalysis</finalName>

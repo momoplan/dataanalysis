@@ -2,6 +2,7 @@ package com.ruyicai.dataanalysis.util.zq;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
@@ -190,6 +191,20 @@ public class JmsZqUtil {
 		} catch(Exception e) {
 			logger.error("足球发送进行中赛事缓存更新的Jms发生异常", e);
 		}
+	}
+	
+	@Produce(uri = "jms:topic:sendAsianCup")
+	private ProducerTemplate sendAsianCupTemplate;
+	
+	/**
+	 * 发送杯赛数据更新的Jms
+	 * @param league
+	 */
+	public void sendAsianCupJMS(String league){
+		Map<String, Object> headers = new HashMap<String, Object>();
+		headers.put("cupJmsType", league);
+		logger.info("sendAsianCupTemplate start, cupJmsType={}", league);
+		sendAsianCupTemplate.sendBodyAndHeaders(null, headers);
 	}
 	
 }
