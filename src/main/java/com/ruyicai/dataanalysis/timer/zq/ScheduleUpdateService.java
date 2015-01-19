@@ -178,6 +178,9 @@ public class ScheduleUpdateService {
 			Integer guestRed = NumberUtil.parseInt(o, 0); //客队红牌
 			Integer round = NumberUtil.parseInt(s, 0); //轮次
 			Integer weatherIcon = NumberUtil.parseInt(u, 0); //天气图标
+			if (sclassId == 95 && StringUtils.isBlank(y)) { // 如果亞洲杯赛程对应的分组名为空，则取对应的轮次/分组名数据，修复round数据不准确的问题
+				y = s;
+			}
 			
 			Schedule schedule = Schedule.findScheduleWOBuild(scheduleId);
 			if(schedule == null) {
