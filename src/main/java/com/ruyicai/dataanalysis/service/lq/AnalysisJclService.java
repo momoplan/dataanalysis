@@ -8,15 +8,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ruyicai.dataanalysis.consts.lq.MatchStateJcl;
 import com.ruyicai.dataanalysis.domain.lq.GlobalCacheJcl;
 import com.ruyicai.dataanalysis.domain.lq.ScheduleJcl;
 import com.ruyicai.dataanalysis.domain.lq.SclassJcl;
+import com.ruyicai.dataanalysis.domain.lq.TeamJcl;
+import com.ruyicai.dataanalysis.domain.lq.TechnicCountJcl;
 import com.ruyicai.dataanalysis.dto.lq.RankingJclDTO;
 import com.ruyicai.dataanalysis.dto.lq.ScheduleJclDTO;
 import com.ruyicai.dataanalysis.util.BeanUtilsEx;
+import com.ruyicai.dataanalysis.util.PropertiesUtil;
 import com.ruyicai.dataanalysis.util.StringUtil;
 import com.ruyicai.dataanalysis.util.lq.CalcJclUtil;
 
@@ -29,6 +35,9 @@ import com.ruyicai.dataanalysis.util.lq.CalcJclUtil;
 public class AnalysisJclService {
 
 	//private Logger logger = LoggerFactory.getLogger(AnalysisJclService.class);
+	
+	@Autowired
+	private PropertiesUtil propertiesUtil;
 	
 	/**
 	 * 获取联赛排名
@@ -233,7 +242,7 @@ public class AnalysisJclService {
 	public List<ScheduleJclDTO> buildDTOS(List<ScheduleJcl> schedules) {
 		List<ScheduleJclDTO> dtos = new ArrayList<ScheduleJclDTO>();
 		for(ScheduleJcl s : schedules) {
-			ScheduleJclDTO dto = buildDTO(s);
+			ScheduleJclDTO dto = buildDTO(s, false,false);
 			dtos.add(dto);
 		}
 		return dtos;
@@ -244,13 +253,29 @@ public class AnalysisJclService {
 	 * @param scheduleJcl
 	 * @return
 	 */
-	public ScheduleJclDTO buildDTO(ScheduleJcl scheduleJcl) {
+	public ScheduleJclDTO buildDTO(ScheduleJcl scheduleJcl,boolean buildTeam,boolean buildTechnicCount) {
 		ScheduleJclDTO dto = new ScheduleJclDTO();
 		try {
 			SclassJcl sclass = SclassJcl.findSclassJcl(scheduleJcl.getSclassId());
 			BeanUtilsEx.copyProperties(dto, scheduleJcl);
 			dto.setSclassName(sclass.getNameJ());
 			dto.setSclassShortName(sclass.getNameJs());
+			if (buildTeam) {
+				TeamJcl homeTeam = TeamJcl.findTeamJcl(Integer.valueOf(scheduleJcl.getHomeTeamId())); //主队球队信息
+				TeamJcl guestTeam = TeamJcl.findTeamJcl(Integer.valueOf(scheduleJcl.getGuestTeamId())); //客队球队信息
+				//设置简称
+				dto.setHomeTeamShortJ(homeTeam.getShortJ());
+				dto.setGuestTeamShortJ(guestTeam.getShortJ());
+				//设置图标
+				dto.setHomeTeamIco(getTeamJclIco(homeTeam));
+				dto.setGuestTeamIco(getTeamJclIco(guestTeam));
+				//支持人数
+				dto.setHomeTeamSupport(homeTeam.getSupport());
+				dto.setGuestTeamSupport(guestTeam.getSupport());
+			}
+			if (buildTechnicCount) {
+				dto.setTechnicCount(TechnicCountJcl.findTechnicCountJcl(scheduleJcl.getEvent()));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -265,6 +290,26 @@ public class AnalysisJclService {
 		for(SclassJcl sclassJcl : sclassJcls) {
 			getRanking(false, sclassJcl.getSclassId());
 		}
+	}
+	
+	/**
+	 * 查询球队图标
+	 * @param team
+	 * @return
+	 */
+	private String getTeamJclIco(TeamJcl team) {
+		try {
+			if (team!=null) {
+				String flag = team.getFlag(); //files/team/20120112163535.jpg
+				if (StringUtils.isNotBlank(flag)) {
+					String ico = propertiesUtil.getImageUrl()+"team/"+flag;
+					return ico;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

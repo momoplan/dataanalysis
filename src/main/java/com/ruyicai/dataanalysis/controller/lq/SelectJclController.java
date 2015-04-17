@@ -100,4 +100,84 @@ public class SelectJclController {
 		return rd;
 	}
 	
+	/**
+	 * 某场比赛的分析数据
+	 * @param event
+	 * @return
+	 */
+	@RequestMapping(value = "/findClasliAnalysis", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findClasliAnalysis(@RequestParam("event") String event){
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(infoJclService.findClasliAnalysis(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞篮findClasliAnalysis,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞篮findClasliAnalysis发生异常", e);
+		}
+		return rd;
+	}
+	
+	/**
+	 * 分析
+	 * @param event
+	 * @return
+	 */
+	@RequestMapping(value = "/getAnalysis", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData getAnalysis(@RequestParam("event") String event) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(infoJclService.getAnalysis(event));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞篮getAnalysis,用时:"+(endMills-startMills)+",event="+event);
+		} catch(Exception e) {
+			logger.error("竞篮getAnalysis发生异常", e);
+		}
+		return rd;
+	}
+	
+	/**
+	 * 查询即时比分
+	 * @param state 1-未开赛；2-进行中；3-完场
+	 * @return
+	 */
+	@RequestMapping(value = "findInstantScores", method = RequestMethod.POST)
+	public @ResponseBody()
+	ResponseData findInstantScores(@RequestParam("state") int state) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(infoJclService.findInstantScores(state));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞篮findInstantScores,用时:"+(endMills-startMills)+",state="+state);
+		} catch(Exception e) {
+			logger.error("竞篮findInstantScores发生异常", e);
+		}
+		return rd;
+	}
+	
+	/**
+	 * 我的观注
+	 * @param events
+	 * @return
+	 */
+	@RequestMapping(value = "/findScheduleByEvents", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseData findScheduleByEvents(@RequestParam("events") String events) {
+		ResponseData rd = new ResponseData();
+		try {
+			long startMills = System.currentTimeMillis();
+			rd.setValue(infoJclService.findScheduleByEvents(events));
+			long endMills = System.currentTimeMillis();
+			logger.info("竞篮findScheduleByEvents,用时:"+(endMills-startMills)+",events="+events);
+		} catch(Exception e) {
+			logger.error("竞篮findScheduleByEvents发生异常", e);
+		}
+		return rd;
+	}
+	
 }

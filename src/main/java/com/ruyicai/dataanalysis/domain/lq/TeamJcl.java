@@ -2,6 +2,7 @@ package com.ruyicai.dataanalysis.domain.lq;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -33,6 +34,15 @@ public class TeamJcl {
 	
 	@Column(name = "nameJ")
 	private String nameJ;
+	
+	@Column(name = "shortJ")
+	private String shortJ;
+	
+	@Column(name = "flag")
+	private String flag;
+	
+	@Column(name = "support")
+	private Integer support;
 	
 	@Autowired
 	private transient TeamJclCache teamJclCache;

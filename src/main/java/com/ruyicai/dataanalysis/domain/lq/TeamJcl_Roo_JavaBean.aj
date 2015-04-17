@@ -32,4 +32,28 @@ privileged aspect TeamJcl_Roo_JavaBean {
         this.nameJ = nameJ;
     }
     
+    public String TeamJcl.getShortJ() {
+        return this.shortJ;
+    }
+    
+    public void TeamJcl.setShortJ(String shortJ) {
+        this.shortJ = shortJ;
+    }
+    
+    public String TeamJcl.getFlag() {
+        return this.flag;
+    }
+    
+    public void TeamJcl.setFlag(String flag) {
+        this.flag = flag;
+    }
+    
+    public Integer TeamJcl.getSupport() {
+        return this.support;
+    }
+    
+    public void TeamJcl.setSupport(Integer support) {
+        this.support = support;
+    }
+    
 }

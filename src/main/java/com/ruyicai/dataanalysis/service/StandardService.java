@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ruyicai.dataanalysis.cache.CacheService;
 import com.ruyicai.dataanalysis.domain.GlobalCache;
 import com.ruyicai.dataanalysis.domain.Schedule;
@@ -18,6 +20,7 @@ import com.ruyicai.dataanalysis.dto.ScheduleDTO;
 import com.ruyicai.dataanalysis.dto.StandardDto;
 import com.ruyicai.dataanalysis.dto.StandardsDto;
 import com.ruyicai.dataanalysis.util.StringUtil;
+import com.ruyicai.dataanalysis.util.zc.ZuCaiUtil;
 import com.ruyicai.dataanalysis.util.zq.CalcUtil;
 
 @Service
@@ -180,6 +183,40 @@ public class StandardService {
 	public StandardsDto findByEvent(String event) {
 		Schedule schedule = Schedule.findByEvent(event, true);
 		if (schedule==null) {
+			return null;
+		}
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
+		GlobalCache standard = globalInfoService.getStandard(schedule);
+		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
+		
+		StandardsDto resultDto = new StandardsDto();
+		resultDto.setSchedule(scheduleDTO);
+		resultDto.setStandards(standards);
+		return resultDto;
+	}
+	
+	public StandardsDto findByBdEvent(String event) {
+		Schedule schedule = Schedule.findByBdEvent(event);
+		if (schedule==null) {
+			return null;
+		}
+		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);
+		GlobalCache standard = globalInfoService.getStandard(schedule);
+		Collection<Standard> standards = Standard.fromJsonArrayToStandards(standard.getValue());
+		
+		StandardsDto resultDto = new StandardsDto();
+		resultDto.setSchedule(scheduleDTO);
+		resultDto.setStandards(standards);
+		return resultDto;
+	}
+	
+	public StandardsDto findByZcEvent(String event) {
+		String lotNo = ZuCaiUtil.getLotNoByZcEvent(event); //彩种编号
+		if (StringUtil.isEmpty(lotNo)) {
+			return null;
+		}
+		Schedule schedule = ZuCaiUtil.getZcScheduleByLotNo(lotNo, event);
+		if(schedule==null) {
 			return null;
 		}
 		ScheduleDTO scheduleDTO = analysisService.buildDTO(schedule, false);

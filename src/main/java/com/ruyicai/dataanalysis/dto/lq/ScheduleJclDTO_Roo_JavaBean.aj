@@ -3,8 +3,10 @@
 
 package com.ruyicai.dataanalysis.dto.lq;
 
+import com.ruyicai.dataanalysis.domain.lq.TechnicCountJcl;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.Collection;
 import java.util.Date;
 
 privileged aspect ScheduleJclDTO_Roo_JavaBean {
@@ -79,6 +81,54 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
     
     public void ScheduleJclDTO.setGuestTeam(String guestTeam) {
         this.guestTeam = guestTeam;
+    }
+    
+    public String ScheduleJclDTO.getHomeTeamShortJ() {
+        return this.homeTeamShortJ;
+    }
+    
+    public void ScheduleJclDTO.setHomeTeamShortJ(String homeTeamShortJ) {
+        this.homeTeamShortJ = homeTeamShortJ;
+    }
+    
+    public String ScheduleJclDTO.getGuestTeamShortJ() {
+        return this.guestTeamShortJ;
+    }
+    
+    public void ScheduleJclDTO.setGuestTeamShortJ(String guestTeamShortJ) {
+        this.guestTeamShortJ = guestTeamShortJ;
+    }
+    
+    public String ScheduleJclDTO.getHomeTeamIco() {
+        return this.homeTeamIco;
+    }
+    
+    public void ScheduleJclDTO.setHomeTeamIco(String homeTeamIco) {
+        this.homeTeamIco = homeTeamIco;
+    }
+    
+    public String ScheduleJclDTO.getGuestTeamIco() {
+        return this.guestTeamIco;
+    }
+    
+    public void ScheduleJclDTO.setGuestTeamIco(String guestTeamIco) {
+        this.guestTeamIco = guestTeamIco;
+    }
+    
+    public Integer ScheduleJclDTO.getHomeTeamSupport() {
+        return this.homeTeamSupport;
+    }
+    
+    public void ScheduleJclDTO.setHomeTeamSupport(Integer homeTeamSupport) {
+        this.homeTeamSupport = homeTeamSupport;
+    }
+    
+    public Integer ScheduleJclDTO.getGuestTeamSupport() {
+        return this.guestTeamSupport;
+    }
+    
+    public void ScheduleJclDTO.setGuestTeamSupport(Integer guestTeamSupport) {
+        this.guestTeamSupport = guestTeamSupport;
     }
     
     public Date ScheduleJclDTO.getMatchTime() {
@@ -169,6 +219,62 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
         this.guestFour = guestFour;
     }
     
+    public String ScheduleJclDTO.getAddTime() {
+        return this.addTime;
+    }
+    
+    public void ScheduleJclDTO.setAddTime(String addTime) {
+        this.addTime = addTime;
+    }
+    
+    public String ScheduleJclDTO.getHomeAddTime1() {
+        return this.homeAddTime1;
+    }
+    
+    public void ScheduleJclDTO.setHomeAddTime1(String homeAddTime1) {
+        this.homeAddTime1 = homeAddTime1;
+    }
+    
+    public String ScheduleJclDTO.getGuestAddTime1() {
+        return this.guestAddTime1;
+    }
+    
+    public void ScheduleJclDTO.setGuestAddTime1(String guestAddTime1) {
+        this.guestAddTime1 = guestAddTime1;
+    }
+    
+    public String ScheduleJclDTO.getHomeAddTime2() {
+        return this.homeAddTime2;
+    }
+    
+    public void ScheduleJclDTO.setHomeAddTime2(String homeAddTime2) {
+        this.homeAddTime2 = homeAddTime2;
+    }
+    
+    public String ScheduleJclDTO.getGuestAddTime2() {
+        return this.guestAddTime2;
+    }
+    
+    public void ScheduleJclDTO.setGuestAddTime2(String guestAddTime2) {
+        this.guestAddTime2 = guestAddTime2;
+    }
+    
+    public String ScheduleJclDTO.getHomeAddTime3() {
+        return this.homeAddTime3;
+    }
+    
+    public void ScheduleJclDTO.setHomeAddTime3(String homeAddTime3) {
+        this.homeAddTime3 = homeAddTime3;
+    }
+    
+    public String ScheduleJclDTO.getGuestAddTime3() {
+        return this.guestAddTime3;
+    }
+    
+    public void ScheduleJclDTO.setGuestAddTime3(String guestAddTime3) {
+        this.guestAddTime3 = guestAddTime3;
+    }
+    
     public String ScheduleJclDTO.getMatchState() {
         return this.matchState;
     }
@@ -231,6 +337,14 @@ privileged aspect ScheduleJclDTO_Roo_JavaBean {
     
     public void ScheduleJclDTO.setBetEndTime(Date betEndTime) {
         this.betEndTime = betEndTime;
+    }
+    
+    public Collection<TechnicCountJcl> ScheduleJclDTO.getTechnicCount() {
+        return this.technicCount;
+    }
+    
+    public void ScheduleJclDTO.setTechnicCount(Collection<TechnicCountJcl> technicCount) {
+        this.technicCount = technicCount;
     }
     
 }

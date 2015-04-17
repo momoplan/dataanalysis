@@ -62,12 +62,16 @@ public class TeamJclUpdateService {
 		String lsID = team.elementTextTrim("lsID"); //联赛id
 		Integer sclassId = StringUtil.isEmpty(lsID) ? null : Integer.parseInt(lsID);
 		String nameJ = team.elementTextTrim("gb"); //简体名称
+		String shortJ = team.elementTextTrim("short"); //简称
+		String flag = team.elementTextTrim("logo");	//队标
 		TeamJcl teamJcl = TeamJcl.findTeamJcl(Integer.parseInt(teamId));
 		if (teamJcl==null) {
 			teamJcl = new TeamJcl();
 			teamJcl.setTeamId(Integer.parseInt(teamId));
 			teamJcl.setSclassId(sclassId);
 			teamJcl.setNameJ(nameJ);
+			teamJcl.setShortJ(shortJ);
+			teamJcl.setFlag(flag);
 			teamJcl.persist();
 		} else {
 			boolean isModify = false;
@@ -81,6 +85,16 @@ public class TeamJclUpdateService {
 			if (!StringUtil.isEmpty(nameJ) && (StringUtil.isEmpty(nameJ_old)||!nameJ.equals(nameJ_old))) {
 				isModify = true;
 				teamJcl.setNameJ(nameJ);
+			}
+			String shortJ_old = teamJcl.getShortJ();
+			if (!StringUtil.isEmpty(shortJ) && (StringUtil.isEmpty(shortJ_old)||!shortJ.equals(shortJ_old))) {
+				isModify = true;
+				teamJcl.setShortJ(shortJ);
+			}
+			String flag_old = teamJcl.getFlag();
+			if(!StringUtil.isEmpty(flag) && (StringUtil.isEmpty(flag_old)||!flag.equals(flag_old))){
+				isModify = true;
+				teamJcl.setFlag(flag);
 			}
 			if (isModify) {
 				teamJcl.merge();

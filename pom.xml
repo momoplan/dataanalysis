@@ -34,6 +34,7 @@
 		<standardJclUrl>http://interface.win007.com/lq/1x2.aspx</standardJclUrl>
 		<peiLvJclUrl>http://interface.win007.com/lq/LqOdds.aspx</peiLvJclUrl>
 		<teamJclUrl>http://interface.win007.com/lq/LqTeam_Xml.aspx</teamJclUrl>
+		<technicCountJclUrl>http://interface.win007.com/lq/LqTeahnicCount.aspx</technicCountJclUrl>
 		<!-- 新闻 -->
 		<jingCaiNewsUrl>http://info.sporttery.cn/roll/</jingCaiNewsUrl>
 		<jingCaiZuQiuUrl>http://www.sporttery.cn/football/index.html</jingCaiZuQiuUrl>

@@ -39,12 +39,14 @@ public class TodayScoreJclUpdateService {
 	@Autowired
 	private SendJmsJclUtil sendJmsJclUtil;
 	
+	@Autowired
+	private TechnicCountJclUpdateService technicCountJclUpdateService;
+	
 	@SuppressWarnings("unchecked")
 	public void process() {
 		logger.info("竞彩篮球-今日比分更新开始");
 		long startmillis = System.currentTimeMillis();
 		try {
-//			String data = httpUtil.downfile(todayScoreJclUrl, HttpUtil.GBK);
 			String data = httpUtil.getResponse(todayScoreJclUrl, HttpUtil.GET, HttpUtil.UTF8, "");
 			if (StringUtil.isEmpty(data)) {
 				logger.info("竞彩篮球-今日比分更新时获取数据为空");
@@ -97,6 +99,7 @@ public class TodayScoreJclUpdateService {
 			String guestAddTime2 = infos[29]; //客队2'ot得分
 			String homeAddTime3 = infos[30]; //主队3'ot得分
 			String guestAddTime3 = infos[31]; //客队3'ot得分
+			String isHaveTechnicCount = infos[32]; //是否有技术统计
 			
 			ScheduleJcl scheduleJcl = ScheduleJcl.findScheduleJclNotBuild(Integer.parseInt(scheduleId));
 			if(null == scheduleJcl) {
@@ -279,6 +282,11 @@ public class TodayScoreJclUpdateService {
 				}
 				//发送赛事缓存更新的Jms
 				sendJmsJclUtil.sendSchedulesCacheUpdateJms(scheduleJcl.getScheduleId());
+			}
+			
+			//更新技术统计
+			if(isHaveTechnicCount.equals("True")){
+				technicCountJclUpdateService.processData(Integer.valueOf(scheduleId));
 			}
 		} catch (Exception e) {
 			logger.error("解析竞彩篮球-今日比分异常", e);
